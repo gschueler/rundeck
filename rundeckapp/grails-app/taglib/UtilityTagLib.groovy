@@ -100,7 +100,15 @@ class UtilityTagLib{
         return sprintf(attrs.format?attrs.format:'%x',b)
     }
 
-
+    /**
+     * Contextual help icon with popup text
+     */
+    def contexthelp={attrs,body->
+        if (body && !attrs.text) {
+            attrs.text = body()
+        }
+        out << render(template: "/common/contexthelp", model: attrs)
+    }
 
     /**
     * Render expander component

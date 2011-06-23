@@ -1946,6 +1946,10 @@ div.popout, span.popout{
     -webkit-box-shadow:#aaa 2px 2px 7px;
 }
 
+div.simplehelp, span.simplehelp{
+    max-width: 400px;
+}
+
 div.rounded, span.rounded{
     padding:5px;
     margin: 4px 0;
