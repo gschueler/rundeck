@@ -25,12 +25,12 @@ package com.dtolabs.rundeck.core.resources.nodes;
 
 import com.dtolabs.rundeck.core.common.Framework;
 import com.dtolabs.rundeck.core.common.FrameworkProject;
+import com.dtolabs.rundeck.core.common.INodeSet;
 import com.dtolabs.rundeck.core.common.Nodes;
 import com.dtolabs.rundeck.core.tools.AbstractBaseTest;
 import com.dtolabs.rundeck.core.utils.FileUtils;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
 
 /**
@@ -45,10 +45,11 @@ public class TestFileNodesProvider extends AbstractBaseTest {
         super(name);
     }
 
+    FrameworkProject frameworkProject;
     public void setUp() {
 
         final Framework frameworkInstance = getFrameworkInstance();
-        final FrameworkProject frameworkProject = frameworkInstance.getFrameworkProjectMgr().createFrameworkProject(
+        frameworkProject = frameworkInstance.getFrameworkProjectMgr().createFrameworkProject(
             PROJ_NAME);
         File resourcesfile = new File(frameworkProject.getNodesResourceFilePath());
         //copy test nodes to resources file
@@ -276,23 +277,133 @@ public class TestFileNodesProvider extends AbstractBaseTest {
 
     }
 
-    public void testConfigure2() throws Exception {
-
-    }
-
     public void testGetNodes() throws Exception {
 
+        Properties props = new Properties();
+        props.setProperty("project", PROJ_NAME);
+        props.setProperty("file", "src/test/com/dtolabs/rundeck/core/common/test-nodes1.xml");
+        props.setProperty("generateFileAutomatically", "false");
+        props.setProperty("includeServerNode", "false");
+        final FileNodesProvider fileNodesProvider = new FileNodesProvider(getFrameworkInstance());
+        fileNodesProvider.configure(props);
+
+        final INodeSet nodes = fileNodesProvider.getNodes();
+        assertNotNull(nodes);
+        assertEquals(2, nodes.getNodes().size());
+        assertNotNull(nodes.getNode("test1"));
+        assertNotNull(nodes.getNode("testnode2"));
+
     }
+    public void testGetNodesYaml() throws Exception {
+        File testfile = new File(frameworkProject.getEtcDir(), "testformat.yaml");
+        assertFalse(testfile.exists());
+        //create yaml file
+        final BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
+            (testfile))));
+        bufferedWriter.write("testyaml1: \n"
+                             + "  hostname: test\n"
+                             + "  description: a description\n"
+                             + "  tags: a, b, c\n"
+                             + "  osArch: x86_64\n"
+                             + "  osFamily: unix\n"
+                             + "  osVersion: 10.6.5\n"
+                             + "  osName: Mac OS X\n"
+                             + "  username: a user\n");
+        bufferedWriter.flush();
+        bufferedWriter.close();
+        assertTrue(testfile.exists());
 
-    public void testGetNodes2() throws Exception {
+        Properties props = new Properties();
+        props.setProperty("project", PROJ_NAME);
+        props.setProperty("file", testfile.getAbsolutePath());
+        props.setProperty("generateFileAutomatically", "false");
+        props.setProperty("includeServerNode", "false");
+        final FileNodesProvider fileNodesProvider = new FileNodesProvider(getFrameworkInstance());
+        fileNodesProvider.configure(props);
 
+        final INodeSet nodes = fileNodesProvider.getNodes();
+        assertNotNull(nodes);
+        assertEquals(1, nodes.getNodes().size());
+        assertNotNull(nodes.getNode("testyaml1"));
+        testfile.delete();
+    }
+    public void testGetNodesIncludeServerNode() throws Exception {
+        File testfile = new File(frameworkProject.getEtcDir(), "testresources.yaml");
+        assertFalse(testfile.exists());
+
+        Properties props = new Properties();
+        props.setProperty("project", PROJ_NAME);
+        props.setProperty("file", testfile.getAbsolutePath());
+        props.setProperty("generateFileAutomatically", "false");
+        props.setProperty("includeServerNode", "true");
+        final FileNodesProvider fileNodesProvider = new FileNodesProvider(getFrameworkInstance());
+        fileNodesProvider.configure(props);
+
+        final INodeSet nodes = fileNodesProvider.getNodes();
+        assertNotNull(nodes);
+        assertEquals(1, nodes.getNodes().size());
+        assertNotNull(nodes.getNode(getFrameworkInstance().getFrameworkNodeName()));
+        assertFalse(testfile.exists());
+    }
+    public void testGetNodesGenerateFileAutomatically() throws Exception {
+        File testfile = new File(frameworkProject.getEtcDir(), "testresources2.yaml");
+        assertFalse(testfile.exists());
+
+        Properties props = new Properties();
+        props.setProperty("project", PROJ_NAME);
+        props.setProperty("file", testfile.getAbsolutePath());
+        props.setProperty("generateFileAutomatically", "true");
+        props.setProperty("includeServerNode", "true");
+        final FileNodesProvider fileNodesProvider = new FileNodesProvider(getFrameworkInstance());
+        fileNodesProvider.configure(props);
+
+        final INodeSet nodes = fileNodesProvider.getNodes();
+        assertNotNull(nodes);
+        assertEquals(1, nodes.getNodes().size());
+        assertNotNull(nodes.getNode(getFrameworkInstance().getFrameworkNodeName()));
+        assertTrue(testfile.exists());
+        testfile.delete();
     }
 
     public void testParseFile() throws Exception {
+        File testfile= new File("src/test/com/dtolabs/rundeck/core/common/test-nodes1.xml");
+        final INodeSet iNodeSet = FileNodesProvider.parseFile(testfile, getFrameworkInstance(), PROJ_NAME);
+        assertNotNull(iNodeSet);
+        assertEquals(2, iNodeSet.getNodes().size());
+        assertNotNull(iNodeSet.getNode("test1"));
+        assertNotNull(iNodeSet.getNode("testnode2"));
 
+        File testfile2 = File.createTempFile("testParseFile", ".yaml");
+        //create yaml file
+        final BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
+            (testfile2))));
+        bufferedWriter.write("testyaml1: \n"
+                             + "  hostname: test\n"
+                             + "  description: a description\n"
+                             + "  tags: a, b, c\n"
+                             + "  osArch: x86_64\n"
+                             + "  osFamily: unix\n"
+                             + "  osVersion: 10.6.5\n"
+                             + "  osName: Mac OS X\n"
+                             + "  username: a user\n");
+        bufferedWriter.flush();
+        bufferedWriter.close();
+        assertTrue(testfile2.exists());
+
+        final INodeSet nodeSet2 = FileNodesProvider.parseFile(testfile2, getFrameworkInstance(), PROJ_NAME);
+        assertNotNull(nodeSet2);
+        assertEquals(1, nodeSet2.getNodes().size());
+        assertNotNull(nodeSet2.getNode("testyaml1"));
+
+        //test failures
+        File dneFile = new File("build/DNEFile.xml");
+
+        try {
+            final INodeSet result = FileNodesProvider.parseFile(dneFile, getFrameworkInstance(), PROJ_NAME);
+            fail();
+        } catch (NodesProviderException e) {
+            assertEquals("File does not exist: " + dneFile.getAbsolutePath(), e.getMessage());
+        }
     }
 
-    public void testParseFile2() throws Exception {
-
-    }
 }
