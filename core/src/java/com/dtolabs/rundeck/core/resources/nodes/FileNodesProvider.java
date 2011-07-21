@@ -24,7 +24,6 @@
 package com.dtolabs.rundeck.core.resources.nodes;
 
 import com.dtolabs.rundeck.core.common.*;
-import com.dtolabs.rundeck.core.plugins.Plugin;
 import com.dtolabs.shared.resources.ResourceXMLGenerator;
 
 import java.io.File;
@@ -32,7 +31,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- * FileNodesProvider is ...
+ * FileNodesProvider can parse files to provide node results
  *
  * @author Greg Schueler <a href="mailto:greg@dtosolutions.com">greg@dtosolutions.com</a>
  */
@@ -46,7 +45,6 @@ public class FileNodesProvider implements NodesProvider, Configurable {
     FileNodesProvider(final Framework framework) {
         this.framework = framework;
         nodeSet = new NodeSetImpl();
-        System.err.println("FileNodesProvider constructor");
     }
 
     public static class Configuration {
@@ -55,11 +53,11 @@ public class FileNodesProvider implements NodesProvider, Configurable {
         public static final String FILE = "file";
         public static final String PROJECT = "project";
         public static final String FORMAT = "format";
-        private Nodes.Format format;
-        private File nodesFile;
-        private String project;
-        private boolean generateFileAutomatically;
-        private boolean includeServerNode;
+        Nodes.Format format;
+        File nodesFile;
+        String project;
+        boolean generateFileAutomatically;
+        boolean includeServerNode;
         final Properties configuration;
 
         Configuration() {
@@ -67,12 +65,22 @@ public class FileNodesProvider implements NodesProvider, Configurable {
         }
 
         Configuration(final Properties configuration) {
+            if(null==configuration) {
+                throw new NullPointerException("configuration");
+            }
             this.configuration = configuration;
             configure();
         }
+        Configuration(final Configuration configuration) {
+            this(configuration.getProperties());
+        }
+
 
         public static Configuration fromProperties(final Properties configuration) {
             return new Configuration(configuration);
+        }
+        public static Configuration clone(final Configuration configuration) {
+            return fromProperties(configuration.getProperties());
         }
 
         public static Configuration build() {
@@ -142,7 +150,7 @@ public class FileNodesProvider implements NodesProvider, Configurable {
                     format = Nodes.Format.valueOf(configuration.getProperty(FORMAT));
                 } catch (IllegalArgumentException e) {
                 }
-            } else {
+            } else if(nodesFile!=null){
                 if (nodesFile.getName().endsWith(".xml")) {
                     format = Nodes.Format.resourcexml;
                 } else if (nodesFile.getName().endsWith(".yaml")) {
@@ -170,7 +178,7 @@ public class FileNodesProvider implements NodesProvider, Configurable {
                 try {
                     Nodes.Format.valueOf(configuration.getProperty(FORMAT));
                 } catch (IllegalArgumentException e) {
-                    throw new ConfigurationException(e);
+                    throw new ConfigurationException("format is not recognized: " + configuration.getProperty(FORMAT));
                 }
             } else if (null == format) {
                 throw new ConfigurationException(
@@ -201,8 +209,7 @@ public class FileNodesProvider implements NodesProvider, Configurable {
      */
     public void configure(final Configuration configuration) throws ConfigurationException {
         System.err.println("FileNodesProvider configure: " + configuration);
-        this.configuration = configuration;
-        this.configuration.configure();
+        this.configuration = new Configuration(configuration);
         this.configuration.validate();
     }
 
