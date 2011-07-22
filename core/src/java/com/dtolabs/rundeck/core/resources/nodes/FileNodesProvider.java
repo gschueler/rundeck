@@ -337,4 +337,22 @@ public class FileNodesProvider implements NodesProvider, Configurable {
         );
         return prov.getNodes();
     }
+    /**
+     * Utility method to directly parse the nodes from a file
+     */
+    public static INodeSet parseFile(final File file, final Nodes.Format format, final Framework framework, final String project) throws
+        NodesProviderException,
+        ConfigurationException {
+        final FileNodesProvider prov = new FileNodesProvider(framework);
+        prov.configure(
+            FileNodesProvider.Configuration.build()
+                .file(file)
+                .includeServerNode(false)
+                .generateFileAutomatically(false)
+                .project(project)
+                .format(format)
+                .requireFileExists(true)
+        );
+        return prov.getNodes();
+    }
 }
