@@ -28,9 +28,11 @@ import com.dtolabs.rundeck.core.common.impl.URLFileUpdater;
 import com.dtolabs.rundeck.core.common.impl.URLFileUpdaterBuilder;
 import org.apache.log4j.Logger;
 
-import java.io.*;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Properties;
 
 /**
@@ -42,16 +44,18 @@ public class URLNodesProvider implements NodesProvider, Configurable {
     static final Logger logger = Logger.getLogger(URLNodesProvider.class.getName());
     public static final int DEFAULT_TIMEOUT = 30;
     final private Framework framework;
-    private Configuration configuration;
+    Configuration configuration;
     private File destinationTempFile;
     private File destinationCacheData;
     private String tempFileName;
     private Nodes.Format contentFormat;
+    URLFileUpdater.httpClientInteraction interaction;
 
     public URLNodesProvider(final Framework framework) {
         this.framework = framework;
     }
 
+    final static HashSet<String> allowedProtocols = new HashSet<String>(Arrays.asList("http", "https", "file"));
     public static class Configuration {
         public static final String URL = "url";
         public static final String PROJECT = "project";
@@ -99,7 +103,6 @@ public class URLNodesProvider implements NodesProvider, Configurable {
         }
 
         void validate() throws ConfigurationException {
-
             if (null == project) {
                 throw new ConfigurationException("project is required");
             }
@@ -107,20 +110,19 @@ public class URLNodesProvider implements NodesProvider, Configurable {
                 try {
                     nodesUrl = new URL(properties.getProperty(URL));
                 } catch (MalformedURLException e) {
-                    throw new ConfigurationException(e);
+                    throw new ConfigurationException("url is malformed: " + e.getMessage(), e);
                 }
-                //assert allowed URL scheme
-                if (!("file".equals(nodesUrl.getProtocol()) || "http".equals(nodesUrl.getProtocol()) || "https".equals(
-                    nodesUrl.getProtocol()))) {
-                    throw new ConfigurationException("URL protocol not allowed: " + nodesUrl.getProtocol());
-                }
-
+            } else if (null == nodesUrl) {
+                throw new ConfigurationException("url is required");
+            }
+            if (null != nodesUrl && !allowedProtocols.contains(nodesUrl.getProtocol().toLowerCase())) {
+                throw new ConfigurationException("url protocol not allowed: " + nodesUrl.getProtocol());
             }
             if (properties.containsKey(TIMEOUT)) {
                 try {
                     timeout = Integer.parseInt(properties.getProperty(TIMEOUT));
                 } catch (NumberFormatException e) {
-                    throw new ConfigurationException(e);
+                    throw new ConfigurationException("timeout is invalid: " + e.getMessage(), e);
                 }
             }
         }
@@ -202,6 +204,10 @@ public class URLNodesProvider implements NodesProvider, Configurable {
                     .setUseCaching(true);
             }
             updater = urlFileUpdaterBuilder.createURLFileUpdater();
+            if(null!=interaction) {
+                //allow mock
+                updater.setInteraction(interaction);
+            }
             UpdateUtils.update(updater, destinationTempFile);
 
             logger.debug("Updated nodes resources file: " + destinationTempFile);

@@ -64,6 +64,73 @@ public class URLFileUpdater implements FileUpdater {
     private int timeout;
     private String username;
     private String password;
+    private httpClientInteraction interaction=new normalInteraction();
+
+    public void setInteraction(final httpClientInteraction interaction) {
+        this.interaction = interaction;
+    }
+
+    public static interface httpClientInteraction {
+        public void setMethod(HttpMethod method);
+
+        public void setClient(HttpClient client);
+
+        public int executeMethod() throws IOException;
+
+        public String getStatusText();
+
+        public InputStream getResponseBodyAsStream() throws IOException;
+
+        public void releaseConnection();
+
+        public void setRequestHeader(String name, String value);
+
+        public Header getResponseHeader(String name);
+
+        void setFollowRedirects(boolean follow);
+    }
+
+    static class normalInteraction implements httpClientInteraction {
+        private HttpMethod method;
+        private HttpClient client;
+
+        public void setMethod(HttpMethod method) {
+            this.method = method;
+        }
+
+        public void setClient(HttpClient client) {
+            this.client = client;
+        }
+
+        public int executeMethod() throws IOException {
+            return client.executeMethod(method);
+        }
+
+        public String getStatusText() {
+            return method.getStatusText();
+        }
+
+        public InputStream getResponseBodyAsStream() throws IOException {
+            return method.getResponseBodyAsStream();
+        }
+
+        public void releaseConnection() {
+            method.releaseConnection();
+        }
+
+        public void setRequestHeader(String name, String value) {
+            method.setRequestHeader(name, value);
+        }
+
+        public Header getResponseHeader(String name) {
+            return method.getResponseHeader(name);
+        }
+
+        public void setFollowRedirects(boolean follow) {
+            method.setFollowRedirects(follow);
+        }
+
+    }
 
     /**
      * Create a URLUpdater
@@ -134,6 +201,9 @@ public class URLFileUpdater implements FileUpdater {
     }
 
     private void updateHTTPUrl(final File destinationFile) throws FileUpdaterException {
+        if (null == interaction) {
+            interaction = new normalInteraction();
+        }
         final Properties cacheProperties;
         if (useCaching) {
             cacheProperties = loadCacheData(cacheMetadata);
@@ -178,35 +248,36 @@ public class URLFileUpdater implements FileUpdater {
             client.getParams().setAuthenticationPreemptive(true);
             client.getState().setCredentials(authscope, cred);
         }
-        HttpMethod method = new GetMethod(urlToUse);
-        method.setFollowRedirects(true);
+        interaction.setClient(client);
+        interaction.setMethod(new GetMethod(urlToUse));
+        interaction.setFollowRedirects(true);
         if (null != acceptHeader) {
-            method.setRequestHeader("Accept", acceptHeader);
+            interaction.setRequestHeader("Accept", acceptHeader);
         } else {
-            method.setRequestHeader("Accept", "*/*");
+            interaction.setRequestHeader("Accept", "*/*");
         }
 
         if (useCaching) {
-            applyCacheHeaders(cacheProperties, method);
+            applyCacheHeaders(cacheProperties, interaction);
         }
 
         logger.debug("Making remote request: " + cleanUrl);
         try {
-            resultCode = client.executeMethod(method);
-            reasonCode = method.getStatusText();
+            resultCode = interaction.executeMethod();
+            reasonCode = interaction.getStatusText();
             if (useCaching && HttpStatus.SC_NOT_MODIFIED == resultCode) {
                 logger.debug("Content NOT MODIFIED: file up to date");
             } else if (HttpStatus.SC_OK == resultCode) {
-                determineContentType(method);
+                determineContentType(interaction);
 
                 //write to file
-                Streams.copyStream(method.getResponseBodyAsStream(), new FileOutputStream(destinationFile));
+                Streams.copyStream(interaction.getResponseBodyAsStream(), new FileOutputStream(destinationFile));
                 if (destinationFile.length() < 1) {
                     //file was empty!
                     destinationFile.delete();
                 }
                 if (useCaching) {
-                    cacheResponseInfo(method, cacheMetadata);
+                    cacheResponseInfo(interaction, cacheMetadata);
                 }
             } else {
                 throw new FileUpdaterException(
@@ -217,7 +288,7 @@ public class URLFileUpdater implements FileUpdater {
         } catch (IOException e) {
             throw new FileUpdaterException(e);
         } finally {
-            method.releaseConnection();
+            interaction.releaseConnection();
         }
     }
 
@@ -225,7 +296,7 @@ public class URLFileUpdater implements FileUpdater {
      * Add appropriate cache headers to the request method, but only if there is valid data in the cache (content type
      * as well as file content)
      */
-    private void applyCacheHeaders(final Properties cacheProperties, final HttpMethod method) {
+    private void applyCacheHeaders(final Properties cacheProperties, final httpClientInteraction method) {
         if (isCachedContentPresent() && null != contentType) {
             if (cacheProperties.containsKey(E_TAG)) {
                 method.setRequestHeader(IF_NONE_MATCH, cacheProperties.getProperty(E_TAG));
@@ -247,7 +318,7 @@ public class URLFileUpdater implements FileUpdater {
         }
     }
 
-    private void determineContentType(final HttpMethod method) {
+    private void determineContentType(final httpClientInteraction method) {
         if (null != method.getResponseHeader(CONTENT_TYPE)) {
             contentType = method.getResponseHeader(CONTENT_TYPE).getValue();
             cleanContentType();
@@ -281,7 +352,7 @@ public class URLFileUpdater implements FileUpdater {
     /**
      * Cache etag and last-modified header info for a response
      */
-    private void cacheResponseInfo(final HttpMethod method, final File cacheFile) {
+    private void cacheResponseInfo(final httpClientInteraction method, final File cacheFile) {
         //write cache data to file if present
         Properties newprops = new Properties();
 
