@@ -1137,8 +1137,6 @@ public class ExecTool implements CLITool,IDispatchedScript,CLILoggerParams, Exec
                 System.err.println("use argNodesFile: "+argNodesFile+", project:" +argProject);
                 return loadLocalFile(argNodesFile);
             } else {
-                System.err.println("use project nodes file: "+project.getNodesResourceFilePath() + ", project:"
-                                   + argProject);
                 return project.getNodeSet();
             }
         } catch (NodeFileParserException e) {
