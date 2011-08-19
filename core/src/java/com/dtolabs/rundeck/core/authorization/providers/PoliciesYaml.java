@@ -37,7 +37,6 @@ public class PoliciesYaml implements PolicyCollection {
         }
     }
 
-    @Override
     public Collection<String> groupNames() throws InvalidCollection {
         List<String> groups = new ArrayList<String>();
         for(YamlPolicy policy: all) {
@@ -48,12 +47,10 @@ public class PoliciesYaml implements PolicyCollection {
         return groups;
     }
 
-    @Override
     public long countPolicies() throws InvalidCollection {
         return all.size();
     }
 
-    @Override
     public Collection<AclContext> matchedContexts(Subject subject, Set<Attribute> environment)
             throws InvalidCollection {
         return PoliciesDocument.policyMatcher(subject, all);
@@ -78,17 +75,14 @@ public class PoliciesYaml implements PolicyCollection {
             parseByClause();
         }
 
-        @Override
         public Set<String> getUsernames() {
             return usernames;
         }
         
-        @Override
         public Set<Object> getGroups() {
             return groups;
         }
         
-        @Override
         public AclContext getContext() {
             return new AclContext() {
                 private String description = "Not Evaluated: " + super.toString();
@@ -98,7 +92,6 @@ public class PoliciesYaml implements PolicyCollection {
                 }
                 
                 @SuppressWarnings("rawtypes")
-                @Override
                 public ContextDecision includes(Map<String, String> resourceMap, String action) {
                     String resource = defineResource(resourceMap);
                     List<ContextEvaluation> evaluations = new ArrayList<ContextEvaluation>();

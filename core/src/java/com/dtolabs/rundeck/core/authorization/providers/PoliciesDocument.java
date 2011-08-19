@@ -108,7 +108,6 @@ public class PoliciesDocument implements PolicyCollection {
     /**
      * @see com.dtolabs.rundeck.core.authorization.providers.PolicyCollection#groupNames()
      */
-    @Override
     public Collection<String> groupNames() throws InvalidCollection {
         if (null != groupNames) {
             return groupNames;
@@ -133,7 +132,6 @@ public class PoliciesDocument implements PolicyCollection {
     /**
      * @see com.dtolabs.rundeck.core.authorization.providers.PolicyCollection#countPolicies()
      */
-    @Override
     public long countPolicies() throws InvalidCollection {
         if (count != Long.MIN_VALUE) {
             return count;
@@ -165,7 +163,6 @@ public class PoliciesDocument implements PolicyCollection {
     /**
      * @see com.dtolabs.rundeck.core.authorization.providers.PolicyCollection#matchedContexts(javax.security.auth.Subject, java.util.Set)
      */
-    @Override
     public Collection<AclContext> matchedContexts(Subject subject, Set<Attribute> environment) throws
         InvalidCollection {
         try {
@@ -267,7 +264,6 @@ public class PoliciesDocument implements PolicyCollection {
         /* (non-Javadoc)
          * @see com.dtolabs.rundeck.core.authorization.providers.AclContext#includes(java.util.Map, java.lang.String)
          */
-        @Override
         public ContextDecision includes(Map<String, String> resource, String action) {
             // keep track of each context and the the resulting grant or rejection
             List<ContextEvaluation> evaluations = new ArrayList<ContextEvaluation>();
