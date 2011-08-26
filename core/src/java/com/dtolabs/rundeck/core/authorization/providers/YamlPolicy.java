@@ -25,11 +25,11 @@
 package com.dtolabs.rundeck.core.authorization.providers;
 
 import com.dtolabs.rundeck.core.authorization.Explanation;
+import com.dtolabs.rundeck.core.utils.Converter;
 import com.dtolabs.rundeck.core.utils.PairImpl;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.PredicateUtils;
-import org.apache.commons.collections.Transformer;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -189,25 +189,28 @@ final class YamlPolicy implements Policy {
 
         }
     }
-    static class MatchedContext extends PairImpl<Boolean,ContextDecision> {
+
+    static class MatchedContext extends PairImpl<Boolean, ContextDecision> {
         MatchedContext(Boolean first, ContextDecision second) {
             super(first, second);
         }
+
         public Boolean isMatched() {
             return getFirst();
         }
-        public ContextDecision getDecision(){
+
+        public ContextDecision getDecision() {
             return getSecond();
         }
     }
+
     static interface ContextMatcher {
         public MatchedContext includes(Map<String, String> resource, String action);
     }
 
     /**
      * returns an allow/reject decision for a specific rule within a type section, can return null indicating there was
-     * no match.
-     * Format:
+     * no match. Format:
      * <pre>
      *     match:
      *       key: regex
@@ -239,6 +242,7 @@ final class YamlPolicy implements Policy {
         }
 
         private static ConcurrentHashMap<String, Pattern> patternCache = new ConcurrentHashMap<String, Pattern>();
+
         private Pattern patternForRegex(final String regex) {
             if (!patternCache.containsKey(regex)) {
                 patternCache.putIfAbsent(regex, Pattern.compile(regex));
@@ -250,7 +254,7 @@ final class YamlPolicy implements Policy {
             boolean matched = true;
             List<ContextEvaluation> evaluations = new ArrayList<ContextEvaluation>();
 
-            matched = matchesRuleSections(resource,evaluations);
+            matched = matchesRuleSections(resource, evaluations);
 
             if (!matched) {
                 return new MatchedContext(false, new ContextDecision(Explanation.Code.REJECTED, false, evaluations));
@@ -315,16 +319,17 @@ final class YamlPolicy implements Policy {
         }
 
         boolean matchesRuleSections(final Map<String, String> resource, final List<ContextEvaluation> evaluations) {
-            int matchesRequired=0;
-            int matchesMet=0;
+            int matchesRequired = 0;
+            int matchesMet = 0;
             //evaluate match:
             if (ruleSection.containsKey(MATCH_SECTION)) {
                 matchesRequired++;
                 boolean matches = ruleMatchesMatchSection(resource, this.ruleSection);
                 if (matches) {
                     matchesMet++;
-                }else {
-                    evaluations.add(new ContextEvaluation(Explanation.Code.REJECTED, MATCH_SECTION+" section did not match"));
+                } else {
+                    evaluations.add(new ContextEvaluation(Explanation.Code.REJECTED,
+                        MATCH_SECTION + " section did not match"));
                 }
             }
             //evaluate equals:
@@ -334,7 +339,8 @@ final class YamlPolicy implements Policy {
                 if (matches) {
                     matchesMet++;
                 } else {
-                    evaluations.add(new ContextEvaluation(Explanation.Code.REJECTED, EQUALS_SECTION+" section did not match"));
+                    evaluations.add(new ContextEvaluation(Explanation.Code.REJECTED,
+                        EQUALS_SECTION + " section did not match"));
                 }
             }
 
@@ -345,79 +351,96 @@ final class YamlPolicy implements Policy {
                 if (matches) {
                     matchesMet++;
                 } else {
-                    evaluations.add(new ContextEvaluation(Explanation.Code.REJECTED, CONTAINS_SECTION+" section did not match"));
+                    evaluations.add(new ContextEvaluation(Explanation.Code.REJECTED,
+                        CONTAINS_SECTION + " section did not match"));
                 }
             }
             return matchesMet == matchesRequired && matchesRequired > 0;
         }
 
-        boolean ruleMatchesContainsSection(Map<String, String> resource, final Map ruleSection) {
-            Map section = (Map) ruleSection.get(CONTAINS_SECTION);
-            return predicateMatch(section, resource, true, new Transformer() {
-                public Object transform(Object o) {
+        boolean ruleMatchesContainsSection(final Map<String, String> resource, final Map ruleSection) {
+            final Map section = (Map) ruleSection.get(CONTAINS_SECTION);
+            return predicateMatchRules(section, resource, true, new Converter<String, Predicate>() {
+                public Predicate convert(final String o) {
                     return new SetContainsPredicate(o);
                 }
             });
         }
 
-        boolean ruleMatchesEqualsSection(Map<String, String> resource, final Map ruleSection) {
-            Map section = (Map) ruleSection.get(EQUALS_SECTION);
-            return predicateMatch(section, resource, false, new Transformer() {
-                public Object transform(Object o) {
+        boolean ruleMatchesEqualsSection(final Map<String, String> resource, final Map ruleSection) {
+            final Map section = (Map) ruleSection.get(EQUALS_SECTION);
+            return predicateMatchRules(section, resource, false, new Converter<String, Predicate>() {
+                public Predicate convert(final String o) {
                     return PredicateUtils.equalPredicate(o);
                 }
             });
         }
 
-        boolean ruleMatchesMatchSection(Map<String, String> resource, final Map ruleSection) {
-            Map section = (Map) ruleSection.get(MATCH_SECTION);
-            return predicateMatch(section, resource, true, new Transformer() {
-                public Object transform(Object o) {
-                    return new RegexPredicate(patternForRegex((String) o));
+        boolean ruleMatchesMatchSection(final Map<String, String> resource, final Map ruleSection) {
+            final Map section = (Map) ruleSection.get(MATCH_SECTION);
+            return predicateMatchRules(section, resource, true, new Converter<String, Predicate>() {
+                public Predicate convert(final String o) {
+                    return new RegexPredicate(patternForRegex(o));
                 }
             });
         }
 
-        private boolean predicateMatch(Map match, Map<String, String> resource, final boolean allowListMatch,
-                                       Transformer predicateTransformer) {
+
+        /**
+         * Return true if all entries in the "match" map pass the predicate tests for the resource
+         *
+         * @param match                the set of matches to check
+         * @param resource             the resource
+         * @param allowListMatch       if true, allow the match value to be a list of values which much all pass the
+         *                             test
+         * @param predicateTransformer transformer to convert a String into a Predicate check
+         */
+        @SuppressWarnings ("rawtypes")
+        boolean predicateMatchRules(final Map match, final Map<String, String> resource, final boolean allowListMatch,
+                                    final Converter<String, Predicate> predicateTransformer) {
             for (final Object o : match.entrySet()) {
-                Map.Entry entry = (Map.Entry) o;
+                final Map.Entry entry = (Map.Entry) o;
                 final String key = (String) entry.getKey();
                 final Object test = entry.getValue();
 
-                boolean matched = applyTest(resource, allowListMatch, predicateTransformer, key, test);
-                if(!matched){
+                final boolean matched = applyTest(resource, allowListMatch, predicateTransformer, key, test);
+                if (!matched) {
                     return false;
                 }
             }
             return true;
         }
 
-        private boolean applyTest(Map<String, String> resource, boolean allowListMatch, Transformer predicateTransformer,
-                               String key, Object test) {
-            boolean matched = false;
+        /**
+         * Return true if all predicate tests on a certain resource entry evaluate to true
+         *
+         * @param resource             the resource
+         * @param allowListMatch       if true, allow the test to be a list of strings
+         * @param predicateTransformer a Converter<S,Predicate> to convert String to Predicate test
+         * @param key                  the resource attribute key to check
+         * @param the                  test to apply, can be a String, or List of Strings if allowListMatch is true
+         */
+        boolean applyTest(final Map<String, String> resource, final boolean allowListMatch,
+                          final Converter<String, Predicate> predicateTransformer, final String key,
+                          final Object test) {
 
-            ArrayList tests = new ArrayList();
+            final ArrayList<Predicate> tests = new ArrayList<Predicate>();
             if (allowListMatch && test instanceof List) {
                 //must match all values
                 for (final Object item : (List) test) {
-                    tests.add(predicateTransformer.transform(item));
+                    final String s = (String) item;
+                    tests.add(predicateTransformer.convert(s));
                 }
             } else if (test instanceof String) {
                 //match single test
-                tests.add(predicateTransformer.transform(test));
+                tests.add(predicateTransformer.convert((String) test));
             } else {
                 //xxx:warn
                 //unexpected format, do not match
-                matched = false;
+                return false;
             }
 
-            if (!PredicateUtils.allPredicate(tests).evaluate(resource.get(key))) {
-                matched = false;
-            }else{
-                matched=true;
-            }
-            return matched;
+            return PredicateUtils.allPredicate(tests).evaluate(resource.get(key));
         }
 
     }
