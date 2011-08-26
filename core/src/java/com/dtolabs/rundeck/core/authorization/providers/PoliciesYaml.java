@@ -27,7 +27,10 @@ public class PoliciesYaml implements PolicyCollection {
         final FileInputStream stream = new FileInputStream(file);
         try {
             for (Object yamlDoc : yaml.loadAll(stream)) {
-                all.add(new YamlPolicy(yamlDoc));
+                final Object yamlDoc1 = yamlDoc;
+                if(yamlDoc1 instanceof Map) {
+                    all.add(new YamlPolicy((Map) yamlDoc1));
+                }
             }
         } finally {
             stream.close();
