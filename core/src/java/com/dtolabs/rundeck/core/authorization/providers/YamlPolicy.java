@@ -53,7 +53,7 @@ final class YamlPolicy implements Policy {
     private Set<String> usernames = new HashSet<String>();
     private Set<Object> groups = new HashSet<Object>();
     AclContext aclContext;
-    private final ConcurrentHashMap<String, AclContext> typeContexts = new ConcurrentHashMap<String, AclContext>();
+
 
     public YamlPolicy(final Map yamlDoc) {
         policyInput = yamlDoc;
@@ -75,19 +75,26 @@ final class YamlPolicy implements Policy {
     }
 
     private void createAclContext() {
-        aclContext = new YamlAclContext(policyInput);
+        aclContext = new YamlAclContext(policyInput, new TypeContextFactory() {
+            public AclContext createAclContext(List typeSection) {
+                return new TypeContext(createTypeRules(typeSection));
+            }
+        }, new LegacyContextFactory() {
+            public AclContext createLegacyContext(Map rules) {
+                return new LegacyRulesContext(rules);
+            }
+        }
+        );
     }
 
-
-    private AclContext createLegacyContext(final Map rules) {
-        return new LegacyRulesContext(rules);
-
+    static interface LegacyContextFactory {
+        public AclContext createLegacyContext(final Map rules);
     }
 
-    private AclContext createTypeContext(final List typeSection) {
-
-        return new TypeContext(createTypeRules(typeSection));
+    static interface TypeContextFactory {
+        public AclContext createAclContext(final List typeSection);
     }
+
 
     List<ContextMatcher> createTypeRules(final List typeSection) {
         final ArrayList<ContextMatcher> rules = new ArrayList<ContextMatcher>();
@@ -595,16 +602,31 @@ final class YamlPolicy implements Policy {
      * Returns decision for a resource and action, based on the "type" of the resource, and the rules defined in the
      * for: type: section of the policy def.
      */
-    class YamlAclContext implements AclContext {
+    static class YamlAclContext implements AclContext {
         private String description = "Not Evaluated: " + super.toString();
         Map policyDef;
+        private final ConcurrentHashMap<String, AclContext> typeContexts = new ConcurrentHashMap<String, AclContext>();
+        TypeContextFactory typeContextFactory;
+        LegacyContextFactory legacyContextFactory;
 
-        YamlAclContext(final Map policyDef) {
+        YamlAclContext(final Map policyDef, final TypeContextFactory typeContextFactory,
+                       final LegacyContextFactory legacyContextFactory) {
             this.policyDef = policyDef;
+            this.typeContextFactory = typeContextFactory;
+            this.legacyContextFactory = legacyContextFactory;
         }
 
         public String toString() {
             return "Context: " + description;
+        }
+
+        private AclContext createTypeContext(final List typeSection) {
+            return typeContextFactory.createAclContext(typeSection);
+        }
+
+        private AclContext createLegacyContext(final Map rules) {
+            return legacyContextFactory.createLegacyContext(rules);
+
         }
 
         @SuppressWarnings ("rawtypes")
