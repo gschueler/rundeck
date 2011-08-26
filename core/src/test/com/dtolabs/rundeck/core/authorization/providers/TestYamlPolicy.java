@@ -56,6 +56,212 @@ public class TestYamlPolicy extends TestCase {
 
     }
 
+    public void testYamlAclContext(){
+
+    }
+    /**
+     * test the full set of matcher rules in a type context produces correct decision
+     * <p/>
+     * <pre>
+     * for:
+     *   type:
+     *     - ruleset..
+     *     - ruleset..
+     * </pre>
+     * each ruleset looks like:
+     * <p/>
+     * <pre>
+     * match:
+     *   key: vlaue
+     *   ..
+     * equals:
+     *   key: value
+     * contains:
+     *   key:value
+     * allow: [action1,action2]
+     * deny: [action3,action4]
+     * </pre>
+     */
+    public void testTypeContext() {
+
+        {
+            //test a single allow results in granted decision
+            final List<YamlPolicy.ContextMatcher> contextMatchers = new ArrayList<YamlPolicy.ContextMatcher>();
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.GRANTED, true));
+            final YamlPolicy.TypeContext typeContext = new YamlPolicy.TypeContext(contextMatchers);
+
+            final ContextDecision includes = typeContext.includes(null, null);
+            assertTrue(includes.granted());
+            assertEquals(Explanation.Code.GRANTED,includes.getCode());
+
+        }
+        {
+            //test a single deny results in deny decision
+            final List<YamlPolicy.ContextMatcher> contextMatchers = new ArrayList<YamlPolicy.ContextMatcher>();
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED_DENIED, false));
+            final YamlPolicy.TypeContext typeContext = new YamlPolicy.TypeContext(contextMatchers);
+
+            final ContextDecision includes = typeContext.includes(null, null);
+            assertFalse(includes.granted());
+            assertEquals(Explanation.Code.REJECTED_DENIED,includes.getCode());
+
+        }
+        {
+            //test a single reject results in reject decision
+            final List<YamlPolicy.ContextMatcher> contextMatchers = new ArrayList<YamlPolicy.ContextMatcher>();
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            final YamlPolicy.TypeContext typeContext = new YamlPolicy.TypeContext(contextMatchers);
+
+            final ContextDecision includes = typeContext.includes(null, null);
+            assertFalse(includes.granted());
+            assertEquals(Explanation.Code.REJECTED, includes.getCode());
+
+        }
+
+        //test multiple results
+
+
+        {
+            //test a [REJECT*,GRANT] results in GRANT
+            final List<YamlPolicy.ContextMatcher> contextMatchers = new ArrayList<YamlPolicy.ContextMatcher>();
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.GRANTED, true));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            final YamlPolicy.TypeContext typeContext = new YamlPolicy.TypeContext(contextMatchers);
+
+            final ContextDecision includes = typeContext.includes(null, null);
+            assertTrue(includes.granted());
+            assertEquals(Explanation.Code.GRANTED, includes.getCode());
+
+        }
+        {
+            //test a [REJECT*,GRANT*,DENY] results in DENY
+            final List<YamlPolicy.ContextMatcher> contextMatchers = new ArrayList<YamlPolicy.ContextMatcher>();
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.GRANTED, true));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED_DENIED, false));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.GRANTED, true));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            final YamlPolicy.TypeContext typeContext = new YamlPolicy.TypeContext(contextMatchers);
+
+            final ContextDecision includes = typeContext.includes(null, null);
+            assertFalse(includes.granted());
+            assertEquals(Explanation.Code.REJECTED_DENIED, includes.getCode());
+
+        }
+
+        {
+            //test a [GRANT*,DENY] results in DENY
+            final List<YamlPolicy.ContextMatcher> contextMatchers = new ArrayList<YamlPolicy.ContextMatcher>();
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED_DENIED, false));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.GRANTED, true));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.GRANTED, true));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.GRANTED, true));
+            final YamlPolicy.TypeContext typeContext = new YamlPolicy.TypeContext(contextMatchers);
+
+            final ContextDecision includes = typeContext.includes(null, null);
+            assertFalse(includes.granted());
+            assertEquals(Explanation.Code.REJECTED_DENIED, includes.getCode());
+
+        }
+
+        {
+            //test a [REJECT*,DENY] results in DENY
+            final List<YamlPolicy.ContextMatcher> contextMatchers = new ArrayList<YamlPolicy.ContextMatcher>();
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED_DENIED, false));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            final YamlPolicy.TypeContext typeContext = new YamlPolicy.TypeContext(contextMatchers);
+
+            final ContextDecision includes = typeContext.includes(null, null);
+            assertFalse(includes.granted());
+            assertEquals(Explanation.Code.REJECTED_DENIED, includes.getCode());
+
+        }
+
+        //test subevaluations will expose a DENY result
+        {
+            //test a [GRANT,REJECT] with DENY evaluation results in DENY
+            final List<YamlPolicy.ContextMatcher> contextMatchers = new ArrayList<YamlPolicy.ContextMatcher>();
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.GRANTED, true));
+            final List<ContextEvaluation> evals = new ArrayList<ContextEvaluation>();
+            evals.add(new ContextEvaluation(Explanation.Code.REJECTED, "reject"));
+            evals.add(new ContextEvaluation(Explanation.Code.REJECTED, "reject"));
+            evals.add(new ContextEvaluation(Explanation.Code.GRANTED, "granted"));
+            evals.add(new ContextEvaluation(Explanation.Code.REJECTED_DENIED, "denied"));
+            evals.add(new ContextEvaluation(Explanation.Code.REJECTED, "reject"));
+            evals.add(new ContextEvaluation(Explanation.Code.REJECTED, "reject"));
+            evals.add(new ContextEvaluation(Explanation.Code.GRANTED, "granted"));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false, evals));
+            final YamlPolicy.TypeContext typeContext = new YamlPolicy.TypeContext(contextMatchers);
+
+            final ContextDecision includes = typeContext.includes(null, null);
+            assertFalse(includes.granted());
+            assertEquals(Explanation.Code.REJECTED_DENIED, includes.getCode());
+
+        }
+
+
+        //test matcher that do not match are ignored
+
+
+        {
+            //only matches apply
+            final List<YamlPolicy.ContextMatcher> contextMatchers = new ArrayList<YamlPolicy.ContextMatcher>();
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            contextMatchers.add(createTestMatcher(false, Explanation.Code.REJECTED_DENIED, false));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            final YamlPolicy.TypeContext typeContext = new YamlPolicy.TypeContext(contextMatchers);
+
+            final ContextDecision includes = typeContext.includes(null, null);
+            assertFalse(includes.granted());
+            assertEquals(Explanation.Code.REJECTED, includes.getCode());
+
+        }
+
+        {
+            //only matches apply
+            final List<YamlPolicy.ContextMatcher> contextMatchers = new ArrayList<YamlPolicy.ContextMatcher>();
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.GRANTED, true));
+            contextMatchers.add(createTestMatcher(false, Explanation.Code.REJECTED_DENIED, false));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            contextMatchers.add(createTestMatcher(true, Explanation.Code.REJECTED, false));
+            final YamlPolicy.TypeContext typeContext = new YamlPolicy.TypeContext(contextMatchers);
+
+            final ContextDecision includes = typeContext.includes(null, null);
+            assertTrue(includes.granted());
+            assertEquals(Explanation.Code.GRANTED, includes.getCode());
+
+        }
+
+    }
+
+    private YamlPolicy.ContextMatcher createTestMatcher(final boolean matched, final Explanation.Code code,
+                                                        final boolean granted) {
+        return createTestMatcher(matched, code, granted, new ArrayList<ContextEvaluation>());
+    }
+
+    private YamlPolicy.ContextMatcher createTestMatcher(final boolean matched, final Explanation.Code code,
+                                                        final boolean granted,
+                                                        final List<ContextEvaluation> contextEvaluations) {
+        return new YamlPolicy.ContextMatcher() {
+            public YamlPolicy.MatchedContext includes(Map<String, String> resource, String action) {
+                return new YamlPolicy.MatchedContext(matched, new ContextDecision(code, granted, contextEvaluations));
+            }
+        };
+    }
+
     public void testTypeRuleContextMatcherEvaluateActionsAllow() {
         {
             //no allow or deny should result in REJECTED
