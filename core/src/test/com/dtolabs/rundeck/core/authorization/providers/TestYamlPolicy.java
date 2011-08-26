@@ -24,7 +24,10 @@
 package com.dtolabs.rundeck.core.authorization.providers;
 
 import com.dtolabs.rundeck.core.authorization.Explanation;
+import com.dtolabs.rundeck.core.utils.Converter;
 import junit.framework.TestCase;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.PredicateUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -1008,6 +1011,116 @@ public class TestYamlPolicy extends TestCase {
             assertEquals(Explanation.Code.REJECTED_DENIED, decision6.getCode());
             assertEquals(1, decision6.getEvaluations().size());
         }
+    }
+
+    public void testApplyTest() {
+        {
+            //match any resource with name=~ blah, and allow all actions
+            final Object load = yaml.load("match: \n"
+                                          + "  name: '.*blah.*'\n"
+                                          + "allow: '*'");
+            assertTrue(load instanceof Map);
+            final Map ruleSection = (Map) load;
+            final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
+                ruleSection);
+            final HashMap<String, String> resmap = new HashMap<String, String>();
+            resmap.put("name", "blah");
+
+            Converter<String, Predicate> test1 = new Converter<String, Predicate>() {
+                public Predicate convert(String s) {
+                    return PredicateUtils.equalPredicate(s);
+                }
+            };
+
+            //test single value predicate value is returned
+
+            assertTrue(typeRuleContext.applyTest(resmap, false, test1, "name", "blah"));
+            assertFalse(typeRuleContext.applyTest(resmap, false, test1, "name", "blee"));
+            assertFalse(typeRuleContext.applyTest(resmap, false, test1, "name", new ArrayList()));
+            assertFalse(typeRuleContext.applyTest(resmap, false, test1, "name", Arrays.asList("blah")));
+            assertFalse(typeRuleContext.applyTest(resmap, false, test1, "name", Arrays.asList("blah", "blah")));
+            assertFalse(typeRuleContext.applyTest(resmap, false, test1, "name", new Object()));
+
+            //test multivalue predicate value is AND result
+            assertTrue(typeRuleContext.applyTest(resmap, true, test1, "name", Arrays.asList("blah")));
+            assertTrue(typeRuleContext.applyTest(resmap, true, test1, "name", Arrays.asList("blah", "blah")));
+            assertFalse(typeRuleContext.applyTest(resmap, true, test1, "name", Arrays.asList("blah", "blee")));
+            assertFalse(typeRuleContext.applyTest(resmap, true, test1, "name", Arrays.asList("blee", "blah")));
+            assertFalse(typeRuleContext.applyTest(resmap, true, test1, "name", Arrays.asList("blee", "blee")));
+
+
+        }
+    }
+
+    public void testPredicateMatchRules() {
+        //match any resource with name=~ blah, and allow all actions
+        final Object load = yaml.load("match: \n"
+                                      + "  name: '.*blah.*'\n"
+                                      + "allow: '*'");
+        assertTrue(load instanceof Map);
+        final Map ruleSection = (Map) load;
+        final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
+            ruleSection);
+        final HashMap<String, String> resmap = new HashMap<String, String>();
+        resmap.put("name", "blah");
+        resmap.put("king", "true");
+        resmap.put("wave", "bland");
+
+        Converter<String, Predicate> test1 = new Converter<String, Predicate>() {
+            public Predicate convert(String s) {
+                return PredicateUtils.equalPredicate(s);
+            }
+        };
+        HashMap rules = new HashMap();
+
+        //test empty rules
+        assertTrue(typeRuleContext.predicateMatchRules(rules, resmap, false, test1));
+        assertTrue(typeRuleContext.predicateMatchRules(rules, resmap, true, test1));
+
+        //set rules, match false
+        rules.put("name", "bloo");
+        assertFalse(typeRuleContext.predicateMatchRules(rules, resmap, false, test1));
+        assertFalse(typeRuleContext.predicateMatchRules(rules, resmap, true, test1));
+
+        //set rules,  match true
+        rules.put("name", "blah");
+        assertTrue(typeRuleContext.predicateMatchRules(rules, resmap, false, test1));
+        assertTrue(typeRuleContext.predicateMatchRules(rules, resmap, true, test1));
+
+        //set rules,  match all, false
+        rules.put("name", "blah");
+        rules.put("king", "false");
+        assertFalse(typeRuleContext.predicateMatchRules(rules, resmap, false, test1));
+        assertFalse(typeRuleContext.predicateMatchRules(rules, resmap, true, test1));
+
+        //set rules,  match all, true
+        rules.put("name", "blah");
+        rules.put("king", "true");
+        assertTrue(typeRuleContext.predicateMatchRules(rules, resmap, false, test1));
+        assertTrue(typeRuleContext.predicateMatchRules(rules, resmap, true, test1));
+
+        //set rules,  match all, false
+        rules.put("name", "blah");
+        rules.put("king", "true");
+        rules.put("wave", "bloo");
+        assertFalse(typeRuleContext.predicateMatchRules(rules, resmap, false, test1));
+        assertFalse(typeRuleContext.predicateMatchRules(rules, resmap, true, test1));
+
+        //set rules,  match all, true
+        rules.put("name", "blah");
+        rules.put("king", "true");
+        rules.put("wave", "bland");
+        assertTrue(typeRuleContext.predicateMatchRules(rules, resmap, false, test1));
+        assertTrue(typeRuleContext.predicateMatchRules(rules, resmap, true, test1));
+
+        //set rules,  additional rules match false
+        rules.put("name", "blah");
+        rules.put("king", "true");
+        rules.put("wave", "bland");
+        rules.put("another", "blee");
+        assertFalse(typeRuleContext.predicateMatchRules(rules, resmap, false, test1));
+        assertFalse(typeRuleContext.predicateMatchRules(rules, resmap, true, test1));
+
     }
 
     public void testTypeRuleContextMatcherMatchRule() {
