@@ -427,7 +427,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -448,7 +448,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -476,7 +476,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -504,7 +504,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -546,7 +546,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -593,7 +593,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -621,7 +621,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -649,7 +649,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -691,7 +691,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -738,7 +738,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -767,7 +767,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -796,7 +796,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -832,7 +832,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -875,7 +875,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -918,7 +918,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -961,7 +961,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -1004,7 +1004,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -1056,7 +1056,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -1115,7 +1115,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -1174,7 +1174,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -1233,7 +1233,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -1283,7 +1283,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -1333,7 +1333,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
@@ -1384,7 +1384,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
             final HashMap<String, String> resmap = new HashMap<String, String>();
             resmap.put("name", "blah");
 
@@ -1422,7 +1422,7 @@ public class TestYamlPolicy extends TestCase {
         assertTrue(load instanceof Map);
         final Map ruleSection = (Map) load;
         final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-            ruleSection);
+            ruleSection, 1);
         final HashMap<String, String> resmap = new HashMap<String, String>();
         resmap.put("name", "blah");
         resmap.put("king", "true");
@@ -1494,7 +1494,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
 
@@ -1517,7 +1517,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
 
@@ -1545,7 +1545,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
 
@@ -1585,7 +1585,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
 
@@ -1608,7 +1608,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
 
@@ -1644,7 +1644,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
 
@@ -1668,7 +1668,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
 
@@ -1703,7 +1703,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
 
@@ -1741,6 +1741,31 @@ public class TestYamlPolicy extends TestCase {
 
     public void testTypeRuleContextMatcher() {
         {
+            //match any resource without any match constraints
+            final Object load = yaml.load("allow: '*'");
+            assertTrue(load instanceof Map);
+            final Map ruleSection = (Map) load;
+            final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
+                ruleSection, 1);
+
+            final HashMap<String, String> resmap = new HashMap<String, String>();
+
+            //true result for any input
+            ArrayList<ContextEvaluation> list = new ArrayList<ContextEvaluation>();
+            assertTrue(typeRuleContext.matchesRuleSections(resmap, list));
+            final YamlPolicy.MatchedContext any = typeRuleContext.includes(resmap, "any");
+            assertNotNull(any);
+            assertTrue(any.getDecision().getEvaluations().toString(), any.isMatched());
+
+            resmap.put("name", "something");
+            assertTrue(typeRuleContext.includes(resmap, "any").isMatched());
+            resmap.put("name", "blah");
+            assertTrue(typeRuleContext.includes(resmap, "any").isMatched());
+            resmap.put("name", "ablahz");
+            assertTrue(typeRuleContext.includes(resmap, "any").isMatched());
+
+        }
+        {
             //match any resource with name=~ blah, and allow all actions
             final Object load = yaml.load("match: \n"
                                           + "  name: '.*blah.*'\n"
@@ -1748,7 +1773,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
 
@@ -1777,7 +1802,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
 
@@ -1814,7 +1839,7 @@ public class TestYamlPolicy extends TestCase {
             assertTrue(load instanceof Map);
             final Map ruleSection = (Map) load;
             final YamlPolicy.TypeRuleContextMatcher typeRuleContext = new YamlPolicy.TypeRuleContextMatcher(
-                ruleSection);
+                ruleSection, 1);
 
             final HashMap<String, String> resmap = new HashMap<String, String>();
 

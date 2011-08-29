@@ -98,9 +98,11 @@ final class YamlPolicy implements Policy {
 
     List<ContextMatcher> createTypeRules(final List typeSection) {
         final ArrayList<ContextMatcher> rules = new ArrayList<ContextMatcher>();
+        int i = 1;
         for (final Object o : typeSection) {
             final Map section = (Map) o;
-            rules.add(createTypeRuleContext(section));
+            rules.add(createTypeRuleContext(section, i));
+            i++;
         }
         return rules;
     }
@@ -108,8 +110,8 @@ final class YamlPolicy implements Policy {
     /**
      * Create acl context  for specific rule in a type context
      */
-    ContextMatcher createTypeRuleContext(final Map section) {
-        return new TypeRuleContextMatcher(section);
+    ContextMatcher createTypeRuleContext(final Map section, final int i) {
+        return new TypeRuleContextMatcher(section, i);
     }
 
     private static String createLegacyJobResourcePath(final Map<String, String> resource) {
@@ -258,10 +260,17 @@ final class YamlPolicy implements Policy {
         public static final String ALLOW_ACTIONS = "allow";
         public static final String DENY_ACTIONS = "deny";
         Map ruleSection;
+        int index;
 
 
-        TypeRuleContextMatcher(final Map ruleSection) {
+        TypeRuleContextMatcher(final Map ruleSection, final int index) {
             this.ruleSection = ruleSection;
+            this.index = index;
+        }
+
+        @Override
+        public String toString() {
+            return "[rule: " + index + ": " + ruleSection + "]";
         }
 
         private static ConcurrentHashMap<String, Pattern> patternCache = new ConcurrentHashMap<String, Pattern>();
@@ -302,7 +311,7 @@ final class YamlPolicy implements Policy {
                     //xxx:warn
                 } else if (actions.contains("*") || actions.contains(action)) {
                     evaluations.add(new ContextEvaluation(Explanation.Code.REJECTED_DENIED,
-                        super.toString() + ": rule: " + ruleSection + " action: " + actions));
+                        this + " for actions: " + actions));
                     denied = true;
                 }
             }
@@ -326,7 +335,7 @@ final class YamlPolicy implements Policy {
                     //xxx:warn
                 } else if (actions.contains("*") || actions.contains(action)) {
                     evaluations.add(new ContextEvaluation(Explanation.Code.GRANTED_ACTIONS_AND_COMMANDS_MATCHED,
-                        super.toString() + ": rule: " + ruleSection + " action: " + actions));
+                        this + " for actions: " + actions));
                     allowed = true;
                 }
             }
@@ -338,6 +347,10 @@ final class YamlPolicy implements Policy {
             }
         }
 
+        /**
+         * Return true if all of the defined rule sections match for the specified resource. If no rule sections exist,
+         * then the result is true.
+         */
         boolean matchesRuleSections(final Map<String, String> resource, final List<ContextEvaluation> evaluations) {
             int matchesRequired = 0;
             int matchesMet = 0;
@@ -372,7 +385,7 @@ final class YamlPolicy implements Policy {
                         CONTAINS_SECTION + " section did not match"));
                 }
             }
-            return matchesMet == matchesRequired && matchesRequired > 0;
+            return matchesMet == matchesRequired;
         }
 
         boolean ruleMatchesContainsSection(final Map<String, String> resource, final Map ruleSection) {
