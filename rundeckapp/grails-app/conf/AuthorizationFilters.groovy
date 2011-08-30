@@ -192,11 +192,6 @@ public class AuthorizationFilters {
                     
                     request.subject = subject
 
-                    //check user role membership for verification
-                    def foundroles=roleService.listMappedRoleMembership(request)
-                    if(!foundroles){
-                        log.warn("User ${session.user} has no role membership in mapped roles");
-                    }
                 }else if (request.api_version) {
                     //allow authentication token to be used 
                     def authtoken = params.authtoken? params.authtoken : request.getHeader('X-RunDeck-Auth-Token')

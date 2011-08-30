@@ -29,7 +29,7 @@
     <g:set var="jobauthorizations" value="${[:]}"/>
     <%
         [UserAuth.WF_DELETE,UserAuth.WF_RUN,UserAuth.WF_CREATE,UserAuth.WF_READ,UserAuth.WF_UPDATE].each{action->
-            jobauthorizations[action]=auth.allowedTest(job:scheduledExecution,action:action)?[idKey]:[]
+            jobauthorizations[action]=auth.jobAllowedTest(job:scheduledExecution,action:action)?[idKey]:[]
         }
     %>
 </g:if>

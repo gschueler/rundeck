@@ -612,7 +612,7 @@
     <g:set var="filterset" value="${User.findByLogin(session.user)?.nodefilters}"/>
 </g:if>
 <div id="nodesContent">
-    <g:set var="run_authorized" value="${auth.allowedTest(job:[jobName:'adhoc_run', groupPath:'ui'], action:UserAuth.WF_RUN)}"/>
+    <g:set var="run_authorized" value="${auth.adhocAllowedTest( action:'adhoc_run')}"/>
     <g:set var="run_enabled" value="${run_authorized && total>0}"/>
 
     <g:if test="${session.project }">

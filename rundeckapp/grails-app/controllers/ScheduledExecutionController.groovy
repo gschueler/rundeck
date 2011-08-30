@@ -1649,7 +1649,7 @@ class ScheduledExecutionController  {
      */
     def _transientExecute={ScheduledExecution scheduledExecution, Map params, Framework framework, List rolelist->
         def object
-        def isauth = scheduledExecutionService.userAuthorizedForJob(params.request,scheduledExecution,framework)
+        def isauth = scheduledExecutionService.userAuthorizedForAdhoc(params.request,scheduledExecution,framework)
         if (!isauth){
             def msg=g.message(code:'unauthorized.job.run.user',args:[params.user])
             return [error:'unauthorized',message:msg]

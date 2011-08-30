@@ -99,11 +99,11 @@
 
                 <div class="jobscontent head">
     <g:if test="${!params.compact}">
-        <auth:allowed job="[jobName:'create',groupPath:'ui']" name="${UserAuth.WF_CREATE}">
+        <auth:resourceAllowed kind="job" action="create">
         <div class=" floatr" >
             <g:link controller="scheduledExecution" action="create" class="button ">New <g:message code="domain.ScheduledExecution.title"/>&hellip;</g:link>
         </div>
-        </auth:allowed>
+        </auth:resourceAllowed>
     </g:if>
 
                 <g:if test="${wasfiltered}">

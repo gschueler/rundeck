@@ -8,6 +8,7 @@ import com.dtolabs.rundeck.core.plugins.configuration.Validator
 import com.dtolabs.rundeck.core.execution.service.NodeExecutorService
 import com.dtolabs.rundeck.core.execution.service.FileCopierService
 import com.dtolabs.rundeck.core.execution.impl.jsch.JschNodeExecutor
+import com.dtolabs.rundeck.core.authorization.Attribute
 
 class MenuController {
     FrameworkService frameworkService
@@ -243,12 +244,13 @@ class MenuController {
                 jobnames[sched.generateFullName()]=[]
             }
             jobnames[sched.generateFullName()]<<sched.id.toString()
-            res.add(["job": sched.jobName, "group": sched.groupPath?:''])
+            res.add(["job": sched.jobName, "group": sched.groupPath?:'',type:'job'])
         }
         // Filter the groups by what the user is authorized to see.
 
         def authorization = frameworkService.getFrameworkFromUserSession(request.session, request).getAuthorizationMgr()
-        def decisions = authorization.evaluate(res, request.subject, new HashSet([UserAuth.WF_CREATE,UserAuth.WF_READ,UserAuth.WF_DELETE,UserAuth.WF_RUN,UserAuth.WF_UPDATE,UserAuth.WF_KILL]), Collections.emptySet())
+        def env = Collections.singleton(new Attribute(URI.create("http://dtolabs.com/rundeck/env/project"), session.project))
+        def decisions = authorization.evaluate(res, request.subject, new HashSet([UserAuth.WF_CREATE,UserAuth.WF_READ,UserAuth.WF_DELETE,UserAuth.WF_RUN,UserAuth.WF_UPDATE,UserAuth.WF_KILL]), env)
 //        def decisions = authorization.evaluate(res, request.subject, new HashSet([UserAuth.WF_READ]), Collections.emptySet())
         log.debug("listWorkflows(evaluate): "+(System.currentTimeMillis()-preeval));
 

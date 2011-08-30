@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 
 import com.dtolabs.rundeck.core.Constants
+import javax.security.auth.Subject
 
 /**
  * Interfaces with the core Framework object
@@ -96,11 +97,11 @@ class FrameworkService implements ApplicationContextAware {
             String rundeckbase=getRundeckBase()
 
             //determine list of possible acl roles
-            List l = BaseAclsAuthorization.listRoles(new File(Constants.getFrameworkConfigDir(rundeckbase)))
+//            List l = BaseAclsAuthorization.listRoles(new File(Constants.getFrameworkConfigDir(rundeckbase)))
             
-            List rolelist = getUserRoleList(request,l)
-            session.roles=rolelist
-            session.Framework = getFrameworkForUserAndRoles(session.user, rolelist, rundeckbase)
+//            List rolelist = getUserRoleList(request,l)
+//            session.roles=rolelist
+            session.Framework = getFrameworkForUserAndSubject(session.user, request.subject, rundeckbase)
         }
         return session.Framework;
     }
@@ -115,6 +116,17 @@ class FrameworkService implements ApplicationContextAware {
         if(null!=user && null != rolelist){
             def authen = new SingleUserAuthentication(user,"")
             def author = new SingleUserAclsAuthorization(fw,new File(Constants.getFrameworkConfigDir(rundeckbase)), user, rolelist.toArray(new String[0]))
+            fw.setAuthenticationMgr(authen)
+            fw.setAuthorizationMgr(author)
+        }
+        fw.setAllowUserInput(false)
+        return fw
+    }
+    public static Framework getFrameworkForUserAndSubject(String user, Subject subject, String rundeckbase){
+        def Framework fw = Framework.getInstance(rundeckbase)
+        if(null!=user && null!=subject){
+            def authen = new SingleUserAuthentication(user,subject)
+            def author = new UserSubjectAuthorization(fw,new File(Constants.getFrameworkConfigDir(rundeckbase)), user, subject)
             fw.setAuthenticationMgr(authen)
             fw.setAuthorizationMgr(author)
         }
