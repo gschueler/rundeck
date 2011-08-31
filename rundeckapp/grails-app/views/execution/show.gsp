@@ -180,8 +180,7 @@
                     <span id="execRetry" style="${wdgt.styleVisible(if:null!=execution.dateCompleted && null!=execution.failedNodeList)}; margin-right:10px;">
                         <g:if test="${scheduledExecution}">
                             <g:set var="jobRunAuth" value="${ auth.jobAllowedTest(job:executionResource,action:UserAuth.WF_RUN)}"/>
-                            <g:set var="canRun" value="${ ( !authMap || authMap[scheduledExecution.id.toString()] ||jobAuthorized ) && jobRunAuth}"/>
-                            <g:if test="${ canRun}">
+                            <g:if test="${ jobRunAuth}">
                                 <g:link controller="scheduledExecution" action="execute" id="${scheduledExecution.extid}" params="${[retryFailedExecId:execution.id]}" title="Run Job on the failed nodes" class="action button" style="margin-left:10px" >
                                     <img src="${resource(dir:'images',file:'icon-small-run.png')}" alt="run" width="16px" height="16px"/>
                                     Retry Failed Nodes  &hellip;
@@ -189,8 +188,7 @@
                             </g:if>
                         </g:if>
                         <g:else>
-                            <g:set var="jobRunAuth" value="${ auth.jobAllowedTest(job:executionResource,action:[UserAuth.WF_CREATE,UserAuth.WF_READ])}"/>
-                            <g:set var="canRun" value="${ jobRunAuth}"/>
+                            <g:set var="canRun" value="${ auth.jobAllowedTest(job:executionResource, action:[UserAuth.WF_READ]) && (auth.resourceAllowedTest(kind:'job', action:[UserAuth.WF_CREATE]) || auth.adhocAllowedTest(action:['adhoc_run']))}"/>
                             <g:if test="${canRun}">
                                 <g:link controller="scheduledExecution" action="createFromExecution" params="${[executionId:execution.id,failedNodes:true]}" class="action button" title="Retry on the failed nodes&hellip;" style="margin-left:10px">
                                     <img src="${resource(dir:'images',file:'icon-small-run.png')}"  alt="run" width="16px" height="16px"/>
@@ -200,8 +198,7 @@
                         </g:else>
                     </span>
                     <span id="execRerun" style="${wdgt.styleVisible(if:null!=execution.dateCompleted)}" >
-                        <g:set var="jobRunAuth" value="${ auth.jobAllowedTest(job:executionResource, action:[UserAuth.WF_CREATE,UserAuth.WF_READ])}"/>
-                        <g:if test="${jobRunAuth }">
+                        <g:if test="${auth.jobAllowedTest(job:executionResource, action:[UserAuth.WF_READ]) && (auth.resourceAllowedTest(kind:'job', action:[UserAuth.WF_CREATE]) || auth.adhocAllowedTest(action:['adhoc_run'])) }">
                             <g:link controller="scheduledExecution" action="createFromExecution" params="${[executionId:execution.id]}" class="action button" title="Rerun or Save this Execution&hellip;" ><img src="${resource(dir:'images',file:'icon-small-run.png')}"  alt="run" width="16px" height="16px"/> Rerun or Save &hellip;</g:link>
                         </g:if>
                     </span>
