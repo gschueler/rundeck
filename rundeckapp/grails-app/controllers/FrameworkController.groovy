@@ -28,7 +28,6 @@ class FrameworkController  {
     FrameworkService frameworkService
     ExecutionService executionService
     UserService userService
-    RoleService roleService
     // the delete, save and update actions only
     // accept POST requests
     def static allowedMethods = [
@@ -306,8 +305,8 @@ class FrameworkController  {
      */
     def performNodeReload = {String url=null->
         if(params.project){
-            if(roleService.isUserInAnyRoles(request,['admin','nodes_admin'])){
-                Framework framework = frameworkService.getFrameworkFromUserSession(session,request)
+            Framework framework = frameworkService.getFrameworkFromUserSession(session, request)
+            if(frameworkService.authorizeProjectResource(framework,[type:'resource',kind:'node'],'refresh',params.project)){
                 def project=framework.getFrameworkProjectMgr().getFrameworkProject(params.project)
                //if reload parameter is specified, and user is admin, reload from source URL
                 try {
