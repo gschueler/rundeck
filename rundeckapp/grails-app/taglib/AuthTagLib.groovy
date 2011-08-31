@@ -5,7 +5,8 @@ import javax.security.auth.Subject
 import com.dtolabs.rundeck.core.authentication.Username;
 import com.dtolabs.rundeck.core.authentication.Group;
 import com.dtolabs.rundeck.core.authorization.Attribute;
-import com.dtolabs.rundeck.core.authorization.Authorization;
+import com.dtolabs.rundeck.core.authorization.Authorization
+import com.dtolabs.rundeck.core.authorization.Decision;
 
 class AuthTagLib {
     def static namespace="auth"
@@ -107,6 +108,11 @@ class AuthTagLib {
         }
 
         def action = attrs.action
+        def isset=false
+        if(action instanceof Collection){
+            action = action as Set
+            isset=true
+        }
 
         boolean has = (!attrs.has || attrs.has == "true")
 
@@ -131,11 +137,16 @@ class AuthTagLib {
             resource.putAll(attributes)
         }
 
-        def decision = authr.evaluate(resource, request.subject, action, env)
+        def authorized
+        if(isset){
+            def decisions = authr.evaluate([resource] as Set, request.subject, action, env)
+            authorized = !(decisions.find{!it.authorized})
+        } else{
+            def Decision decision = authr.evaluate(resource, request.subject, action, env)
+            authorized=decision.authorized
+        }
 
-        if (has && decision.authorized) {
-            out << body()
-        } else if (!has && !decision.authorized) {
+        if (!(has ^ authorized)) {
             out << body()
         } else if (attrs.altText) {
             out << attrs.altText
@@ -188,16 +199,10 @@ class AuthTagLib {
         }
         def Set resources = [resource]
 
-        authr.evaluate(resources, request.subject, tests, env).each { def decision ->
-            // has == true, authorized == true => auth = true
-            // has == true, authorized == false => auth = false
-            // has == false, authorized == true => auth = false
-            // has == false, authorized == false => auth = true
-            auth = !(has ^ decision.isAuthorized()) // inverse xor
-            if (auth)
-                return;
-        }
-        return auth;
+        def decisions= authr.evaluate(resources, request.subject, tests, env)
+        //return true if all decsisions are (has==true) or are not (has!=true) authorized
+        return !(decisions.find{has^it.authorized})
+
     }
     /**
      * return true if user authorization matches the assertion.  Attributes:
@@ -227,20 +232,14 @@ class AuthTagLib {
         def framework = frameworkService.getFrameworkFromUserSession(request.session, request)
         def Authorization authr = framework.getAuthorizationMgr()
 
-        def Set resource = [[type: 'adhoc']]
+        def Set resources = [[type: 'adhoc']]
 
         def env = Collections.singleton(new Attribute(URI.create("http://dtolabs.com/rundeck/env/project"), session.project))
 
-        authr.evaluate(resource, request.subject, tests, env).each { def decision ->
-            // has == true, authorized == true => auth = true
-            // has == true, authorized == false => auth = false
-            // has == false, authorized == true => auth = false
-            // has == false, authorized == false => auth = true
-            auth = !(has ^ decision.isAuthorized()) // inverse xor
-            if (auth)
-                return;
-        }
-        return auth;
+
+        def decisions = authr.evaluate(resources, request.subject, tests, env)
+        //return true if all decsisions are (has==true) or are not (has!=true) authorized
+        return !(decisions.find {has ^ it.authorized})
     }
     /**
      * return true if user authorization matches the assertion.  Attributes:
@@ -280,19 +279,13 @@ class AuthTagLib {
         def framework = frameworkService.getFrameworkFromUserSession(request.session, request)
         def Authorization authr = framework.getAuthorizationMgr()
         
-        def Set resource = [ ["job": attrs.job?.jobName, "group": (attrs.job?.groupPath ?: ""), type:'job'] ]
+        def Set resources = [ ["job": attrs.job?.jobName, "group": (attrs.job?.groupPath ?: ""), type:'job'] ]
 
         def env = Collections.singleton(new Attribute(URI.create("http://dtolabs.com/rundeck/env/project"), session.project))
-        
-        authr.evaluate(resource, request.subject, tests, env).each{ def decision ->
-            // has == true, authorized == true => auth = true
-            // has == true, authorized == false => auth = false
-            // has == false, authorized == true => auth = false
-            // has == false, authorized == false => auth = true
-            auth = !(has ^ decision.isAuthorized()) // inverse xor
-            if(auth)
-                return;
-        }
-        return auth;
+
+
+        def decisions = authr.evaluate(resources, request.subject, tests, env)
+        //return true if all decsisions are (has==true) or are not (has!=true) authorized
+        return !(decisions.find {has ^ it.authorized})
     }
 }
