@@ -147,7 +147,6 @@ class MenuController {
     def jobsFragment = {ScheduledExecutionQuery query ->
         long start=System.currentTimeMillis()
         Framework framework = frameworkService.getFrameworkFromUserSession(session,request)
-        FrameworkController.autosetSessionProject(session,framework)
         def usedFilter=null
         
         if(params.filterName){
@@ -250,7 +249,6 @@ class MenuController {
         def authorization = frameworkService.getFrameworkFromUserSession(request.session, request).getAuthorizationMgr()
         def env = Collections.singleton(new Attribute(URI.create("http://dtolabs.com/rundeck/env/project"), session.project))
         def decisions = authorization.evaluate(res, request.subject, new HashSet([UserAuth.WF_READ,UserAuth.WF_DELETE,UserAuth.WF_RUN,UserAuth.WF_UPDATE,UserAuth.WF_KILL]), env)
-//        def decisions = authorization.evaluate(res, request.subject, new HashSet([UserAuth.WF_READ]), Collections.emptySet())
         log.debug("listWorkflows(evaluate): "+(System.currentTimeMillis()-preeval));
 
         long viewable=System.currentTimeMillis()
