@@ -89,28 +89,7 @@ public class AuthorizationFilters {
          */
         authorizationCheck(controller: '*', action: '*') {
             before = {
-                def authc = newauthSet[controllerName]
-                def authReq
-                if (authc) {
-                    authReq = authc[actionName]
-                }
-                if (!authReq && authc) {
-                    //look for controller/* auth requirement
-                    authReq = authc['*']
-                }
-                /*def authtest= authReq?false:true
-                if (authReq) {
-                    //get user authorizations
-                    def User user
-                    if (session && session.user) {
-                        def Framework framework = frameworkService.getFrameworkFromUserSession(session,request)
-                        if('project'==authReq.context){
-                            authtest=frameworkService.authorizeProjectResourceAll(framework,authReq.resource,authReq.action,session.project)
-                        }else{
-                            authtest = frameworkService.authorizeApplicationResourceAll(framework, authReq.resource, authReq.action)
-                        }
-                    }
-                }*/
+               
                 if (request.invalidApiAuthentication ) {
                     response.setStatus(403)
                     def authid = session.user ?: "(${request.invalidAuthToken ?: 'unauthenticated'})"
