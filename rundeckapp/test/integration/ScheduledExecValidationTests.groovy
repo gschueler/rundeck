@@ -889,7 +889,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',adhocExecution:true,adhocRemoteString:'a command']
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:true,adhocRemoteString:'a command']
             def results=sec._dovalidate(params)
             assertFalse(results.failed)
             assertNotNull(results.scheduledExecution)
@@ -904,7 +904,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasFieldErrors('jobName'))
             assertEquals 'monkey1',execution.jobName
             assertEquals 'testProject',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertEquals 1,execution.workflow.commands.size()
@@ -924,7 +924,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'', 
+            def params=[jobName:'monkey1',project:'testProject',description:'blah', 
                    workflow:[threadcount:1,keepgoing:true,"commands[0]":[adhocExecution:true,adhocRemoteString:'a remote string']]
             ]
             def results=sec._dovalidate(params)
@@ -960,7 +960,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,type:'',name:'',command:'',
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,type:'',name:'',command:'',
                    workflow:[threadcount:1,keepgoing:true,
                        "commands[0]":[adhocExecution:true,adhocRemoteString:"do something"],
                        "commands[1]":[adhocExecution:true,adhocLocalString:"test dodah"],
@@ -1014,7 +1014,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,type:'',name:'',command:'',
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,type:'',name:'',command:'',
                    workflow:[threadcount:1,keepgoing:true,
                        "commands[0]":[adhocExecution:true,adhocRemoteString:"do something"],
                        "commands[1]":[adhocExecution:true,adhocLocalString:"test dodah"],
@@ -1088,7 +1088,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',adhocExecution:true]
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:true]
             def results=sec._dovalidate(params)
 
             assertTrue(results.failed)
@@ -1124,7 +1124,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',type:'',command:'',adhocExecution:true,adhocRemoteString:'test1',adhocLocalString:'test2']
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',type:'',command:'',adhocExecution:true,adhocRemoteString:'test1',adhocLocalString:'test2']
             def results=sec._dovalidate(params)
 
             if(results.scheduledExecution.errors.hasErrors()){
@@ -1164,7 +1164,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',type:'',command:'',adhocExecution:true,adhocRemoteString:'test what']
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',type:'',command:'',adhocExecution:true,adhocRemoteString:'test what']
             def results=sec._dovalidate(params)
             assertFalse(results.failed)
             assertNotNull(results.scheduledExecution)
@@ -1182,7 +1182,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasFieldErrors('command'))
             assertEquals 'monkey1',execution.jobName
             assertEquals 'testProject',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -1209,7 +1209,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',adhocExecution:true,adhocLocalString:'test what']
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:true,adhocLocalString:'test what']
             def results=sec._dovalidate(params)
             assertFalse(results.failed)
             assertNotNull(results.scheduledExecution)
@@ -1227,7 +1227,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasFieldErrors('command'))
             assertEquals 'monkey1',execution.jobName
             assertEquals 'testProject',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -1254,7 +1254,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',type:'',command:'',adhocExecution:true,adhocFilepath:'test what']
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',type:'',command:'',adhocExecution:true,adhocFilepath:'test what']
             def results=sec._dovalidate(params)
             assertFalse(results.failed)
             assertNotNull(results.scheduledExecution)
@@ -1272,7 +1272,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasFieldErrors('command'))
             assertEquals 'monkey1',execution.jobName
             assertEquals 'testProject',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -1299,7 +1299,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',type:'',command:'',
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',type:'',command:'',
                 adhocExecution:true,
                 adhocFilepath:'test file',
                 argString:'test args'
@@ -1321,7 +1321,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasFieldErrors('command'))
             assertEquals 'monkey1',execution.jobName
             assertEquals 'testProject',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -1348,7 +1348,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',type:'',command:'',
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',type:'',command:'',
                 adhocExecution:true,
                 adhocExecutionType:'remote',
                 adhocRemoteString:'test remote',
@@ -1371,7 +1371,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasFieldErrors('command'))
             assertEquals 'monkey1',execution.jobName
             assertEquals 'testProject',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -1398,7 +1398,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',type:'',command:'',
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',type:'',command:'',
                 adhocExecution:true,
                 adhocExecutionType:'local',
                 adhocLocalString:'test local',
@@ -1421,7 +1421,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasFieldErrors('command'))
             assertEquals 'monkey1',execution.jobName
             assertEquals 'testProject',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -1452,7 +1452,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',adhocExecution:true,adhocRemoteString:"test command",
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:true,adhocRemoteString:"test command",
                 notifications: [[eventTrigger: 'onsuccess', type: 'email', content: 'c@example.com,d@example.com']]
             ]
             def results=sec._dovalidate(params)
@@ -1470,7 +1470,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasErrors())
             assertEquals 'monkey1',execution.jobName
             assertEquals 'testProject',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -1507,7 +1507,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',adhocExecution:true,adhocRemoteString:'test command',
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:true,adhocRemoteString:'test command',
                 notifications: [[eventTrigger: 'onsuccess', type: 'email', content: 'c@example.com,d@example.com'], [eventTrigger: 'onfailure', type: 'email', content: 'monkey@example.com']]
             ]
             def results=sec._dovalidate(params)
@@ -1525,7 +1525,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasErrors())
             assertEquals 'monkey1',execution.jobName
             assertEquals 'testProject',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -1572,7 +1572,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',adhocExecution:true,adhocRemoteString:'test command',
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:true,adhocRemoteString:'test command',
                 notifyOnsuccess:'true',notifySuccessRecipients:'c@example.com,d@example.com',
                 notifyOnfailure:'true',notifyFailureRecipients:'monkey@example.com',
 
@@ -1593,7 +1593,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasErrors())
             assertEquals 'monkey1',execution.jobName
             assertEquals 'testProject',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -1641,7 +1641,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand',
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand',
                 notifyOnsuccess:'true',notifySuccessRecipients:'c@example.',
             ]
             def results=sec._dovalidate(params)
@@ -1675,7 +1675,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand',
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand',
                 notifyOnfailure:'true',notifyFailureRecipients:'@example.com',
             ]
             def results=sec._dovalidate(params)
@@ -1709,7 +1709,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand',
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand',
                    notifications: [[eventTrigger: 'onsuccess', type: 'email', content: 'c@example.comd@example.com'], [eventTrigger: 'onfailure', type: 'email', content: 'monkey@ example.com']]
             ]
             def results=sec._dovalidate(params)
@@ -1743,7 +1743,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService = fwkControl.createMock()
 
-            def params = [jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand',
+            def params = [jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand',
                 notifications: [[eventTrigger: 'onsuccess', type: 'url', content: 'c@example.comd@example.com'], [eventTrigger: 'onfailure', type: 'url', content: 'monkey@ example.com']]
             ]
             def results = sec._dovalidate(params)
@@ -1781,7 +1781,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand',
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand',
                    options:["options[0]":[name: 'test3', defaultValue: 'val3', enforced: false, valuesUrl: "http://test.com/test3"]]
             ]
             def results=sec._dovalidate(params)
@@ -1825,7 +1825,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',adhocExecution:true,adhocRemoteString:'test command',
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:true,adhocRemoteString:'test command',
                 'option.test3':'val3', options: ["options[0]":[name: 'test3', defaultValue: 'val3', enforced: false, valuesUrl: "http://test.com/test3"]]
             ]
             def results=sec._dovalidate(params)
@@ -1881,7 +1881,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand',
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand',
                    options:["options[0]":[ defaultValue: 'val3', enforced: false, valuesUrl: "http://test.com/test3"]]
             ]
             def results=sec._dovalidate(params)
@@ -1921,7 +1921,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand',
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand',
                    options:["options[0]":[name:'opt3', defaultValue: 'val3', enforced: false, valuesUrl: "hzttp://test.com/test3"]]
             ]
             def results=sec._dovalidate(params)
@@ -1961,7 +1961,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand',
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand',
                    options:["options[0]":[name:'opt3', defaultValue: 'val3', enforced: false, multivalued:true, delimiter:' ']]
             ]
             def results=sec._dovalidate(params)
@@ -2005,7 +2005,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=[jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand',
+            def params=[jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand',
                    options:["options[0]":[name:'opt3', defaultValue: 'val3', enforced: false, multivalued:true]]
             ]
             def results=sec._dovalidate(params)
@@ -2034,7 +2034,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
     public void testDoUpdate(){
         def sec = new ScheduledExecutionController()
         if(true){//test update basic job details
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:true,adhocRemoteString:'test command',)
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:true,adhocRemoteString:'test command',)
             se.save()
 
             assertNotNull se.id
@@ -2057,7 +2057,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID{id-> return se }
             sec.scheduledExecutionService=sesControl.createMock()
 
-            def params=[id:se.id.toString(),jobName:'monkey2',project:'testProject2',description:'',adhocExecution:true,adhocRemoteString:'test command',]
+            def params=[id:se.id.toString(),jobName:'monkey2',project:'testProject2',description:'blah',adhocExecution:true,adhocRemoteString:'test command',]
             def results=sec._doupdate(params)
             def succeeded=results[0]
             def scheduledExecution=results[1]
@@ -2075,7 +2075,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasErrors())
             assertEquals 'monkey2',execution.jobName
             assertEquals 'testProject2',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
 
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
@@ -2096,7 +2096,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
     public void testDoUpdateJob(){
         def sec = new ScheduledExecutionController()
         if(true){//test update basic job details
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:true,adhocRemoteString:'test command',)
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:true,adhocRemoteString:'test command',)
             se.save()
 
             assertNotNull se.id
@@ -2116,7 +2116,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=new ScheduledExecution(jobName:'monkey2',project:'testProject2',description:'',adhocExecution:true,adhocRemoteString:'test command',
+            def params=new ScheduledExecution(jobName:'monkey2',project:'testProject2',description:'blah',adhocExecution:true,adhocRemoteString:'test command',
                 workflow: new Workflow(commands:[new CommandExec(adhocRemoteString:'test command',adhocExecution:true)])
             )
             def results=sec._doupdateJob(se.id.toString(),params)
@@ -2136,7 +2136,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasErrors())
             assertEquals 'monkey2',execution.jobName
             assertEquals 'testProject2',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
 
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
@@ -2157,7 +2157,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
     public void testDoUpdateJobShouldReplaceFilters(){
         def sec = new ScheduledExecutionController()
         if(true){//test update basic job details
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',
                 doNodedispatch:true, nodeInclude:"hostname",
                 workflow: new Workflow(commands:[new CommandExec(adhocRemoteString:'test command',adhocExecution:true)])
             )
@@ -2180,7 +2180,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=new ScheduledExecution(jobName:'monkey2',project:'testProject2',description:'',
+            def params=new ScheduledExecution(jobName:'monkey2',project:'testProject2',description:'blah',
                 doNodedispatch:true, nodeIncludeName:"nodename",
                 workflow: new Workflow(commands:[new CommandExec(adhocRemoteString:'test command',adhocExecution:true)])
             )
@@ -2208,7 +2208,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
     public void testDoUpdateScheduled(){
         def sec = new ScheduledExecutionController()
         if(true){//test set scheduled with crontabString
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -2236,7 +2236,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.scheduledExecutionService=sesControl.createMock()
 
-            def params=[id:se.id.toString(),jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand',scheduled:true,crontabString:'0 21 */4 */4 */6 ? 2010-2040',useCrontabString:'true']
+            def params=[id:se.id.toString(),jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand',scheduled:true,crontabString:'0 21 */4 */4 */6 ? 2010-2040',useCrontabString:'true']
             def results=sec._doupdate(params)
             def succeeded=results[0]
             def scheduledExecution=results[1]
@@ -2263,7 +2263,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
         }
         if(true){//test set scheduled with invalid crontabString (invalid dayOfMonth/dayOfWeek combo)
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -2291,7 +2291,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.scheduledExecutionService=sesControl.createMock()
 
-            def params=[id:se.id.toString(),scheduled:true,crontabString:'0 21 */4 */4 */6 3 2010-2040',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand']
+            def params=[id:se.id.toString(),scheduled:true,crontabString:'0 21 */4 */4 */6 3 2010-2040',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand']
             def results=sec._doupdate(params)
             def succeeded=results[0]
             def scheduledExecution=results[1]
@@ -2306,7 +2306,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
         }
         if(true){//test set scheduled with invalid crontabString (invalid dayOfMonth/dayOfWeek combo, two ?)
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -2334,7 +2334,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.scheduledExecutionService=sesControl.createMock()
 
-            def params=[id:se.id.toString(),scheduled:true,crontabString:'0 21 */4 ? */6 ? 2010-2040',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand']
+            def params=[id:se.id.toString(),scheduled:true,crontabString:'0 21 */4 ? */6 ? 2010-2040',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand']
             def results=sec._doupdate(params)
             def succeeded=results[0]
             def scheduledExecution=results[1]
@@ -2349,7 +2349,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
         }
         if(true){//test set scheduled with invalid crontabString (invalid year char)
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -2389,7 +2389,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             
         }
         if(true){//test set scheduled with invalid crontabString  (too few components)
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -2414,7 +2414,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params=[id:se.id.toString(),scheduled:true,crontabString:'0 21 */4 */4 */6',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand']
+            def params=[id:se.id.toString(),scheduled:true,crontabString:'0 21 */4 */4 */6',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand']
             def results=sec._doupdate(params)
             def succeeded=results[0]
             def scheduledExecution=results[1]
@@ -2429,7 +2429,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
         }
         if(true){//test set scheduled with invalid crontabString  (wrong seconds value)
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -2454,7 +2454,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params=[id:se.id.toString(),scheduled:true,crontabString:'70 21 */4 */4 */6 ?',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand']
+            def params=[id:se.id.toString(),scheduled:true,crontabString:'70 21 */4 */4 */6 ?',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand']
             def results=sec._doupdate(params)
             def succeeded=results[0]
             def scheduledExecution=results[1]
@@ -2469,7 +2469,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
         }
         if(true){//test set scheduled with invalid crontabString  (wrong minutes value)
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -2494,7 +2494,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params=[id:se.id.toString(),scheduled:true,crontabString:'0 70 */4 */4 */6 ?',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand']
+            def params=[id:se.id.toString(),scheduled:true,crontabString:'0 70 */4 */4 */6 ?',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand']
             def results=sec._doupdate(params)
             def succeeded=results[0]
             def scheduledExecution=results[1]
@@ -2509,7 +2509,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
         }
         if(true){//test set scheduled with invalid crontabString  (wrong hour value)
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -2534,7 +2534,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params=[id:se.id.toString(),scheduled:true,crontabString:'0 0 25 */4 */6 ?',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand']
+            def params=[id:se.id.toString(),scheduled:true,crontabString:'0 0 25 */4 */6 ?',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand']
             def results=sec._doupdate(params)
             def succeeded=results[0]
             def scheduledExecution=results[1]
@@ -2549,7 +2549,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
         }
         if(true){//test set scheduled with invalid crontabString  (wrong day of month value)
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -2574,7 +2574,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params=[id:se.id.toString(),scheduled:true,crontabString:'0 0 2 32 */6 ?',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand']
+            def params=[id:se.id.toString(),scheduled:true,crontabString:'0 0 2 32 */6 ?',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand']
             def results=sec._doupdate(params)
             def succeeded=results[0]
             def scheduledExecution=results[1]
@@ -2589,7 +2589,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
         }
         if(true){//test set scheduled with invalid crontabString  (wrong month value)
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -2614,7 +2614,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params=[id:se.id.toString(),scheduled:true,crontabString:'0 0 2 3 13 ?',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand']
+            def params=[id:se.id.toString(),scheduled:true,crontabString:'0 0 2 3 13 ?',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand']
             def results=sec._doupdate(params)
             def succeeded=results[0]
             def scheduledExecution=results[1]
@@ -2629,7 +2629,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
         }
         if(true){//test set scheduled with invalid crontabString  (wrong day of week value)
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -2654,7 +2654,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params=[id:se.id.toString(),scheduled:true,crontabString:'0 0 2 ? 12 8',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand']
+            def params=[id:se.id.toString(),scheduled:true,crontabString:'0 0 2 ? 12 8',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand']
             def results=sec._doupdate(params)
             def succeeded=results[0]
             def scheduledExecution=results[1]
@@ -2672,7 +2672,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
     public void testDoUpdateJobShouldSetCrontabString(){
         def sec = new ScheduledExecutionController()
         //test set scheduled with crontabString
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -2699,7 +2699,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.scheduledExecutionService=sesControl.createMock()
 
-            def params=new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',
+            def params=new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',
                 workflow: new Workflow(commands:[new CommandExec(adhocRemoteString:'test command',adhocExecution:true)]),
                 scheduled:true,crontabString:'0 21 */4 */4 */6 ? 2010-2040',useCrontabString:'true')
             def results=sec._doupdateJob(se.id.toString(),params)
@@ -2729,7 +2729,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
     public void testDoUpdateJobShouldNotSetInvalidCrontabString(){
         def sec = new ScheduledExecutionController()
         if(true){//test set scheduled with invalid crontabString (invalid dayOfMonth/dayOfWeek combo)
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -2756,7 +2756,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.scheduledExecutionService=sesControl.createMock()
 
-            def params=new ScheduledExecution(scheduled:true,crontabString:'0 21 */4 */4 */6 3 2010-2040',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'',
+            def params=new ScheduledExecution(scheduled:true,crontabString:'0 21 */4 */4 */6 3 2010-2040',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'blah',
                 dayOfMonth:'*/4',dayOfWeek:'3',
                 workflow: new Workflow(commands:[new CommandExec(adhocRemoteString:'test command',adhocExecution:true)]))
             def results=sec._doupdateJob(se.id.toString(),params)
@@ -2773,7 +2773,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
         }
         if(true){//test set scheduled with invalid crontabString (invalid dayOfMonth/dayOfWeek combo, two ?)
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -2800,7 +2800,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.scheduledExecutionService=sesControl.createMock()
 
-            def params=new ScheduledExecution(scheduled:true,crontabString:'0 21 */4 ? */6 ? 2010-2040',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'',
+            def params=new ScheduledExecution(scheduled:true,crontabString:'0 21 */4 ? */6 ? 2010-2040',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'blah',
                 workflow: new Workflow(commands:[new CommandExec(adhocRemoteString:'test command',adhocExecution:true)]))
             def results=sec._doupdateJob(se.id.toString(),params)
             def succeeded=results[0]
@@ -2816,7 +2816,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
         }
         if(true){//test set scheduled with invalid crontabString (invalid year char)
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -2853,7 +2853,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
         }
         if(true){//test set scheduled with invalid crontabString  (too few components)
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -2874,7 +2874,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=new ScheduledExecution(scheduled:true,crontabString:'0 21 */4 */4 */6',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'',
+            def params=new ScheduledExecution(scheduled:true,crontabString:'0 21 */4 */4 */6',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'blah',
                 workflow: new Workflow(commands:[new CommandExec(adhocRemoteString:'test command',adhocExecution:true)]))
             def results=sec._doupdateJob(se.id.toString(),params)
             def succeeded=results[0]
@@ -2890,7 +2890,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
         }
         if(true){//test set scheduled with invalid crontabString  (wrong seconds value)
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -2911,7 +2911,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=new ScheduledExecution(scheduled:true,crontabString:'70 21 */4 */4 */6 ?',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'',
+            def params=new ScheduledExecution(scheduled:true,crontabString:'70 21 */4 */4 */6 ?',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'blah',
                 workflow: new Workflow(commands:[new CommandExec(adhocRemoteString:'test command',adhocExecution:true)]))
             def results=sec._doupdateJob(se.id.toString(),params)
             def succeeded=results[0]
@@ -2927,7 +2927,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
         }
         if(true){//test set scheduled with invalid crontabString  (wrong minutes value)
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -2948,7 +2948,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=new ScheduledExecution(scheduled:true,crontabString:'0 70 */4 */4 */6 ?',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'',
+            def params=new ScheduledExecution(scheduled:true,crontabString:'0 70 */4 */4 */6 ?',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'blah',
                 workflow: new Workflow(commands:[new CommandExec(adhocRemoteString:'test command',adhocExecution:true)]))
             def results=sec._doupdateJob(se.id.toString(),params)
             def succeeded=results[0]
@@ -2964,7 +2964,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
         }
         if(true){//test set scheduled with invalid crontabString  (wrong hour value)
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -2985,7 +2985,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=new ScheduledExecution(scheduled:true,crontabString:'0 0 25 */4 */6 ?',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'',
+            def params=new ScheduledExecution(scheduled:true,crontabString:'0 0 25 */4 */6 ?',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'blah',
                 workflow: new Workflow(commands:[new CommandExec(adhocRemoteString:'test command',adhocExecution:true)]))
             def results=sec._doupdateJob(se.id.toString(),params)
             def succeeded=results[0]
@@ -3001,7 +3001,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
         }
         if(true){//test set scheduled with invalid crontabString  (wrong day of month value)
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -3022,7 +3022,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=new ScheduledExecution(scheduled:true,crontabString:'0 0 2 32 */6 ?',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'',
+            def params=new ScheduledExecution(scheduled:true,crontabString:'0 0 2 32 */6 ?',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'blah',
                 workflow: new Workflow(commands:[new CommandExec(adhocRemoteString:'test command',adhocExecution:true)]))
             def results=sec._doupdateJob(se.id.toString(),params)
             def succeeded=results[0]
@@ -3038,7 +3038,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
         }
         if(true){//test set scheduled with invalid crontabString  (wrong month value)
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -3059,7 +3059,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=new ScheduledExecution(scheduled:true,crontabString:'0 0 2 3 13 ?',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'',
+            def params=new ScheduledExecution(scheduled:true,crontabString:'0 0 2 3 13 ?',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'blah',
                 workflow: new Workflow(commands:[new CommandExec(adhocRemoteString:'test command',adhocExecution:true)]))
             def results=sec._doupdateJob(se.id.toString(),params)
             def succeeded=results[0]
@@ -3075,7 +3075,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
         }
         if(true){//test set scheduled with invalid crontabString  (wrong day of week value)
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:false,name:'aResource',type:'aType',command:'aCommand')
             se.save()
 
             assertNotNull se.id
@@ -3096,7 +3096,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=new ScheduledExecution(scheduled:true,crontabString:'0 0 2 ? 12 8',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'',
+            def params=new ScheduledExecution(scheduled:true,crontabString:'0 0 2 ? 12 8',useCrontabString:'true',jobName:'monkey1',project:'testProject',description:'blah',
                 workflow: new Workflow(commands:[new CommandExec(adhocRemoteString:'test command',adhocExecution:true)]))
             def results=sec._doupdateJob(se.id.toString(),params)
             def succeeded=results[0]
@@ -3116,7 +3116,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
     public void testDoUpdateAdhoc(){
         def sec = new ScheduledExecutionController()
         if(true){//test failure on empty adhoc params
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',
                 adhocExecution:true,adhocRemoteString:'test remote',
                 command:'',type:'',)
             se.save()
@@ -3142,7 +3142,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params=[id:se.id.toString(),jobName:'monkey2',project:'testProject2',description:'',adhocExecution:'true',adhocRemoteString:'']
+            def params=[id:se.id.toString(),jobName:'monkey2',project:'testProject2',description:'blah',adhocExecution:'true',adhocRemoteString:'']
             def results=sec._doupdate(params)
             def succeeded=results[0]
             def scheduledExecution=results[1]
@@ -3169,7 +3169,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
         }
         if(true){//test update from one adhoc type to another; remote -> local
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',
                 adhocExecution:true,adhocRemoteString:'test remote',
                 command:'',type:'',)
             se.save()
@@ -3195,7 +3195,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params=[id:se.id.toString(),jobName:'monkey2',project:'testProject2',description:'',adhocExecution:'true',adhocLocalString:'test local']
+            def params=[id:se.id.toString(),jobName:'monkey2',project:'testProject2',description:'blah',adhocExecution:'true',adhocLocalString:'test local']
             def results=sec._doupdate(params)
             def succeeded=results[0]
             def scheduledExecution=results[1]
@@ -3213,7 +3213,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasErrors())
             assertEquals 'monkey2',execution.jobName
             assertEquals 'testProject2',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -3229,7 +3229,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertNull execution.options
         }
         if(true){//test update from one adhoc type to another; remote -> file
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',
                 adhocExecution:true,adhocRemoteString:'test remote',
                 command:'',type:'',)
             se.save()
@@ -3255,7 +3255,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params=[id:se.id.toString(),jobName:'monkey2',project:'testProject2',description:'',adhocExecution:'true',adhocFilepath:'test file']
+            def params=[id:se.id.toString(),jobName:'monkey2',project:'testProject2',description:'blah',adhocExecution:'true',adhocFilepath:'test file']
             def results=sec._doupdate(params)
             def succeeded=results[0]
             def scheduledExecution=results[1]
@@ -3273,7 +3273,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasErrors())
             assertEquals 'monkey2',execution.jobName
             assertEquals 'testProject2',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -3290,7 +3290,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertNull execution.options
         }
         if(true){//test update from one adhoc type to another; local -> remote
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',
                 adhocExecution:true,adhocLocalString:'test local',
                 command:'',type:'',)
             se.save()
@@ -3316,7 +3316,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params=[id:se.id.toString(),jobName:'monkey2',project:'testProject2',description:'',adhocExecution:'true',adhocRemoteString:'test remote']
+            def params=[id:se.id.toString(),jobName:'monkey2',project:'testProject2',description:'blah',adhocExecution:'true',adhocRemoteString:'test remote']
             def results=sec._doupdate(params)
             def succeeded=results[0]
             def scheduledExecution=results[1]
@@ -3334,7 +3334,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasErrors())
             assertEquals 'monkey2',execution.jobName
             assertEquals 'testProject2',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -3350,7 +3350,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertNull execution.options
         }
         if(true){//test update from one adhoc type to another; local -> file
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',
                 adhocExecution:true,adhocLocalString:'test local',
                 command:'',type:'',)
             se.save()
@@ -3376,7 +3376,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params=[id:se.id.toString(),jobName:'monkey2',project:'testProject2',description:'',adhocExecution:'true',adhocFilepath:'test file']
+            def params=[id:se.id.toString(),jobName:'monkey2',project:'testProject2',description:'blah',adhocExecution:'true',adhocFilepath:'test file']
             def results=sec._doupdate(params)
             def succeeded=results[0]
             def scheduledExecution=results[1]
@@ -3394,7 +3394,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasErrors())
             assertEquals 'monkey2',execution.jobName
             assertEquals 'testProject2',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -3410,7 +3410,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertNull execution.options
         }
         if(true){//test update from one adhoc type to another; file -> remote
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',
                 adhocExecution:true,adhocFilepath:'test file',
                 command:'',type:'',)
             se.save()
@@ -3436,7 +3436,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params=[id:se.id.toString(),jobName:'monkey2',project:'testProject2',description:'',adhocExecution:'true',adhocRemoteString:'test remote']
+            def params=[id:se.id.toString(),jobName:'monkey2',project:'testProject2',description:'blah',adhocExecution:'true',adhocRemoteString:'test remote']
             def results=sec._doupdate(params)
             def succeeded=results[0]
             def scheduledExecution=results[1]
@@ -3454,7 +3454,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasErrors())
             assertEquals 'monkey2',execution.jobName
             assertEquals 'testProject2',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -3470,7 +3470,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertNull execution.options
         }
         if(true){//test update from one adhoc type to another; file -> local
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',
                 adhocExecution:true,adhocFilepath:'test file',
                 command:'',type:'',)
             se.save()
@@ -3496,7 +3496,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params=[id:se.id.toString(),jobName:'monkey2',project:'testProject2',description:'',adhocExecution:'true',adhocLocalString:'test local']
+            def params=[id:se.id.toString(),jobName:'monkey2',project:'testProject2',description:'blah',adhocExecution:'true',adhocLocalString:'test local']
             def results=sec._doupdate(params)
             def succeeded=results[0]
             def scheduledExecution=results[1]
@@ -3514,7 +3514,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasErrors())
             assertEquals 'monkey2',execution.jobName
             assertEquals 'testProject2',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -3533,7 +3533,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
     public void testDoUpdateJobShouldntSetEmptyAdhocItem(){
         def sec = new ScheduledExecutionController()
         //test failure on empty adhoc params
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',
                 adhocExecution:true,adhocRemoteString:'test remote',
                 command:'',type:'',)
             se.save()
@@ -3555,7 +3555,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=new ScheduledExecution(jobName:'monkey2',project:'testProject2',description:'',
+            def params=new ScheduledExecution(jobName:'monkey2',project:'testProject2',description:'blah',
                 workflow:new Workflow(commands:[new CommandExec(adhocExecution:'true',adhocRemoteString:'')])
             )
             def results=sec._doupdateJob(se.id.toString(),params)
@@ -3586,7 +3586,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
     public void testDoUpdateJobShouldChangeWorkflow(){
         def sec = new ScheduledExecutionController()
         //test update from one adhoc type to another; file -> remote
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',
                 workflow:new Workflow(commands:[new CommandExec(adhocExecution:'true',adhocLocalString:'test local'),
                 new CommandExec(adhocExecution:'true',adhocFilepath:'test file'),
                 new JobExec(jobName:'a name',jobGroup:'a group',argString: 'whatever')])
@@ -3604,7 +3604,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params=new ScheduledExecution(jobName:'monkey2',project:'testProject2',description:'',
+            def params=new ScheduledExecution(jobName:'monkey2',project:'testProject2',description:'blah',
                 workflow:new Workflow(commands:[new CommandExec(adhocExecution:'true',adhocRemoteString:'test remote')])
             )
             def results=sec._doupdateJob(se.id.toString(),params)
@@ -3624,7 +3624,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasErrors())
             assertEquals 'monkey2',execution.jobName
             assertEquals 'testProject2',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -3643,7 +3643,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
     public void testDoUpdateNotificationsShouldUpdate(){
         def sec = new ScheduledExecutionController()
         if (true) {//test update job  notifications, disabling onsuccess
-            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: true, adhocRemoteString: 'test command',)
+            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: true, adhocRemoteString: 'test command',)
             def na1 = new Notification(eventTrigger: 'onsuccess', type: 'email', content: 'c@example.com,d@example.com')
             def na2 = new Notification(eventTrigger: 'onfailure', type: 'email', content: 'monkey@example.com')
             se.addToNotifications(na1)
@@ -3671,7 +3671,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params = [id: se.id.toString(), jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: true, adhocRemoteString: 'test command',
+            def params = [id: se.id.toString(), jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: true, adhocRemoteString: 'test command',
                 notified:'true',
                 notifySuccessRecipients: 'spaghetti@nowhere.com',
                 notifyOnfailure: 'true', notifyFailureRecipients: 'milk@store.com',
@@ -3693,7 +3693,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasErrors())
             assertEquals 'monkey1', execution.jobName
             assertEquals 'testProject', execution.project
-            assertEquals '', execution.description
+            assertEquals 'blah2', execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -3721,7 +3721,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertEquals "milk@store.com", n2.content
         }
         if (true) {//test update job  notifications, replacing onsuccess, and removing onfailure
-            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: true, adhocRemoteString: 'test command',)
+            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: true, adhocRemoteString: 'test command',)
             def na1 = new Notification(eventTrigger: 'onsuccess', type: 'email', content: 'c@example.com,d@example.com')
             def na2 = new Notification(eventTrigger: 'onfailure', type: 'email', content: 'monkey@example.com')
             se.addToNotifications(na1)
@@ -3749,7 +3749,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params = [id: se.id.toString(), jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: true, adhocRemoteString: 'test command',
+            def params = [id: se.id.toString(), jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: true, adhocRemoteString: 'test command',
                 notified: 'true',
                 notifyOnsuccessUrl:'true',notifySuccessUrl: 'http://example.com',
                  notifyFailureRecipients: 'milk@store.com',
@@ -3771,7 +3771,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasErrors())
             assertEquals 'monkey1', execution.jobName
             assertEquals 'testProject', execution.project
-            assertEquals '', execution.description
+            assertEquals 'blah2', execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -3800,7 +3800,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
         }
 
         if (true) {//test update job  notifications, removing all notifications
-            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: true, adhocRemoteString: 'test command',)
+            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: true, adhocRemoteString: 'test command',)
             def na1 = new Notification(eventTrigger: 'onsuccess', type: 'email', content: 'c@example.com,d@example.com')
             def na2 = new Notification(eventTrigger: 'onfailure', type: 'email', content: 'monkey@example.com')
             se.addToNotifications(na1)
@@ -3828,7 +3828,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params = [id: se.id.toString(), jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: true, adhocRemoteString: 'test command',
+            def params = [id: se.id.toString(), jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: true, adhocRemoteString: 'test command',
                 notified: 'false',
                 notifyOnsuccessUrl: 'true', notifySuccessUrl: 'http://example.com',
                 notifyFailureRecipients: 'milk@store.com',
@@ -3850,7 +3850,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasErrors())
             assertEquals 'monkey1', execution.jobName
             assertEquals 'testProject', execution.project
-            assertEquals '', execution.description
+            assertEquals 'blah2', execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -3867,7 +3867,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
         }
 
         if (true) {//test update job  notifications, removing all notifications by unchecking
-            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: true, adhocRemoteString: 'test command',)
+            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: true, adhocRemoteString: 'test command',)
             def na1 = new Notification(eventTrigger: 'onsuccess', type: 'email', content: 'c@example.com,d@example.com')
             def na2 = new Notification(eventTrigger: 'onfailure', type: 'email', content: 'monkey@example.com')
             se.addToNotifications(na1)
@@ -3895,7 +3895,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params = [id: se.id.toString(), jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: true, adhocRemoteString: 'test command',
+            def params = [id: se.id.toString(), jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: true, adhocRemoteString: 'test command',
                 notified: 'true',
                 notifySuccessUrl: 'http://example.com',
                 notifyFailureRecipients: 'milk@store.com',
@@ -3917,7 +3917,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasErrors())
             assertEquals 'monkey1', execution.jobName
             assertEquals 'testProject', execution.project
-            assertEquals '', execution.description
+            assertEquals 'blah2', execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -3936,7 +3936,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
     public void testDoUpdateNotifications(){
         def sec = new ScheduledExecutionController()
         if(true){//test update job  notifications
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:true,adhocRemoteString:'test command',)
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:true,adhocRemoteString:'test command',)
             def na1 = new Notification(eventTrigger:'onsuccess',type:'email',content:'c@example.com,d@example.com')
             def na2 = new Notification(eventTrigger:'onfailure',type:'email',content:'monkey@example.com')
             se.addToNotifications(na1)
@@ -3964,7 +3964,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params=[id:se.id.toString(),jobName:'monkey1',project:'testProject',description:'',adhocExecution:true,adhocRemoteString:'test command',
+            def params=[id:se.id.toString(),jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:true,adhocRemoteString:'test command',
                 notifications:[[eventTrigger:'onsuccess',type:'email',content:'spaghetti@nowhere.com'],[eventTrigger:'onfailure',type:'email',content:'milk@store.com']]
             ]
             def results=sec._doupdate(params)
@@ -3984,7 +3984,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasErrors())
             assertEquals 'monkey1',execution.jobName
             assertEquals 'testProject',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
 
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
@@ -4019,7 +4019,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
         }
 
         if(true){//test update job  notifications, using form input parameters
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:true,adhocRemoteString:'test command',)
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:true,adhocRemoteString:'test command',)
             def na1 = new Notification(eventTrigger:'onsuccess',type:'email',content:'c@example.com,d@example.com')
             def na2 = new Notification(eventTrigger:'onfailure',type:'email',content:'monkey@example.com')
             se.addToNotifications(na1)
@@ -4047,7 +4047,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params=[id:se.id.toString(),jobName:'monkey1',project:'testProject',description:'',adhocExecution:true,adhocRemoteString:'test command',
+            def params=[id:se.id.toString(),jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:true,adhocRemoteString:'test command',
                 notifyOnsuccess:'true',notifySuccessRecipients:'spaghetti@nowhere.com',
                 notifyOnfailure:'true',notifyFailureRecipients:'milk@store.com',
             ]
@@ -4068,7 +4068,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasErrors())
             assertEquals 'monkey1',execution.jobName
             assertEquals 'testProject',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
             assertNotNull execution.workflow.commands
@@ -4101,7 +4101,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertEquals "milk@store.com",n2.content
         }
         if(true){//test update job  notifications, using form input parameters, invalid email addresses
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:true,adhocRemoteString:'test command',)
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:true,adhocRemoteString:'test command',)
             def na1 = new Notification(eventTrigger:'onsuccess',type:'email',content:'c@example.com,d@example.com')
             def na2 = new Notification(eventTrigger:'onfailure',type:'email',content:'monkey@example.com')
             se.addToNotifications(na1)
@@ -4129,7 +4129,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params=[id:se.id.toString(),jobName:'monkey1',project:'testProject',description:'',adhocExecution:true,adhocRemoteString:'test command',
+            def params=[id:se.id.toString(),jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:true,adhocRemoteString:'test command',
                 notifyOnsuccess:'true',notifySuccessRecipients:'spaghetti@ nowhere.com',
                 notifyOnfailure:'true',notifyFailureRecipients:'milkstore.com',
             ]
@@ -4155,7 +4155,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
             assertEquals 'monkey1',execution.jobName
             assertEquals 'testProject',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
             assertEquals 'test command',execution.adhocRemoteString
             assertTrue execution.adhocExecution
             assertNotNull execution.notifications
@@ -4181,7 +4181,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
     public void testDoUpdateJobShouldUpdateNotifications(){
         def sec = new ScheduledExecutionController()
         if(true){//test update job  notifications
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',
                 workflow:new Workflow(commands: [new CommandExec(adhocExecution:true,adhocRemoteString:'test command',)])
             )
             def na1 = new Notification(eventTrigger:'onsuccess',type:'email',content:'c@example.com,d@example.com')
@@ -4207,7 +4207,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params= new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:true,adhocRemoteString:'test command',
+            def params= new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:true,adhocRemoteString:'test command',
             notifications:[new Notification(eventTrigger:'onsuccess',type:'email',content:'spaghetti@nowhere.com'),
                 new Notification(eventTrigger:'onfailure',type:'email',content:'milk@store.com')
             ])
@@ -4228,7 +4228,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             assertFalse(execution.errors.hasErrors())
             assertEquals 'monkey1',execution.jobName
             assertEquals 'testProject',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
 
             assertFalse execution.adhocExecution
             assertNotNull execution.workflow
@@ -4265,7 +4265,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
     public void testDoUpdateJobShouldFailBadNotifications(){
         def sec = new ScheduledExecutionController()
         if(true){//test update job  notifications, invalid email addresses
-            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:true,adhocRemoteString:'test command',)
+            def se = new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:true,adhocRemoteString:'test command',)
             def na1 = new Notification(eventTrigger:'onsuccess',type:'email',content:'c@example.com,d@example.com')
             def na2 = new Notification(eventTrigger:'onfailure',type:'email',content:'monkey@example.com')
             se.addToNotifications(na1)
@@ -4289,7 +4289,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService=fwkControl.createMock()
 
-            def params= new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'',adhocExecution:true,adhocRemoteString:'test command',
+            def params= new ScheduledExecution(jobName:'monkey1',project:'testProject',description:'blah',adhocExecution:true,adhocRemoteString:'test command',
             notifications:[new Notification(eventTrigger:'onsuccess',type:'email',content:'spaghetti@ nowhere.com'),
                 new Notification(eventTrigger:'onfailure',type:'email',content:'milkstore.com')
             ])
@@ -4315,7 +4315,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
 
             assertEquals 'monkey1',execution.jobName
             assertEquals 'testProject',execution.project
-            assertEquals '',execution.description
+            assertEquals 'blah',execution.description
             assertEquals 'test command',execution.adhocRemoteString
             assertTrue execution.adhocExecution
             assertNotNull execution.notifications
@@ -4343,7 +4343,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
         def sec = new ScheduledExecutionController()
         if (true) {//test update workflow 
 
-            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: '')
+            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: 'blah3')
             def workflow = new Workflow(threadcount:1,keepgoing:true)
             def wfitem = new CommandExec(adhocExecution:true,adhocRemoteString:'test command',)
             workflow.addToCommands(wfitem)
@@ -4412,7 +4412,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
         def sec = new ScheduledExecutionController()
         if (true) {//test update: update workflow by adding Options
 
-            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: '')
+            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: 'blah3')
             def workflow = new Workflow(threadcount:1,keepgoing:true)
             def wfitem = new CommandExec(name: 'aResource', type: 'aType', command: 'aCommand')
             workflow.addToCommands(wfitem)
@@ -4474,7 +4474,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
         }
         if (true) {//test update: update workflow by removing Options
 
-            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: false, name: '', type: '', command: '')
+            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: false, name: '', type: '', command: '')
             def workflow = new Workflow(threadcount:1,keepgoing:true)
             def wfitem = new CommandExec(name: 'aResource', type: 'aType', command: 'aCommand')
             workflow.addToCommands(wfitem)
@@ -4532,7 +4532,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
         def sec = new ScheduledExecutionController()
         if (true) {//test update: don't modify existing option
 
-            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand')
+            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand')
             def opt1 = new Option(name: 'test1', defaultValue: 'val1', enforced: false, valuesUrl: "http://test.com/test")
             def opt2 = new Option(name: 'test2', defaultValue: 'val2', enforced: true, values: ['a', 'b', 'c'])
             se.addToOptions(opt1)
@@ -4556,7 +4556,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params = [id: se.id.toString(), jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand']
+            def params = [id: se.id.toString(), jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand']
             def results = sec._doupdate(params)
             def succeeded = results[0]
             def scheduledExecution = results[1]
@@ -4597,7 +4597,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
         }
         if (true) {//test update: set _nooptions to delete options
 
-            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand')
+            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand')
             def opt1 = new Option(name: 'test1', defaultValue: 'val1', enforced: false, valuesUrl: "http://test.com/test")
             def opt2 = new Option(name: 'test2', defaultValue: 'val2', enforced: true, values: ['a', 'b', 'c'])
             se.addToOptions(opt1)
@@ -4621,7 +4621,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params = [id: se.id.toString(), jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand', _nooptions:true]
+            def params = [id: se.id.toString(), jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand', _nooptions:true]
             def results = sec._doupdate(params)
             def succeeded = results[0]
             def scheduledExecution = results[1]
@@ -4641,7 +4641,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
         }
         if (true) {//test update: set options to replace options
 
-            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand')
+            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand')
             def opt1 = new Option(name: 'test1', defaultValue: 'val1', enforced: false, valuesUrl: "http://test.com/test")
             def opt2 = new Option(name: 'test2', defaultValue: 'val2', enforced: true, values: ['a', 'b', 'c'])
             se.addToOptions(opt1)
@@ -4665,7 +4665,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params = [id: se.id.toString(), jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand',
+            def params = [id: se.id.toString(), jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand',
                 options:["options[0]":[name: 'test3', defaultValue: 'val3', enforced: false, valuesUrl: "http://test.com/test3"]]
             ]
             def results = sec._doupdate(params)
@@ -4698,7 +4698,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
         }
         if (true) {//test update: set options to replace options, use old-style option.name to set argString of workflow item
 
-            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: '', adhocExecution:true,adhocRemoteString:'test command',)
+            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution:true,adhocRemoteString:'test command',)
             def opt1 = new Option(name: 'test1', defaultValue: 'val1', enforced: false, valuesUrl: "http://test.com/test")
             def opt2 = new Option(name: 'test2', defaultValue: 'val2', enforced: true, values: ['a', 'b', 'c'])
             se.addToOptions(opt1)
@@ -4722,7 +4722,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params = [id: se.id.toString(), jobName: 'monkey1', project: 'testProject', description: '', adhocExecution:true,adhocRemoteString:'test command',
+            def params = [id: se.id.toString(), jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution:true,adhocRemoteString:'test command',
                 'option.test3':'val3',options:["options[0]":[name: 'test3', defaultValue: 'val3', enforced: false, valuesUrl: "http://test.com/test3"]]
             ]
             def results = sec._doupdate(params)
@@ -4764,7 +4764,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
         def sec = new ScheduledExecutionController()
         if (true) {//test update: set options to modify existing options
 
-            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand')
+            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand')
             def opt1 = new Option(name: 'test1', defaultValue: 'val1', enforced: true, values: ['a', 'b', 'c'])
             def opt2 = new Option(name: 'test2', enforced: false, valuesUrl:"http://test.com/test2")
             se.addToOptions(opt1)
@@ -4788,7 +4788,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params = [id: se.id.toString(), jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand',
+            def params = [id: se.id.toString(), jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand',
                 options:["options[0]":[name: 'test1', defaultValue: 'val3', enforced: false, valuesUrl: "http://test.com/test3"],
                 "options[1]":[name: 'test2', defaultValue: 'd', enforced: true, values:['a','b','c','d']]]
             ]
@@ -4833,7 +4833,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
         def sec = new ScheduledExecutionController()
         if (true) {//test update: set options to validate multivalued options
 
-            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand')
+            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand')
             def opt1 = new Option(name: 'test1', defaultValue: 'val1', enforced: true, values: ['a', 'b', 'c'])
             def opt2 = new Option(name: 'test2', enforced: false, valuesUrl: "http://test.com/test2")
             se.addToOptions(opt1)
@@ -4857,7 +4857,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             sesControl.demand.getByIDorUUID {id -> return se }
             sec.scheduledExecutionService = sesControl.createMock()
 
-            def params = [id: se.id.toString(), jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand',
+            def params = [id: se.id.toString(), jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand',
                 options: ["options[0]": [name: 'test1', defaultValue: 'val3', enforced: false,multivalued:true],
                     "options[1]": [name: 'test2', defaultValue: 'val2', enforced: false, values: ['a', 'b', 'c', 'd'], multivalued:true, delimiter:"testdelim"]]
             ]
@@ -4900,7 +4900,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
         def sec = new ScheduledExecutionController()
         if (true) {//test updateJob: no options in input job should remove existing options
 
-            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: '',
+            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: 'blah2',
                 workflow: new Workflow(commands:[new CommandExec(adhocRemoteString:'test command',adhocExecution:true)]),
             )
             def opt1 = new Option(name: 'test1', defaultValue: 'val1', enforced: false, valuesUrl: "http://test.com/test")
@@ -4922,7 +4922,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService = fwkControl.createMock()
 
-            def params = new ScheduledExecution( jobName: 'monkey1', project: 'testProject', description: '',
+            def params = new ScheduledExecution( jobName: 'monkey1', project: 'testProject', description: 'blah2',
                     workflow: new Workflow(commands:[new CommandExec(adhocRemoteString:'test command',adhocExecution:true)]),
              )
             def results = sec._doupdateJob(se.id,params)
@@ -4949,7 +4949,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
         def sec = new ScheduledExecutionController()
         if (true) {//test update: set options to replace options
 
-            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand')
+            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand')
             def opt1 = new Option(name: 'test1', defaultValue: 'val1', enforced: false, valuesUrl: "http://test.com/test")
             def opt2 = new Option(name: 'test2', defaultValue: 'val2', enforced: true, values: ['a', 'b', 'c'])
             se.addToOptions(opt1)
@@ -4969,7 +4969,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService = fwkControl.createMock()
 
-            def params = new ScheduledExecution( jobName: 'monkey1', project: 'testProject', description: '',
+            def params = new ScheduledExecution( jobName: 'monkey1', project: 'testProject', description: 'blah2',
                     workflow: new Workflow(commands:[new CommandExec(adhocRemoteString:'test command',adhocExecution:true)]),
                     options:[
                         new Option(name: 'test3', defaultValue: 'val3', enforced: false, valuesUrl: "http://test.com/test3"),
@@ -5005,7 +5005,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
         }
         if (true) {//test update: set options to modify existing options
 
-            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand')
+            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand')
             def opt1 = new Option(name: 'test1', defaultValue: 'val1', enforced: true, values: ['a', 'b', 'c'])
             def opt2 = new Option(name: 'test2', enforced: false, valuesUrl:"http://test.com/test2")
             se.addToOptions(opt1)
@@ -5025,7 +5025,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService = fwkControl.createMock()
 
-            def params = new ScheduledExecution( jobName: 'monkey1', project: 'testProject', description: '',
+            def params = new ScheduledExecution( jobName: 'monkey1', project: 'testProject', description: 'blah2',
                     workflow: new Workflow(commands:[new CommandExec(adhocRemoteString:'test command',adhocExecution:true)]),
                     options:[
                         new Option(name: 'test1', defaultValue: 'val3', enforced: false, valuesUrl: "http://test.com/test3"),
@@ -5068,7 +5068,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
         }
         if (true) {//test update invalid: multivalued true without delimiter
 
-            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand')
+            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand')
             def opt1 = new Option(name: 'test1', defaultValue: 'val1', enforced: true, values: ['a', 'b', 'c'])
             def opt2 = new Option(name: 'test2', enforced: false, valuesUrl:"http://test.com/test2")
             se.addToOptions(opt1)
@@ -5088,7 +5088,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
             }
             sec.frameworkService = fwkControl.createMock()
 
-            def params = new ScheduledExecution( jobName: 'monkey1', project: 'testProject', description: '',
+            def params = new ScheduledExecution( jobName: 'monkey1', project: 'testProject', description: 'blah2',
                     workflow: new Workflow(commands:[new CommandExec(adhocRemoteString:'test command',adhocExecution:true)]),
                     options:[
                         new Option(name: 'test1', defaultValue: 'val3', enforced: false, valuesUrl: "http://test.com/test3",multivalued:true),
@@ -5131,7 +5131,7 @@ public class ScheduledExecValidationTests extends GrailsUnitTestCase{
         def sec = new ScheduledExecutionController()
         if (true) {//test basic copy action
 
-            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: '', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand')
+            def se = new ScheduledExecution(jobName: 'monkey1', project: 'testProject', description: 'blah2', adhocExecution: false, name: 'aResource', type: 'aType', command: 'aCommand')
             se.save()
 
             assertNotNull se.id

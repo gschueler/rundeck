@@ -7,6 +7,9 @@ class User {
     Date dateCreated
     Date lastUpdated
     
+    static mapping = {
+      table 'rduser'
+    }    
     String dashboardPref
     String filterPref
     static hasMany = [reportfilters:ReportFilter,jobfilters:ScheduledExecutionFilter,nodefilters:NodeFilter]

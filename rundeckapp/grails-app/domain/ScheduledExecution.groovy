@@ -62,14 +62,17 @@ class ScheduledExecution extends ExecutionContext {
         argString(nullable:true)
         seconds(nullable:true)
         year(nullable:true)
-        description(nullable:false,blank:true)
+        description(nullable:false,blank:false)
         adhocExecution(nullable:true)
         adhocRemoteString(nullable:true, blank:true)
         adhocLocalString(nullable:true, blank:true)
         adhocFilepath(nullable:true, blank:true)
         uuid(unique: true, nullable:true, blank:false)
     }
-
+    static mapping = {
+      options column:'rdoptions_ref'
+      user column: 'rduser_name'
+    }
     public static final daysofweeklist = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
     public static final monthsofyearlist = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 

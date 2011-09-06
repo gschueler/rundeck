@@ -61,6 +61,9 @@ class ReportFilter {
         jobIdFilter(nullable:true)
         nodeFilter(nullable:true)
     }
+     static mapping = {
+      user column:'rduser_ref'
+    }
 
     public ReportQuery createQuery(){
         ReportQuery query = new ReportQuery(this.properties.findAll{it.key=~/.*Filter$/})

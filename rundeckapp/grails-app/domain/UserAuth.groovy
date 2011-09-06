@@ -43,6 +43,10 @@ public class UserAuth {
 
 
     static belongsTo = [user: User]
+    
+    static mapping = {
+      user column:'rduser_ref'
+    }
 
     public static UserAuth createDefault() {
         return new UserAuth(

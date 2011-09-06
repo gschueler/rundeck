@@ -23,7 +23,7 @@ class ScheduledExecutionTests extends GrailsUnitTestCase {
         se.jobName=""
         assertFalse "ScheduledExecution shouldn't validate",se.validate()
 
-        List notBlankFields = ['jobName', 'project']
+        List notBlankFields = ['jobName', 'project','description']
         notBlankFields.each { key ->
             se = new ScheduledExecution()
             se.properties=props
@@ -34,7 +34,7 @@ class ScheduledExecutionTests extends GrailsUnitTestCase {
             se."${key}"=""
             assertFalse "ScheduledExecution shouldn't validate for blank value of ${key}",se.validate()
         }
-        List blankNotNullFields = [ 'description']
+        List blankNotNullFields = [ ]
         blankNotNullFields.each { key ->
             se = new ScheduledExecution()
             se.properties=props

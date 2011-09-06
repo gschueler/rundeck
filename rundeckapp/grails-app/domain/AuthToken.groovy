@@ -18,7 +18,10 @@ class AuthToken {
     String token
     String authRoles
     static belongsTo = [user:User]
-
+    
+    static mapping = {
+      user column:'rduser_ref'
+   }
     static constraints = {
         token(nullable:false,unique:true)
         authRoles(nullable:false)

@@ -49,7 +49,7 @@ public class Option implements Comparable{
     String delimiter
     static belongsTo=[scheduledExecution:ScheduledExecution]
     static transients=['valuesList','valuesUrlString']
-
+   
     static constraints={
         name(nullable:false,blank:false)
         description(nullable:true)
@@ -63,7 +63,10 @@ public class Option implements Comparable{
         delimiter(nullable:true)
         multivalued(nullable:true)
     }
-
+	
+    static mapping = {
+      table 'rdoption'
+    }
     /**
      * Return canonical map representation
      */

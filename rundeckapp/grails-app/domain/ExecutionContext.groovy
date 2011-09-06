@@ -9,6 +9,9 @@ abstract class ExecutionContext extends BaseNodeFilters{
     Workflow workflow
     String loglevel="WARN"
 
+    static mapping = {
+      user column:'rduser_name'
+    }
     Boolean nodeKeepgoing=false
     Boolean doNodedispatch=false
     Integer nodeThreadcount=1
