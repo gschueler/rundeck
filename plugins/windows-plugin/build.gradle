@@ -9,7 +9,9 @@ configurations{
 }
 dependencies {
     //add lib/*.jar files to pluginLibs
-    pluginLibs fileTree(dir: 'lib', include: '*.jar')
+    //pluginLibs fileTree(dir: 'lib', include: '*.jar')
+	pluginLibs group: 'org.jinterop', name:'j-interop',version:'2.0.4'
+	pluginLibs group: 'org.jinterop', name:'j-interopdeps',version:'2.0.4'
 }
 
 // task to copy plugin libs to output/lib dir
@@ -17,16 +19,88 @@ task copyToLib(type: Copy) {
     into "$buildDir/output/lib"
     from configurations.pluginLibs
 }
+pluginClassNames='com.dtolabs.rundeck.plugin.windows.WindowsFileCopier,com.dtolabs.rundeck.plugin.windows.WindowsNodeExecutor'
+libList = configurations.pluginLibs.collect{'lib/'+it.name}.join(' ')
 
 jar {
     //include contents of output dir
     from "$buildDir/output"
     manifest {
         //create space-separated list of pluginLibs
-        def libList = configurations.pluginLibs.collect{relativePath(it).replaceAll('\\\\','/')}.join(' ')
-        attributes 'Rundeck-Plugin-Classnames': 'com.dtolabs.rundeck.plugin.windows.WindowsFileCopier,com.dtolabs.rundeck.plugin.windows.WindowsNodeExecutor', 'Rundeck-Plugin-Libs': "${libList}"
+        attributes 'Rundeck-Plugin-Classnames': pluginClassNames, 'Rundeck-Plugin-Libs': "${libList}"
     }
 }
 
 //set jar task to depend on copyToLib
 jar.dependsOn(copyToLib)
+
+apply plugin: 'maven'
+
+task createPom << {
+    pom {
+        project {
+            artifactId 'rundeck-windows-plugin'
+            groupId "com.dtolabs.rundeck"
+            inceptionYear '2011'
+            packaging 'jar'
+            version version
+            name "RunDeck Windows Plugin"
+            url 'http://rundeck.org'
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+            parent{
+                groupId 'com.dtolabs.rundeck'
+                artifactId "rundeck-bundled-plugins"
+                version(version)
+            }
+            build{
+                plugins{
+					plugin{
+						groupId 'org.apache.maven.plugins'
+						artifactId 'maven-dependency-plugin'
+						version '2.4'
+						executions{
+							execution{
+								id 'copy-dependencies'
+								phase 'prepare-package'
+								goals{
+									goal 'copy-dependencies'
+								}
+								configuration{
+									includeArtifactIds 'jcifs,j-interop,j-interopdeps'
+									outputDirectory '${project.build.directory}/classes/lib'
+								}
+							}
+						}
+					}
+                    plugin{
+                        groupId 'org.apache.maven.plugins'
+                        artifactId 'maven-jar-plugin'
+                        version '2.3.2'
+                        configuration{
+                            archive{
+                              manifestEntries{
+                                'Rundeck-Plugin-Classnames'(pluginClassNames)
+								'Rundeck-Plugin-Libs'(libList)
+                              }
+                            }
+                        }
+                    }
+                }
+            }
+			dependencies{
+				dependency{
+					groupId 'org.jinterop'
+					artifactId 'j-interop'
+					version '2.0.4'
+					scope 'compile'
+				}
+			}
+        }
+    }.writeTo("pom.xml")
+}

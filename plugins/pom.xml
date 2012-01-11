@@ -43,6 +43,7 @@
   <modules>
     <module>stub-plugin</module>
     <module>script-plugin</module>
+    <module>windows-plugin</module>
   </modules>
   <dependencies>
     <dependency>
