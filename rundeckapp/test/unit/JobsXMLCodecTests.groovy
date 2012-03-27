@@ -1545,7 +1545,7 @@ class JobsXMLCodecTests extends GroovyTestCase {
         assertEquals "incorrect secureExposed", 'true',opt2.secureExposed.toString()
         assertNull "incorrect regex", opt2.regex
         assertNull "incorrect values size", opt2.values
-        assertNull "missing valuesUrl", opt2.realValuesUrl
+        assertNull "missing valuesUrl", opt2.valuesUrl
 
         //secure option
         def xml3 = """<joblist>
@@ -1588,7 +1588,7 @@ class JobsXMLCodecTests extends GroovyTestCase {
         assertEquals "incorrect secureExposed", 'false',opt3.secureExposed.toString()
         assertNull "incorrect regex", opt3.regex
         assertNull "incorrect values size", opt3.values
-        assertNull "missing valuesUrl", opt3.realValuesUrl
+        assertNull "missing valuesUrl", opt3.valuesUrl
 
         //secure option
         def xml4 = """<joblist>
@@ -1631,7 +1631,7 @@ class JobsXMLCodecTests extends GroovyTestCase {
         assertEquals "incorrect secureExposed", 'false',opt4.secureExposed.toString()
         assertNull "incorrect regex", opt4.regex
         assertNull "incorrect values size", opt4.values
-        assertNull "missing valuesUrl", opt4.realValuesUrl
+        assertNull "missing valuesUrl", opt4.valuesUrl
 
     }
 

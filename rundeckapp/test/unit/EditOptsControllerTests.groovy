@@ -127,7 +127,7 @@ class EditOptsControllerTests extends ControllerUnitTestCase {
             assertFalse option.required
             assertFalse option.enforced
             assertNotNull option.values
-            assertNull option.realValuesUrl
+            assertNull option.valuesUrl
             assertNull option.regex
             assertNull option.defaultValue
             assertFalse option.secureInput
@@ -146,7 +146,7 @@ class EditOptsControllerTests extends ControllerUnitTestCase {
             assertFalse option.required
             assertFalse option.enforced
             assertNotNull option.values
-            assertNull option.realValuesUrl
+            assertNull option.valuesUrl
             assertNull option.regex
             assertNull option.defaultValue
             assertTrue option.secureInput
@@ -165,7 +165,7 @@ class EditOptsControllerTests extends ControllerUnitTestCase {
             assertFalse option.required
             assertFalse option.enforced
             assertNotNull option.values
-            assertNull option.realValuesUrl
+            assertNull option.valuesUrl
             assertNull option.regex
             assertNull option.defaultValue
             assertTrue option.secureInput
