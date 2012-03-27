@@ -363,6 +363,20 @@ class EditOptsController {
         if(null==params.secureInput){
             params.secureInput=false
         }
+        if(null==params.secureExposed){
+            params.secureExposed=false
+        }
+        if (params.inputType=='plain') {
+            params.secureInput = false
+            params.secureExposed = false
+        }else if (params.inputType=='secure') {
+            params.secureInput = true
+            params.secureExposed = false
+        }else if (params.inputType=='secureExposed') {
+            params.secureInput = true
+            params.secureExposed = true
+        }
+
         opt.properties = params
         if(params.valuesType == 'list'){
             opt.valuesUrl=null
@@ -391,6 +405,13 @@ class EditOptsController {
             params.enforcedType = 'enforced'
         } else {
             params.enforcedType = 'none'
+        }
+        if (!params.secureInput){
+            params.inputType = 'plain'
+        } else if (!params.secureExposed) {
+            params.inputType='secure'
+        } else if (params.secureExposed){
+            params.inputType = 'secureExposed'
         }
         params.valuesList = opt.produceValuesList()
         params.remove('values')
