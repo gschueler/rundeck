@@ -50,7 +50,8 @@ public class Option implements Comparable{
     Boolean multivalued
     String delimiter
     Boolean secureInput
-    
+    Boolean secureExposed
+
     static belongsTo=[scheduledExecution:ScheduledExecution]
     static transients=['valuesList','valuesUrlString']
 
@@ -67,6 +68,7 @@ public class Option implements Comparable{
         delimiter(nullable:true)
         multivalued(nullable:true)
         secureInput(nullable:true)
+        secureExposed(nullable:true)
     }
 
     static mapping = {
@@ -109,6 +111,9 @@ public class Option implements Comparable{
         if(secureInput){
             map.secure=secureInput
         }
+        if(secureExposed && secureInput){
+            map.valueExposed= secureExposed
+        }
         return map
     }
 
@@ -140,6 +145,13 @@ public class Option implements Comparable{
         }
         if(data.secure){
             opt.secureInput=Boolean.valueOf(data.secure)
+        }else{
+            opt.secureInput=false
+        }
+        if(opt.secureInput && data.valueExposed){
+            opt.secureExposed=Boolean.valueOf(data.valueExposed)
+        }else{
+            opt.secureExposed=false
         }
         return opt
     }
@@ -176,7 +188,7 @@ public class Option implements Comparable{
      */
     public Option createClone(){
         Option opt = new Option()
-        ['name','description','defaultValue','enforced','required','values','valuesList','valuesUrl','regex','multivalued','delimiter','secureInput'].each{k->
+        ['name','description','defaultValue','enforced','required','values','valuesList','valuesUrl','regex','multivalued','delimiter','secureInput','secureExposed'].each{k->
             opt[k]=this[k]
         }
         if(!opt.valuesList && values){
@@ -197,6 +209,7 @@ public class Option implements Comparable{
         ", regex='" + regex + '\'' +
         ", multivalued='" + multivalued + '\'' +
         ", secureInput='" + secureInput + '\'' +
+        ", secureExposed='" + secureExposed + '\'' +
         ", delimiter='" + delimiter + '\'' +
         '}' ;
     }
