@@ -5,6 +5,6 @@
     All rights reserved.
     
     <span class="num">${grailsApplication.metadata['build.ident']}</span>
-<g:if test="${grails.util.Environment.current==grails.util.Environment.DEVELOPMENT}">
+<g:if test="${grails.util.Environment.current==grails.util.Environment.DEVELOPMENT || org.codehaus.groovy.grails.commons.ConfigurationHolder.config.rundeck?.debug?.gsp?.timer=='true'}">
     <g:timerSummary/>
 </g:if>
