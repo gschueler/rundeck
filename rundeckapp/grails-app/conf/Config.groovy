@@ -57,6 +57,8 @@ environments {
         rundeck.v14.rdbsupport = "true"
     }
 }
+grails.plugin.databasemigration.updateOnStart=true
+grails.plugin.databasemigration.updateOnStartFileNames=['changelog.groovy']
 
 grails.mail.default.from="rundeck-server@localhost"
 
@@ -88,7 +90,7 @@ log4j={
 
     warn 'org.mortbay.log'
     warn 'grails.app.filters.AuthorizationFilters'
-    
+    debug 'grails.app.controller.ScheduledExecutionController'
 //    info 'com.dtolabs.rundeck.core.authorization.providers.SAREAuthorization'
 }
 
