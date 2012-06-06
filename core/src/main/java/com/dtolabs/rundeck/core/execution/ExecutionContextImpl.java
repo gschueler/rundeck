@@ -168,6 +168,16 @@ public class ExecutionContextImpl implements ExecutionContext {
             context.getExecutionListener(), context.getFramework(), context.getNodesFile(), context.getThreadCount(),
             context.isKeepgoing());
     }
+    /**
+     * Create a new ExecutionContext with a specific NodesSelector, and all other values from the input context
+     */
+    public static ExecutionContextImpl createExecutionContextImpl(final ExecutionContext context,
+                                                                  final NodesSelector nodeSelector) {
+        return new ExecutionContextImpl(context.getFrameworkProject(), context.getUser(), nodeSelector,
+            context.getArgs(), context.getLoglevel(), context.getDataContext(), context.getPrivateDataContext(),
+            context.getExecutionListener(), context.getFramework(), context.getNodesFile(), context.getThreadCount(),
+            context.isKeepgoing());
+    }
 
     /**
      * Create a new ExecutionContext from an original substituting a specific datacontext.
@@ -177,6 +187,16 @@ public class ExecutionContextImpl implements ExecutionContext {
         return new ExecutionContextImpl(context.getFrameworkProject(), context.getUser(), context.getNodeSelector(),
             context.getArgs(), context.getLoglevel(), dataContext, context.getPrivateDataContext(),
             context.getExecutionListener(),
+            context.getFramework(), context.getNodesFile(), context.getThreadCount(), context.isKeepgoing());
+    }
+    /**
+     * Create a new ExecutionContext from an original substituting a specific ExecutionListener.
+     */
+    public static ExecutionContextImpl createExecutionContextImpl(final ExecutionContext context,
+                                                                  final ExecutionListener newListener) {
+        return new ExecutionContextImpl(context.getFrameworkProject(), context.getUser(), context.getNodeSelector(),
+            context.getArgs(), context.getLoglevel(), context.getDataContext(), context.getPrivateDataContext(),
+            newListener,
             context.getFramework(), context.getNodesFile(), context.getThreadCount(), context.isKeepgoing());
     }
 

@@ -112,7 +112,7 @@ public class TestNodeFirstWorkflowStrategy extends AbstractBaseTest {
         }
     }
 
-    static class testListener implements ExecutionListener {
+    static class testListener implements ExecutionListenerOverride {
         public boolean isTerse() {
             return false;
         }
@@ -175,6 +175,20 @@ public class TestNodeFirstWorkflowStrategy extends AbstractBaseTest {
 
         public BuildListener getBuildListener() {
             return null;
+        }
+
+
+        public ExecutionListenerOverride createOverride() {
+            return this;
+        }
+
+        public void setTerse(boolean terse) {
+        }
+
+        public void setLogFormat(String format) {
+        }
+
+        public void setFailedNodesListener(FailedNodesListener listener) {
         }
     }
 
