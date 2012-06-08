@@ -563,17 +563,17 @@ class ExecutionService implements ApplicationContextAware, CommandInterpreter{
 
         //create thread object with an execution item, and start it
         final WorkflowExecutionItemImpl item = new WorkflowExecutionItemImpl(
-            new WorkflowImpl(execMap.workflow.commands.collect {itemForWFCmdItem(it)}, execMap.workflow.threadcount, execMap.workflow.keepgoing,execMap.workflow.strategy?execMap.workflow.strategy: "node-first"))
+            new WorkflowImpl(execMap.workflow.commands.collect {itemForWFCmdItem(it,it.errorHandler?itemForWFCmdItem(it.errorHandler):null)}, execMap.workflow.threadcount, execMap.workflow.keepgoing,execMap.workflow.strategy?execMap.workflow.strategy: "node-first"))
         return item
     }
 
-    public ExecutionItem itemForWFCmdItem(final IWorkflowCmdItem cmd) throws FileNotFoundException {
+    public ExecutionItem itemForWFCmdItem(final CommandExec cmd,final ExecutionItem handler=null) throws FileNotFoundException {
         if (null != cmd.getAdhocRemoteString()) {
 
             final List<String> strings = CLIUtils.splitArgLine(cmd.getAdhocRemoteString());
             final String[] args = strings.toArray(new String[strings.size()]);
 
-            return ExecutionItemFactory.createExecCommand(args);
+            return ExecutionItemFactory.createExecCommand(args,handler);
             
         } else if (null != cmd.getAdhocLocalString()) {
             final String script = cmd.getAdhocLocalString();
@@ -584,7 +584,7 @@ class ExecutionService implements ApplicationContextAware, CommandInterpreter{
             } else {
                 args = new String[0];
             }
-            return ExecutionItemFactory.createScriptFileItem(script, args);
+            return ExecutionItemFactory.createScriptFileItem(script, args, handler);
 
         } else if (null != cmd.getAdhocFilepath()) {
             final String filepath = cmd.getAdhocFilepath();
@@ -595,9 +595,9 @@ class ExecutionService implements ApplicationContextAware, CommandInterpreter{
             } else {
                 args = new String[0];
             }
-            return ExecutionItemFactory.createScriptFileItem(new File(filepath), args);
-        } else if (cmd instanceof IWorkflowJobItem) {
-            final IWorkflowJobItem jobcmditem = (IWorkflowJobItem) cmd;
+            return ExecutionItemFactory.createScriptFileItem(new File(filepath), args, handler);
+        } else if (cmd.instanceOf(JobExec)) {
+            final JobExec jobcmditem = cmd as JobExec;
 
             final String[] args;
             if (null != jobcmditem.getArgString()) {
@@ -607,7 +607,7 @@ class ExecutionService implements ApplicationContextAware, CommandInterpreter{
                 args = new String[0];
             }
 
-            return ExecutionItemFactory.createJobRef(jobcmditem.getJobIdentifier(),args)
+            return ExecutionItemFactory.createJobRef(jobcmditem.getJobIdentifier(),args, handler)
         } else {
             throw new IllegalArgumentException("Workflow command item was not valid");
         }
