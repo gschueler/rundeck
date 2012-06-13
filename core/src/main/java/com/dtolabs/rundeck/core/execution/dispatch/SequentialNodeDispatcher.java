@@ -143,11 +143,11 @@ public class SequentialNodeDispatcher implements NodeDispatcher {
                 }
             }
         }
+        if (nodeNames.size() > 0 && null != failedListener) {
+            //tell listener of failed node list
+            failedListener.nodesFailed(failures);
+        }
         if (keepgoing && nodeNames.size() > 0) {
-            if (null != failedListener) {
-                //tell listener of failed node list
-                failedListener.nodesFailed(failures);
-            }
             //now fail
             //XXX: needs to change from exception
             throw new NodesetFailureException(failures);
