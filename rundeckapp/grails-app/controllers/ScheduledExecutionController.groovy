@@ -1093,7 +1093,7 @@ class ScheduledExecutionController  {
 
     }
     public List _doupdateJob (id, ScheduledExecution params, changeinfo=[:]){
-        log.debug("ScheduledExecutionController: update : attempting to update: "+id +
+        log.debug("ScheduledExecutionController: updateJob : attempting to update: "+id +
                  ". params: " + params)
         Framework framework = frameworkService.getFrameworkFromUserSession(session,request)
         def user = (session?.user) ? session.user : "anonymous"
@@ -1199,6 +1199,13 @@ class ScheduledExecutionController  {
                 if(cmdparams.errors.hasErrors()){
                     wfitemfailed=true
                     failedlist<<(i+1)
+                }
+                if(cmdparams.errorHandler){
+                    WorkflowController._validateCommandExec(cmdparams.errorHandler)
+                    if(cmdparams.errorHandler.errors.hasErrors()){
+                        wfitemfailed=true
+                        failedlist<<(i+1)
+                    }
                 }
                 i++
             }

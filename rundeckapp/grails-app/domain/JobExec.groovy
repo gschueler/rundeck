@@ -36,7 +36,7 @@ public class JobExec extends CommandExec implements IWorkflowJobItem{
     }
 
     public String toString() {
-        return "jobref(name=\"${jobName}\" group=\"${jobGroup}\" argString=\"${argString}\")"
+        return "jobref(name=\"${jobName}\" group=\"${jobGroup}\" argString=\"${argString}\")" + (errorHandler ? " [handler: ${errorHandler}" : '')
     }
 
     public String summarize() {
@@ -52,7 +52,9 @@ public class JobExec extends CommandExec implements IWorkflowJobItem{
     }
 
     public CommandExec createClone(){
-        JobExec ce = new JobExec(this.properties)
+        Map properties = new HashMap(this.properties)
+        properties.remove('errorHandler')
+        JobExec ce = new JobExec(properties)
         return ce
     }
     /**
@@ -62,6 +64,9 @@ public class JobExec extends CommandExec implements IWorkflowJobItem{
         final Map map = [jobref: [group: jobGroup ? jobGroup : '', name: jobName]]
         if(argString){
             map.jobref.args=argString
+        }
+        if (errorHandler) {
+            map.errorhandler = errorHandler.toMap()
         }
         return map
     }
@@ -73,6 +78,7 @@ public class JobExec extends CommandExec implements IWorkflowJobItem{
         if(map.jobref.args){
             exec.argString=map.jobref.args
         }
+        //nb: error handler is created inside Workflow.fromMap
         return exec
     }
 }
