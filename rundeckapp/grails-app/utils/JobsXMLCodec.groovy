@@ -183,12 +183,18 @@ class JobsXMLCodec {
                 map.sequence.commands=[map.sequence.remove('commands')]
             }
               //convert script args values to idiosyncratic label
-            map.sequence.commands.each{ cmd ->
-                if(cmd.scriptfile || cmd.script){
-                    cmd.args=cmd.remove('scriptargs')
-                }else if(cmd.jobref?.arg?.line){
+            def fixup= { cmd ->
+                if (cmd.scriptfile || cmd.script) {
+                    cmd.args = cmd.remove('scriptargs')
+                } else if (cmd.jobref?.arg?.line) {
                     cmd.jobref.args = cmd.jobref.arg.remove('line')
                     cmd.jobref.remove('arg')
+                }
+            }
+            map.sequence.commands.each(fixup)
+            map.sequence.commands.each{
+                if(it.errorhandler){
+                    fixup(it.errorhandler)
                 }
             }
         }
@@ -300,23 +306,29 @@ class JobsXMLCodec {
         BuilderUtil.makeAttribute(map.sequence,'strategy')
         map.sequence.command=map.sequence.remove('commands')
         //convert script args values to idiosyncratic label
-        map.sequence.command.each{ cmd ->
-            if(cmd.scriptfile || cmd.script){
-                cmd.scriptargs=cmd.remove('args')
-                if(cmd.script){
-                    cmd[BuilderUtil.asCDATAName('script')]=cmd.remove('script')
+        def gencmd= { cmd ->
+            if (cmd.scriptfile || cmd.script) {
+                cmd.scriptargs = cmd.remove('args')
+                if (cmd.script) {
+                    cmd[BuilderUtil.asCDATAName('script')] = cmd.remove('script')
                 }
-            }else if(cmd.jobref){
-                BuilderUtil.makeAttribute(cmd.jobref,'name')
-                if(cmd.jobref.group){
-                    BuilderUtil.makeAttribute(cmd.jobref,'group')
-                }else{
+            } else if (cmd.jobref) {
+                BuilderUtil.makeAttribute(cmd.jobref, 'name')
+                if (cmd.jobref.group) {
+                    BuilderUtil.makeAttribute(cmd.jobref, 'group')
+                } else {
                     cmd.jobref.remove('group')
                 }
                 final def remove = cmd.jobref.remove('args')
-                if(null!=remove){
-                    cmd.jobref.arg=BuilderUtil.toAttrMap('line',remove)
+                if (null != remove) {
+                    cmd.jobref.arg = BuilderUtil.toAttrMap('line', remove)
                 }
+            }
+        }
+        map.sequence.command.each(gencmd)
+        map.sequence.command.each{
+            if(it.errorhandler){
+                gencmd(it.errorhandler)
             }
         }
         if(map.notification){
