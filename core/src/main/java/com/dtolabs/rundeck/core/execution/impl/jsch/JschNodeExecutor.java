@@ -48,6 +48,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.text.MessageFormat;
@@ -80,35 +82,38 @@ public class JschNodeExecutor implements NodeExecutor, Describable {
     public static final String NODE_ATTR_SSH_AUTHENTICATION = "ssh-authentication";
     public static final String NODE_ATTR_SSH_PASSWORD_OPTION = "ssh-password-option";
     public static final String DEFAULT_SSH_PASSWORD_OPTION = "option.sshPassword";
-    public static final String NODE_ATTR_SUDO_PASSWORD_OPTION = "sudo-password-option";
+    public static final String SUDO_OPT_PREFIX = "sudo-";
+    public static final String SUDO2_OPT_PREFIX = "sudo2-";
+    public static final String NODE_ATTR_SUDO_PASSWORD_OPTION =  "password-option";
     public static final String DEFAULT_SUDO_PASSWORD_OPTION = "option.sudoPassword";
+    public static final String DEFAULT_SUDO2_PASSWORD_OPTION = "option.sudo2Password";
 
 
     public static final String FWK_PROP_SSH_AUTHENTICATION = FWK_PROP_PREFIX + NODE_ATTR_SSH_AUTHENTICATION;
     public static final String PROJ_PROP_SSH_AUTHENTICATION = PROJ_PROP_PREFIX + NODE_ATTR_SSH_AUTHENTICATION;
 
-    public static final String NODE_ATTR_SUDO_COMMAND_ENABLED = "sudo-command-enabled";
-    public static final String NODE_ATTR_SUDO_PROMPT_PATTERN = "sudo-prompt-pattern";
+    public static final String NODE_ATTR_SUDO_COMMAND_ENABLED = "command-enabled";
+    public static final String NODE_ATTR_SUDO_PROMPT_PATTERN = "prompt-pattern";
     public static final String DEFAULT_SUDO_PROMPT_PATTERN = "^\\[sudo\\] password for .+: .*";
-    public static final String NODE_ATTR_SUDO_FAILURE_PATTERN = "sudo-failure-pattern";
+    public static final String NODE_ATTR_SUDO_FAILURE_PATTERN = "failure-pattern";
     public static final String DEFAULT_SUDO_FAILURE_PATTERN = "^.*try again.*";
-    public static final String NODE_ATTR_SUDO_COMMAND_PATTERN = "sudo-command-pattern";
+    public static final String NODE_ATTR_SUDO_COMMAND_PATTERN = "command-pattern";
     public static final String DEFAULT_SUDO_COMMAND_PATTERN = "^sudo$";
-    public static final String NODE_ATTR_SUDO_PROMPT_MAX_LINES = "sudo-prompt-max-lines";
+    public static final String NODE_ATTR_SUDO_PROMPT_MAX_LINES = "prompt-max-lines";
     public static final int DEFAULT_SUDO_PROMPT_MAX_LINES = 12;
-    public static final String NODE_ATTR_SUDO_RESPONSE_MAX_LINES = "sudo-response-max-lines";
+    public static final String NODE_ATTR_SUDO_RESPONSE_MAX_LINES = "response-max-lines";
     public static final int DEFAULT_SUDO_RESPONSE_MAX_LINES = 2;
-    public static final String NODE_ATTR_SUDO_PROMPT_MAX_TIMEOUT = "sudo-prompt-max-timeout";
+    public static final String NODE_ATTR_SUDO_PROMPT_MAX_TIMEOUT = "prompt-max-timeout";
     public static final long DEFAULT_SUDO_PROMPT_MAX_TIMEOUT = 5000;
-    public static final String NODE_ATTR_SUDO_RESPONSE_MAX_TIMEOUT = "sudo-response-max-timeout";
+    public static final String NODE_ATTR_SUDO_RESPONSE_MAX_TIMEOUT = "response-max-timeout";
     public static final long DEFAULT_SUDO_RESPONSE_MAX_TIMEOUT = 5000;
-    public static final String NODE_ATTR_SUDO_FAIL_ON_PROMPT_MAX_LINES = "sudo-fail-on-prompt-max-lines";
+    public static final String NODE_ATTR_SUDO_FAIL_ON_PROMPT_MAX_LINES = "fail-on-prompt-max-lines";
     public static final boolean DEFAULT_SUDO_FAIL_ON_PROMPT_MAX_LINES = false;
-    public static final String NODE_ATTR_SUDO_FAIL_ON_PROMPT_TIMEOUT = "sudo-fail-on-prompt-timeout";
+    public static final String NODE_ATTR_SUDO_FAIL_ON_PROMPT_TIMEOUT = "fail-on-prompt-timeout";
     public static final boolean DEFAULT_SUDO_FAIL_ON_PROMPT_TIMEOUT = true;
-    public static final String NODE_ATTR_SUDO_FAIL_ON_RESPONSE_TIMEOUT = "sudo-fail-on-response-timeout";
+    public static final String NODE_ATTR_SUDO_FAIL_ON_RESPONSE_TIMEOUT = "fail-on-response-timeout";
     public static final boolean DEFAULT_SUDO_FAIL_ON_RESPONSE_TIMEOUT = false;
-    public static final String NODE_ATTR_SUDO_SUCCESS_ON_PROMPT_THRESHOLD = "sudo-success-on-prompt-threshold";
+    public static final String NODE_ATTR_SUDO_SUCCESS_ON_PROMPT_THRESHOLD = "success-on-prompt-threshold";
     public static final boolean DEFAULT_SUDO_SUCCESS_ON_PROMPT_THRESHOLD = true;
 
     private Framework framework;
@@ -223,7 +228,8 @@ public class JschNodeExecutor implements NodeExecutor, Describable {
 
 
             //if 2nd responder
-            final SudoResponder sudoResponder2 = SudoResponder.create(node, framework, context, "2");
+            final SudoResponder sudoResponder2 = SudoResponder.create(node, framework, context, SUDO2_OPT_PREFIX,
+                                                                      DEFAULT_SUDO2_PASSWORD_OPTION);
             if (sudoResponder2.isSudoEnabled()
                 && sudoResponder2.matchesCommandPattern(CLIUtils.generateArgline(null, command))) {
                 logger.debug("Enable second sudo responder");
@@ -556,26 +562,36 @@ public class JschNodeExecutor implements NodeExecutor, Describable {
         private long responseMaxTimeout = -1;
         private boolean failOnResponseThreshold = false;
         private String inputString;
-        private String configSuffix = "";
+        private String configPrefix;
         private String description;
+        private String defaultSudoPasswordOption;
 
 
         private SudoResponder() {
             description = DEFAULT_DESCRIPTION;
-
+            defaultSudoPasswordOption = DEFAULT_SUDO_PASSWORD_OPTION;
+            configPrefix = SUDO_OPT_PREFIX;
         }
-        private SudoResponder(final String configSuffix) {
-            if(null!=configSuffix) {
-                this.configSuffix = configSuffix;
+        private SudoResponder(final String configPrefix, final String defaultSudoPasswordOption) {
+            this();
+            if(null!= configPrefix) {
+                this.configPrefix = configPrefix;
+            }
+            if(null!=defaultSudoPasswordOption){
+                this.defaultSudoPasswordOption=defaultSudoPasswordOption;
             }
         }
 
         static SudoResponder create(final INodeEntry node, final Framework framework, final ExecutionContext context) {
-            return create(node, framework, context, "");
+            return create(node, framework, context, null,null);
         }
 
-        static SudoResponder create(final INodeEntry node, final Framework framework, final ExecutionContext context, String configSuffix) {
-            final SudoResponder sudoResponder = new SudoResponder(configSuffix);
+        static SudoResponder create(final INodeEntry node,
+                                    final Framework framework,
+                                    final ExecutionContext context,
+                                    final String configPrefix,
+                                    final String defaultSudoPasswordOption) {
+            final SudoResponder sudoResponder = new SudoResponder(configPrefix,defaultSudoPasswordOption);
             sudoResponder.init(node, framework.getFrameworkProjectMgr().getFrameworkProject(
                 context.getFrameworkProject()), framework, context);
             return sudoResponder;
@@ -594,42 +610,59 @@ public class JschNodeExecutor implements NodeExecutor, Describable {
         private void init(final INodeEntry node, final FrameworkProject frameworkProject,
                           final Framework framework, final ExecutionContext context) {
             sudoEnabled = determineSudoEnabled(node);
+            System.err.println("sudoEnabled? "+sudoEnabled+", test: "+ configPrefix + NODE_ATTR_SUDO_COMMAND_ENABLED);
             if (sudoEnabled) {
                 final String sudoPassword = determineSudoPassword(node, context);
                 inputString = (null != sudoPassword ? sudoPassword : "") + "\n";
 
-                sudoCommandPattern = resolveProperty(NODE_ATTR_SUDO_COMMAND_PATTERN + configSuffix, DEFAULT_SUDO_COMMAND_PATTERN, node,
-                    frameworkProject, framework);
-                inputSuccessPattern = resolveProperty(NODE_ATTR_SUDO_PROMPT_PATTERN + configSuffix, DEFAULT_SUDO_PROMPT_PATTERN, node,
-                    frameworkProject, framework);
+                sudoCommandPattern = resolveProperty(configPrefix + NODE_ATTR_SUDO_COMMAND_PATTERN,
+                                                     DEFAULT_SUDO_COMMAND_PATTERN,
+                                                     node,
+                                                     frameworkProject,
+                                                     framework);
+                inputSuccessPattern = resolveProperty(configPrefix + NODE_ATTR_SUDO_PROMPT_PATTERN,
+                                                      DEFAULT_SUDO_PROMPT_PATTERN,
+                                                      node,
+                                                      frameworkProject,
+                                                      framework);
                 inputFailurePattern = null;
-                responseFailurePattern = resolveProperty(NODE_ATTR_SUDO_FAILURE_PATTERN + configSuffix, DEFAULT_SUDO_FAILURE_PATTERN,
-                    node,
-                    frameworkProject, framework);
+                responseFailurePattern = resolveProperty(configPrefix + NODE_ATTR_SUDO_FAILURE_PATTERN,
+                                                         DEFAULT_SUDO_FAILURE_PATTERN,
+                                                         node,
+                                                         frameworkProject,
+                                                         framework);
                 responseSuccessPattern = null;
-                inputMaxLines = resolveIntProperty(NODE_ATTR_SUDO_PROMPT_MAX_LINES + configSuffix, DEFAULT_SUDO_PROMPT_MAX_LINES,
-                    node,
-                    frameworkProject, framework);
-                inputMaxTimeout = resolveLongProperty(NODE_ATTR_SUDO_PROMPT_MAX_TIMEOUT + configSuffix,
-                    DEFAULT_SUDO_PROMPT_MAX_TIMEOUT,
-                    node, frameworkProject, framework);
-                responseMaxLines = resolveIntProperty(NODE_ATTR_SUDO_RESPONSE_MAX_LINES + configSuffix,
-                    DEFAULT_SUDO_RESPONSE_MAX_LINES,
-                    node, frameworkProject, framework);
-                responseMaxTimeout = resolveLongProperty(NODE_ATTR_SUDO_RESPONSE_MAX_TIMEOUT + configSuffix,
-                    DEFAULT_SUDO_RESPONSE_MAX_TIMEOUT, node, frameworkProject, framework);
+                inputMaxLines = resolveIntProperty(configPrefix + NODE_ATTR_SUDO_PROMPT_MAX_LINES,
+                                                   DEFAULT_SUDO_PROMPT_MAX_LINES,
+                                                   node,
+                                                   frameworkProject,
+                                                   framework);
+                inputMaxTimeout = resolveLongProperty(configPrefix + NODE_ATTR_SUDO_PROMPT_MAX_TIMEOUT,
+                                                      DEFAULT_SUDO_PROMPT_MAX_TIMEOUT,
+                                                      node, frameworkProject, framework);
+                responseMaxLines = resolveIntProperty(configPrefix + NODE_ATTR_SUDO_RESPONSE_MAX_LINES,
+                                                      DEFAULT_SUDO_RESPONSE_MAX_LINES,
+                                                      node, frameworkProject, framework);
+                responseMaxTimeout = resolveLongProperty(configPrefix + NODE_ATTR_SUDO_RESPONSE_MAX_TIMEOUT,
+                                                         DEFAULT_SUDO_RESPONSE_MAX_TIMEOUT,
+                                                         node,
+                                                         frameworkProject,
+                                                         framework);
 
-                failOnInputLinesThreshold = resolveBooleanProperty(NODE_ATTR_SUDO_FAIL_ON_PROMPT_MAX_LINES
-                                                                   + configSuffix,
+                failOnInputLinesThreshold = resolveBooleanProperty(
+                    configPrefix + NODE_ATTR_SUDO_FAIL_ON_PROMPT_MAX_LINES,
                     DEFAULT_SUDO_FAIL_ON_PROMPT_MAX_LINES, node, frameworkProject, framework);
 
-                failOnInputTimeoutThreshold = resolveBooleanProperty(NODE_ATTR_SUDO_FAIL_ON_PROMPT_TIMEOUT
-                                                                     + configSuffix,
+                failOnInputTimeoutThreshold = resolveBooleanProperty(
+                    configPrefix + NODE_ATTR_SUDO_FAIL_ON_PROMPT_TIMEOUT,
                     DEFAULT_SUDO_FAIL_ON_PROMPT_TIMEOUT, node, frameworkProject, framework);
-                failOnResponseThreshold = resolveBooleanProperty(NODE_ATTR_SUDO_FAIL_ON_RESPONSE_TIMEOUT + configSuffix,
-                    DEFAULT_SUDO_FAIL_ON_RESPONSE_TIMEOUT, node, frameworkProject, framework);
-                successOnInputThreshold = resolveBooleanProperty(NODE_ATTR_SUDO_SUCCESS_ON_PROMPT_THRESHOLD
-                                                                 + configSuffix,
+                failOnResponseThreshold = resolveBooleanProperty(configPrefix + NODE_ATTR_SUDO_FAIL_ON_RESPONSE_TIMEOUT,
+                                                                 DEFAULT_SUDO_FAIL_ON_RESPONSE_TIMEOUT,
+                                                                 node,
+                                                                 frameworkProject,
+                                                                 framework);
+                successOnInputThreshold = resolveBooleanProperty(
+                    configPrefix + NODE_ATTR_SUDO_SUCCESS_ON_PROMPT_THRESHOLD,
                     DEFAULT_SUDO_SUCCESS_ON_PROMPT_THRESHOLD, node, frameworkProject, framework);
             }
         }
@@ -651,22 +684,20 @@ public class JschNodeExecutor implements NodeExecutor, Describable {
          * Determine if sudo should be used: sudo-enabled property must be "true" and the sudo password must be set
          */
         private boolean determineSudoEnabled(final INodeEntry node) {
-            if (null != node.getAttributes().get(NODE_ATTR_SUDO_COMMAND_ENABLED + configSuffix)) {
-                return  Boolean.parseBoolean(node.getAttributes().get(NODE_ATTR_SUDO_COMMAND_ENABLED + configSuffix));
-            }
-            return false;
+            final String test = node.getAttributes().get(configPrefix + NODE_ATTR_SUDO_COMMAND_ENABLED);
+            return null != test && Boolean.parseBoolean(test);
         }
 
         /**
          * Determine the sudo password to use
          */
         private String determineSudoPassword(final INodeEntry node, final ExecutionContext context) {
-            if (null != node.getAttributes().get(NODE_ATTR_SUDO_PASSWORD_OPTION + configSuffix)) {
+            if (null != node.getAttributes().get(configPrefix + NODE_ATTR_SUDO_PASSWORD_OPTION)) {
                 return NodeSSHConnectionInfo.evaluateSecureOption(node.getAttributes().get(
-                    NODE_ATTR_SUDO_PASSWORD_OPTION + configSuffix),
+                    configPrefix + NODE_ATTR_SUDO_PASSWORD_OPTION),
                                                                   context);
             } else {
-                return NodeSSHConnectionInfo.evaluateSecureOption(DEFAULT_SUDO_PASSWORD_OPTION + configSuffix, context);
+                return NodeSSHConnectionInfo.evaluateSecureOption(defaultSudoPasswordOption, context);
             }
         }
 
