@@ -812,7 +812,9 @@ class ScheduledExecutionController  {
         if(newScheduledExecution.scheduled){
             crontab=newScheduledExecution.timeAndDateAsBooleanMap()
         }
-        render(view:'create',model: [ scheduledExecution:newScheduledExecution, crontab:crontab,params:params, iscopy:true, authorized:scheduledExecutionService.userAuthorizedForJob(request,scheduledExecution,framework), projects: frameworkService.projects(framework)])
+        def nodeStepTypes = framework.getNodeStepExecutorService().listDescriptions()
+        def stepTypes = framework.getStepExecutionService().listDescriptions()
+        render(view:'create',model: [ scheduledExecution:newScheduledExecution, crontab:crontab,params:params, iscopy:true, authorized:scheduledExecutionService.userAuthorizedForJob(request,scheduledExecution,framework), projects: frameworkService.projects(framework), nodeStepDescriptions: nodeStepTypes, stepDescriptions: stepTypes])
 
     }
     /**
@@ -975,7 +977,10 @@ class ScheduledExecutionController  {
                 scheduledExecution.errors.allErrors.each { log.warn(it.defaultMessage) }
             }
             flash.message=g.message(code:'ScheduledExecutionController.save.failed')
-            return render(view:'create',model:[scheduledExecution:scheduledExecution,params:params, projects: frameworkService.projects(framework)])
+
+            def nodeStepTypes = framework.getNodeStepExecutorService().listDescriptions()
+            def stepTypes = framework.getStepExecutionService().listDescriptions()
+            return render(view:'create',model:[scheduledExecution:scheduledExecution,params:params, projects: frameworkService.projects(framework), nodeStepDescriptions: nodeStepTypes, stepDescriptions: stepTypes])
         }
     }
     /**
@@ -1122,7 +1127,10 @@ class ScheduledExecutionController  {
             scheduledExecution.errors.allErrors.each { log.warn(it.defaultMessage) }
             flash.message=results.message
             Framework framework = frameworkService.getFrameworkFromUserSession(session, request)
-            render(view:'create',model:[scheduledExecution:scheduledExecution,params:params, projects: frameworkService.projects(framework)])
+
+            def nodeStepTypes = framework.getNodeStepExecutorService().listDescriptions()
+            def stepTypes = framework.getStepExecutionService().listDescriptions()
+            render(view:'create',model:[scheduledExecution:scheduledExecution,params:params, projects: frameworkService.projects(framework), nodeStepDescriptions: nodeStepTypes, stepDescriptions: stepTypes])
         } else {
             log.debug("ExecutionController: immediate execution scheduled (${results.id})")
             redirect(controller:"execution", action:"follow",id:results.id)
@@ -1216,20 +1224,20 @@ class ScheduledExecutionController  {
             flash.savedJobMessage="Created new Job"
             scheduledExecutionService.logJobChange(changeinfo,scheduledExecution.properties)
             return redirect(controller:'scheduledExecution',action:'show',params:[id:scheduledExecution.extid])
-        }else if(result.unauthorized){
-            if(scheduledExecution){
-                scheduledExecution.errors.allErrors.each { log.warn(it.defaultMessage) }
-            }
-            request.message=result.error
-
-            render(view:'create',model:[scheduledExecution:scheduledExecution,params:params, projects: frameworkService.projects(framework)])
         }else{
             if(scheduledExecution){
                 scheduledExecution.errors.allErrors.each { log.warn(it.defaultMessage) }
             }
-            request.message=g.message(code:'ScheduledExecutionController.save.failed')
-            render(view:'create',model:[scheduledExecution:scheduledExecution,params:params, projects: frameworkService.projects(framework)])
+            if (result.unauthorized){
+                request.message = result.error
+            }else{
+                request.message=g.message(code:'ScheduledExecutionController.save.failed')
+            }
         }
+
+        def nodeStepTypes = framework.getNodeStepExecutorService().listDescriptions()
+        def stepTypes = framework.getStepExecutionService().listDescriptions()
+        render(view: 'create', model: [scheduledExecution: scheduledExecution, params: params, projects: frameworkService.projects(framework), nodeStepDescriptions: nodeStepTypes, stepDescriptions: stepTypes])
     }
     /**
      * Parse some kind of job input request using the specified format

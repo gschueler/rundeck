@@ -347,7 +347,8 @@ class WorkflowController {
             def item
 
             if(input.params.pluginItem){
-                item = new PluginStep([type:input.params.newitemtype])
+                item = new PluginStep()
+                item.type= input.params.newitemtype
                 item.nodeStep=input.params.newitemnodestep=='true'
                 item.configuration= input.params.pluginConfig
             }else if (input.params.jobName || 'job' == input.params.newitemtype) {
