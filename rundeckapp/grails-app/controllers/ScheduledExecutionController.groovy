@@ -718,11 +718,12 @@ class ScheduledExecutionController  {
             session.removeAttribute('undoOPTS');
             session.removeAttribute('redoOPTS');
         }
-        def stepTypes=framework.getNodeStepExecutorService().listDescriptions()
+        def nodeStepTypes=framework.getNodeStepExecutorService().listDescriptions()
+        def stepTypes=framework.getStepExecutionService().listDescriptions()
         crontab = scheduledExecution.timeAndDateAsBooleanMap()
         return [ scheduledExecution:scheduledExecution, crontab:crontab,params:params,
             nextExecutionTime:scheduledExecutionService.nextExecutionTime(scheduledExecution),
-            authorized:scheduledExecutionService.userAuthorizedForJob(request,scheduledExecution,framework), projects: frameworkService.projects(framework),nodeStepDescriptions:stepTypes]
+            authorized:scheduledExecutionService.userAuthorizedForJob(request,scheduledExecution,framework), projects: frameworkService.projects(framework),nodeStepDescriptions: nodeStepTypes,stepDescriptions:stepTypes]
     }
 
 
@@ -911,9 +912,10 @@ class ScheduledExecutionController  {
             session.removeAttribute('redoOPTS');
         }
 
-        def stepTypes = framework.getNodeStepExecutorService().listDescriptions()
+        def nodeStepTypes = framework.getNodeStepExecutorService().listDescriptions()
+        def stepTypes = framework.getStepExecutionService().listDescriptions()
         log.debug("ScheduledExecutionController: create : now returning model data to view...")
-        return ['scheduledExecution':scheduledExecution,params:params,crontab:[:],projects:projects,nodeStepDescriptions: stepTypes]
+        return ['scheduledExecution':scheduledExecution,params:params,crontab:[:],projects:projects,nodeStepDescriptions: nodeStepTypes, stepDescriptions: stepTypes]
     }
 
     private clearEditSession(id='_new'){
