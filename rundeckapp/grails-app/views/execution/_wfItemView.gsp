@@ -40,14 +40,7 @@
             </g:if>
             <g:elseif test="${pluginitem}">
                 <g:if test="${!noimgs}"><g:img file="icon-small-file.png" width="16px" height="16px"/></g:if>
-                <g:if test="${itemDescription}">
-                    <g:render template="/framework/renderPluginConfig"
-                              model="${[prefix: '', includeFormFields: false, values: item?.configuration,
-                                      description: itemDescription, type: item?.type]}"/>
-                </g:if>
-                <g:else>
-                    Plugin Step
-                </g:else>
+                <stepplugin:display step="${item}" prefix="" includeFormFields="false"/>
             </g:elseif>
             <g:else>
                 <g:if test="${!noimgs}"><g:img file="icon-small-shell.png" width="16px" height="16px"/></g:if>
