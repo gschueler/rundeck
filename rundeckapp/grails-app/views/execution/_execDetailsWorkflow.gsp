@@ -130,7 +130,7 @@
     <div id="wfnew_eh_types" style="display:none; margin-top:10px;background: white;" class="popout">
         %{--This element is moved around to show the add error-handle buttons for a step--}%
         <g:render template="/execution/wfAddStep"
-                model="[addMessage:'Workflow.stepErrorHandler.label.add',descriptionMessage:'Workflow.stepErrorHandler.label.add',chooseMessage:'Workflow.stepErrorHandler.label.choose.the.type']"
+                model="[addMessage:'Workflow.stepErrorHandler.label.add',descriptionMessage:'Workflow.stepErrorHandler.description',chooseMessage:'Workflow.stepErrorHandler.label.choose.the.type']"
         />
     </div>
     </div>
