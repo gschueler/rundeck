@@ -606,4 +606,8 @@ class UtilityTagLib{
             }
         }
     }
+
+    def markdown={ attrs, body ->
+        out<<body().toString().decodeMarkdown()
+    }
 }

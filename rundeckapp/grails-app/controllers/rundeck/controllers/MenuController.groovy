@@ -595,6 +595,9 @@ class MenuController {
         ]]
     }
 
+    def licenses = {->
+
+    }
 
 
     /**
