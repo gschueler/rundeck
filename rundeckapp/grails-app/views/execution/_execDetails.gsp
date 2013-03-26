@@ -1,7 +1,7 @@
 <%@ page import="rundeck.ExecutionContext; rundeck.ScheduledExecution" %>
 <g:set var="rkey" value="${g.rkey()}"/>
 
-<table class="simpleForm" cellpadding="0" cellspacing="0">
+<table class="simpleForm" style="width:100%" cellpadding="0" cellspacing="0">
 
     <g:if test="${execdata!=null && execdata.id && execdata instanceof ScheduledExecution && execdata.scheduled}">
         <tr>
