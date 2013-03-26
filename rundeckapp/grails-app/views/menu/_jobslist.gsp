@@ -38,7 +38,7 @@
                         <g:else>
                         <tr class="sectionhead expandComponentHolder ${paginateParams?.idlist==scheduledExecution.id.toString()?'expanded':''}" id="jobrow_${scheduledExecution.id}">
                             <td class="jobname">
-                                <div style="overflow:hidden; text-overflow: ellipsis; height:16px;">
+                                <div style="overflow:hidden; text-overflow: ellipsis; height:20px;">
                                 %{--<g:expander key="${ukey+'jobDisplay'+scheduledExecution.id}" open="${paginateParams?.idlist==scheduledExecution.id.toString()?'true':'false'}" imgfirst="true">${scheduledExecution.jobName.encodeAsHTML()}</g:expander>--}%
                                     <span class="jobbulkeditfield" style="display: none">
                                     <g:if test="${jobauthorizations && jobauthorizations[AuthConstants.ACTION_DELETE]?.contains(scheduledExecution.id.toString())}">

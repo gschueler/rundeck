@@ -42,7 +42,7 @@
         <g:set var="rpt" value="${it}"/>
         <tr class="  ${it?.status != 'succeed' ? 'fail' : ''}  ${!it.dateCompleted ? 'nowrunning' : ''} ${sincetime && it.dateCompleted.time>sincetime?'newitem':''} hilite expandComponentHolder sectionhead" onclick="Expander.toggle(this,'${rkey}subsect_${it.id}');">
             <td style="width:12px;">
-                <span class="action textbtn expandComponentControl" >
+                <span class="action expandComponentControl" >
                     <img src="${resource(dir: 'images', file: 'icon-tiny-disclosure.png')}" title="Toggle extra information" alt="" width="12px" height="12px"/>
                 </span>
             </td>

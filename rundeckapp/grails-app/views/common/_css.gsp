@@ -17,19 +17,19 @@
     }
     td.selected, .selected, tr.selected{
         %{--background: #bbb url(<g:resource dir='images' file='bggrad-select.png'/>) repeat-x top left;--}%
-        border:1px solid #999;
+        border-color: #999;
     }
     tr.selected.alternateRow{
         %{--background: #bbb url(<g:resource dir='images' file='bggrad-select.png'/>) repeat-x 0px -16px;--}%
-        border:1px solid #999;
+        border-color:#999;
     }
     td.hilite.selected:hover, .hilite.selected:hover, tr.hilite.selected:hover{
         %{--background: #bbb url(<g:resource dir='images' file='bggrad-select.png'/>) repeat-x 0px -16px;--}%
-        border:1px solid #999;
+        border-color:#999;
     }
     tr.hilite.selected.alternateRow:hover{
         %{--background: #bbb url(<g:resource dir='images' file='bggrad-select.png'/>) repeat-x 0px -32px;--}%
-        border:1px solid #999;
+        border-color:#999;
     }
 
     a.toptab{
@@ -50,7 +50,7 @@
     }
     a.action.button.selected, span.action.button.selected,a.textaction.button.selected, span.textaction.button.selected{
         %{--background: #eee url(<g:resource dir='images' file='bggrad-select.png'/>) repeat-x 0px 0px;--}%
-        border:1px solid #999;
+        border-color: #999;
     }
 
     div.depressed, span.depressed{

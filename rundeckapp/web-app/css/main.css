@@ -34,8 +34,7 @@ html, body{
 	
 	padding: 0 0 0 0;
 	margin: 0 0 0 0;
-    font: 81.25%/1.5em verdana, arial, helvetica, sans-serif;
-
+    font: 12px/18px verdana, arial, helvetica, sans-serif;
 }
 
 table{
@@ -87,6 +86,9 @@ a.external:hover{
 }
 form{
     margin:0;
+}
+input,select,option{
+    font: 12px/18px verdana, arial, helvetica, sans-serif;
 }
 
 ul, ol{
@@ -232,9 +234,15 @@ img{
     vertical-align: middle;
     border: 0;
 }
-a.action, .action.textbtn, td.action.textbtn{
+.action, .action.textbtn{
     color:blue;
     font-weight:normal;
+    padding: 4px 9px;
+}
+.textbtn{
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
 }
 .action.textbtn.ready{
     text-decoration:underline;
@@ -249,17 +257,37 @@ a.action:hover, span.action.textbtn:hover, td.action.textbtn:hover{
     color: blue;
     text-decoration:underline;
 }
-a.button, span.button, label.button{
-    padding: 3px;
-    background: #eee;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
+.button, button, input[type=submit], input[type=button]{
+    background: #fff;
+    display: inline-block;
+    padding: 4px 12px;
+    margin-bottom: 0;
+    text-align: center;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid #aaaaaa;
+    border-color: #aaa #aaa #888;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
 }
-a.button.icon, span.button.icon{
+.button.icon{
     border: 1px solid #aaa;
 }
-a.button:hover, span.button:hover,span.titlegroup.action:hover,a.textaction.button:hover, span.textaction.button:hover{
+
+button:hover,
+.button:hover,
+button:focus,
+.button:focus,
+button:active,
+.button:active,
+button.active,
+.button.active,
+button.disabled,
+button[disabled],
+input[type=submit]:hover, input[type=button]:hover,
+span.titlegroup.action:hover,a.textaction.button:hover, span.textaction.button:hover{
     background: #ccc;
 }
 .buttonbar{
@@ -269,15 +297,15 @@ a.button:hover, span.button:hover,span.titlegroup.action:hover,a.textaction.butt
     margin:0;
     clear:both;
 }
-a.button.disabled, span.button.disabled{
+.button.disabled, .button.disabled{
     color:#888;
-    border: 1px solid #eee;
+    border-color: #eee;
 }
-a.button.disabled:hover, span.button.disabled:hover{
+.button.disabled:hover, .button.disabled:hover{
     background:#eee;
     cursor: default;
     color:#888;
-    border: 1px solid #eee;
+    border-color: #eee;
 }
 div.buttonholder, td.buttonholder, span.buttonholder{
     padding:5px;
@@ -1058,12 +1086,11 @@ table.jobsList td.jobbuttons div.buttons a.button, table.jobsList td.jobbuttons 
     border-radius:1px;
 
 }
-span.button.small, a.button.small,.toolbar.small span.button, .toolbar.small a.button{
-    padding: 1px;
-    -moz-border-radius:1px;
-    -webkit-border-radius:1px;
-    border-radius:1px;
-    /*font-size:8pt;*/
+.button.small, .toolbar.small .button, button.small, input[type=submit].small{
+    padding: 2px 6px;
+    -moz-border-radius:2px;
+    -webkit-border-radius:2px;
+    border-radius:2px;
 }
 span.button > img, a.button > img{
     vertical-align: middle;
@@ -1781,7 +1808,6 @@ div.jobGroups.subjobs, div.expandComponent.sub_group {
 div.pflowlist{
     padding: 10px 10px;
     border:1px solid #ddd;
-    float:left;
     width:auto;
 
 }
@@ -1792,7 +1818,6 @@ div.pflowlist.edit ol.flowlist li{
     padding:2px;
 }
 div.pflow{
-    float:left;
     width:100%;
     padding:2px;
     padding-left:20px;

@@ -652,10 +652,10 @@
                 <g:render template="nodeFiltersHidden" model="${[params:params,query:query]}"/>
             </g:if>
             <g:if test="${run_enabled}">
-                <g:textField name="workflow.commands[0].adhocRemoteString" size="80" placeholder="Enter a shell command" autofocus="true" />
+                <g:textField name="workflow.commands[0].adhocRemoteString" size="75" placeholder="Enter a shell command" autofocus="true" />
             </g:if>
             <g:else>
-                <input type="text" name="workflow.commands[0].adhocRemoteString" size="80" placeholder="Enter a shell command" autofocus="true" disabled/>
+                <input type="text" name="workflow.commands[0].adhocRemoteString" size="75" placeholder="Enter a shell command" autofocus="true" disabled/>
             </g:else>
         %{--</g:form>--}%
             <g:if test="${run_authorized}">
