@@ -77,6 +77,17 @@
                 new BubbleController(e,null,{offx:-14,offy:null}).startObserving();
             });
             </g:if>
+          $$('select.obs_followModeSelect').each(function(e){
+            Event.observe(e,'change',function(el){
+                window.location='${g.createLinkTo(controller: "execution", action: "show", id:execution.id)}'+'?mode='+$F(e);
+            });
+          });
+          $$('.obs_modeSelect').each(function(e){
+            Event.observe(e,'click',function(el){
+                $(e).hide();
+                $$('.show_modeSelect').each(Element.show);
+            });
+          });
         }
 
         Event.observe(window, 'load', init);
@@ -170,38 +181,30 @@
 
 
 
-            <span id="execRetry"
-                  style="${wdgt.styleVisible(if: null != execution.dateCompleted && null != execution.failedNodeList)}; margin-right:10px;">
-                <g:if test="${scheduledExecution}">
-                    <g:if test="${authChecks[AuthConstants.ACTION_RUN]}">
-                        <g:link controller="scheduledExecution" action="execute" id="${scheduledExecution.extid}"
-                                params="${[retryFailedExecId: execution.id]}" title="Run Job on the failed nodes"
-                                class="action button" style="margin-left:10px">
-                            <img src="${resource(dir: 'images', file: 'icon-small-run.png')}" alt="run" width="16px"
-                                 height="16px"/>
-                            Retry Failed Nodes  &hellip;
-                        </g:link>
-                    </g:if>
-                </g:if>
-                <g:else>
-                    <g:if test="${auth.resourceAllowedTest(kind: 'job', action: [AuthConstants.ACTION_CREATE]) || adhocRunAllowed}">
-                        <g:link controller="scheduledExecution" action="createFromExecution"
-                                params="${[executionId: execution.id, failedNodes: true]}" class="action button"
-                                title="Retry on the failed nodes&hellip;" style="margin-left:10px">
-                            <img src="${resource(dir: 'images', file: 'icon-small-run.png')}" alt="run" width="16px"
-                                 height="16px"/>
-                            Retry Failed Nodes &hellip;
-                        </g:link>
-                    </g:if>
-                </g:else>
-            </span>
+        %{--Download output button--}%
+        <span style="${execution.dateCompleted ? '' : 'display:none'}" class="sepL" id="viewoptionscomplete">
+            <g:link class="" style="padding:5px;"
+                    title="Download entire output file"
+                    controller="execution" action="downloadOutput" id="${execution.id}">
+                &darr;
+                %{--<img--}%
+                    %{--src="${resource(dir: 'images', file: 'button-downarrow-gray.png')}" alt="Download" title="Download output"--}%
+                    %{--width="16px" height="16px"/> --}%
+                <span
+                    id="outfilesize">${filesize ? filesize + ' bytes' : ''}</span></g:link>
+        </span>
+
+            %{--
+            Workflow details expander
+            --}%
 
             <g:expander key="schedExDetails${scheduledExecution?.id ? scheduledExecution?.id : ''}"
                         imgfirst="true">Workflow Details</g:expander>
-            <div class="presentation" style="display:none" id="schedExDetails${scheduledExecution?.id}">
-                <g:render template="execDetails" model="[execdata: execution]"/>
 
-            </div>
+
+            %{--
+            Execution retry buttons
+            --}%
 
             <span id="execRerun" style="${wdgt.styleVisible(if: null != execution.dateCompleted)}">
                 <g:if test="${scheduledExecution}">
@@ -234,6 +237,42 @@
                     </g:if>
                 </g:else>
             </span>
+            <span id="execRetry"
+                  style="${wdgt.styleVisible(if: null != execution.dateCompleted && null != execution.failedNodeList)}; margin-right:10px;">
+                <g:if test="${scheduledExecution}">
+                    <g:if test="${authChecks[AuthConstants.ACTION_RUN]}">
+                        <g:link controller="scheduledExecution" action="execute" id="${scheduledExecution.extid}"
+                                params="${[retryFailedExecId: execution.id]}" title="Run Job on the failed nodes"
+                                class="action button" style="margin-left:10px">
+                            <img src="${resource(dir: 'images', file: 'icon-small-run.png')}" alt="run" width="16px"
+                                 height="16px"/>
+                            Retry Failed Nodes  &hellip;
+                        </g:link>
+                    </g:if>
+                </g:if>
+                <g:else>
+                    <g:if test="${auth.resourceAllowedTest(kind: 'job', action: [AuthConstants.ACTION_CREATE]) || adhocRunAllowed}">
+                        <g:link controller="scheduledExecution" action="createFromExecution"
+                                params="${[executionId: execution.id, failedNodes: true]}" class="action button"
+                                title="Retry on the failed nodes&hellip;" style="margin-left:10px">
+                            <img src="${resource(dir: 'images', file: 'icon-small-run.png')}" alt="run" width="16px"
+                                 height="16px"/>
+                            Retry Failed Nodes &hellip;
+                        </g:link>
+                    </g:if>
+                </g:else>
+            </span>
+
+
+
+            %{--Workflow Details section--}%
+              <div class="presentation" style="display:none" id="schedExDetails${scheduledExecution?.id}">
+                  <g:render template="execDetails" model="[execdata: execution]"/>
+
+              </div>
+
+
+
         </div>
         <div class="clear"></div>
     </div>
@@ -243,170 +282,154 @@
            title="Progress is an estimate based on average execution time for this ${g.message(code: 'domain.ScheduledExecution.title')}.">0%</div>
   </div>
 
-    %{--<div id="commandFlow" class="commandFlow">--}%
-        %{--<table width="100%">--}%
-            %{--<tr>--}%
-                %{--<td width="50%">--}%
-
-
-                %{--</td>--}%
-                %{--<td width="50%" >--}%
-                   %{----}%
-                %{--</td>--}%
-            %{--</tr>--}%
-        %{--</table>--}%
-    %{--</div>--}%
-
-    <div id="commandPerformOpts" class="outputdisplayopts" style=" display: none;">
+    <div id="commandPerformOpts" class="outputdisplayopts" style=" ;">
         <form action="#" id="outputappendform">
 
         <table width="100%">
             <tr>
-                <td class="buttonholder" style="padding:10px;">
-                    <g:link class="tab ${followmode=='tail'?' selected':''}" style="padding:5px;"
-                        title="${g.message(code:'execution.show.mode.Tail.desc')}"
-                        controller="execution"  action="show" id="${execution.id}" params="${[lastlines:params.lastlines,mode:'tail'].findAll{it.value}}"><g:message code="execution.show.mode.Tail.title" default="Tail Output"/></g:link>
-                    <g:link class="tab ${followmode=='browse'?' selected':''}" style="padding:5px;"
-                        title="${g.message(code:'execution.show.mode.Annotated.desc')}"
-                        controller="execution"  action="show" id="${execution.id}" params="[mode:'browse']"><g:message code="execution.show.mode.Annotated.title" default="Annotated"/></g:link>
-                    <g:link class="tab ${followmode=='node'?' selected':''}" style="padding:5px;"
-                        title="${g.message(code:'execution.show.mode.Compact.desc')}"
-                        controller="execution"  action="show" id="${execution.id}" params="[mode:'node']"><g:message code="execution.show.mode.Compact.title" default="Compact"/></g:link>
-                    
-            <span id="fullviewopts" style="${followmode!='browse'?'display:none':''}">
-                    %{--<input--}%
-                        %{--type="radio"--}%
-                        %{--name="outputappend"--}%
-                        %{--id="outputappendtop"--}%
-                        %{--value="top"--}%
-                        %{--style="display: none;"/>--}%
-                    %{--<label for="outputappendtop">--}%
-                        %{--<span--}%
-                        %{--class="action textbtn button"--}%
+                %{--<td class="buttonholder" style="padding:10px;">--}%
+
+                    %{----}%
+                    %{--<span class="obs_modeSelect">--}%
+                        %{--<span class="action textbtn" title="Follow Mode">--}%
+                            %{--${followmode}--}%
+                        %{--</span>--}%
+                    %{--</span>--}%
+                    %{--<span style="display: none" class="show_modeSelect">--}%
+                        %{--<g:select value="${followmode}" from="${['tail','browse','node']}" class="followModeSelect"></g:select>--}%
+                    %{--</span>--}%
+
+
+                %{--</td>--}%
+                <td style="text-align: right;">
+                %{--
+                Follow output controls expander
+                --}%
+                %{--Follow output controls section--}%
+
+                <span class="presentation show_modeSelect" style="display:none" id="outputControl">
+                    <span id="fullviewopts" style="${followmode != 'browse' ? 'display:none' : ''}">
+
+                        %{--<span class="action textbtn button"--}%
                         %{--title="Click to change"--}%
-                            %{--id="appendTopLabel"--}%
-                        %{--onclick="followControl.setOutputAppendTop(true);"--}%
-                        %{-->Top</span></label>--}%
-                    %{--<input--}%
-                        %{--type="radio"--}%
-                        %{--name="outputappend"--}%
-                        %{--id="outputappendbottom"--}%
-                        %{--value="bottom"--}%
-                        %{--checked="CHECKED"--}%
-                        %{--style="display: none;"/>--}%
-                    %{--<label--}%
-                        %{--for="outputappendbottom">--}%
-                        %{--<span--}%
-                            %{--class="action textbtn button"--}%
-                            %{--title="Click to change"--}%
-                            %{--id="appendBottomLabel"--}%
-                            %{--onclick="followControl.setOutputAppendTop(false);"--}%
-                        %{-->Bottom</span></label>--}%
-<%--
-            </td>
-            <td>--%>
-                <span class="action textbtn button"
-                      title="Click to change"
-                      id="ctxshowgroupoption"
-                      onclick="followControl.setGroupOutput($('ctxshowgroup').checked);">
-                <input
-                    type="checkbox"
-                    name="ctxshowgroup"
-                    id="ctxshowgroup"
-                    value="true"
-                    ${followmode=='tail'?'':'checked="CHECKED"'}
-                    style=""/>
-                    <label for="ctxshowgroup">Group commands</label>
-                </span>
-<%--
-                </td>
+                        %{--id="ctxshowgroupoption"--}%
+                        %{--onclick="followControl.setGroupOutput($('ctxshowgroup').checked);">--}%
+                        %{--<input--}%
+                        %{--type="checkbox"--}%
+                        %{--name="ctxshowgroup"--}%
+                        %{--id="ctxshowgroup"--}%
+                        %{--value="true"--}%
+                        %{--${followmode == 'tail' ? '' : 'checked="CHECKED"'}--}%
+                        %{--style=""/>--}%
+                        %{--<label for="ctxshowgroup">Group output</label>--}%
+                        %{--</span>--}%
+                        %{--&nbsp;--}%
+                        &nbsp;
+                        <span class="action textbtn"
+                              title="Click to change"
+                              id="ctxshowlastlineoption"
+                              style="${wdgt.styleVisible(if: null == execution?.dateCompleted)}"
+                              onclick="followControl.setShowFinalLine($('ctxshowlastline').checked);">
+                            <input
+                                    type="checkbox"
+                                    name="ctxshowlastline"
+                                    id="ctxshowlastline"
+                                    value="true"
+                                    checked="CHECKED"
+                                    style=""/>
+                            <label for="ctxshowlastline">Show final line</label>
+                        </span>
+                        <span
+                                class="action textbtn"
+                                title="Click to change"
+                                id="ctxcollapseLabel"
+                                onclick="followControl.setCollapseCtx($('ctxcollapse').checked);">
+                            <input
+                                    type="checkbox"
+                                    name="ctxcollapse"
+                                    id="ctxcollapse"
+                                    value="true"
+                                ${followmode == 'tail' ? '' : null == execution?.dateCompleted ? 'checked="CHECKED"' : ''}
+                                    style=""/>
+                            <label for="ctxcollapse">Collapse</label>
+                        </span>
+                    </span>
+                    <g:if test="${followmode == 'tail'}">
 
-            <td >--%>
-                &nbsp;
-                <span
-                    class="action textbtn button"
-                    title="Click to change"
-                    id="ctxcollapseLabel"
-                    onclick="followControl.setCollapseCtx($('ctxcollapse').checked);">
-                <input
-                    type="checkbox"
-                    name="ctxcollapse"
-                    id="ctxcollapse"
-                    value="true"
-                    ${followmode=='tail'?'':null==execution?.dateCompleted?'checked="CHECKED"':''}
-                    style=""/>
-                    <label for="ctxcollapse">Collapse</label>
-                </span>
-<%--
-            </td>
-            <td>--%>
-                &nbsp;
-                <span class="action textbtn button"
-                      title="Click to change"
-                      id="ctxshowlastlineoption"
-                      style="${wdgt.styleVisible(if: null == execution?.dateCompleted)}"
-                      onclick="followControl.setShowFinalLine($('ctxshowlastline').checked);">
-                <input
-                    type="checkbox"
-                    name="ctxshowlastline"
-                    id="ctxshowlastline"
-                    value="true"
-                    checked="CHECKED"
-                    style=""/>
-                    <label for="ctxshowlastline">Show final line</label>
-                </span>
-            </span>
-            <g:if test="${followmode=='tail'}">
-<%---
-                </td>
-                <td>--%>
-                    Show the last
-                    <span class="action textbtn button"
-                      title="Click to reduce"
-                      onmousedown="followControl.modifyLastlines(-5);return false;">-</span>
-                <input
-                    type="text"
-                    name="lastlines"
-                    id="lastlinesvalue"
-                    value="${params.lastlines?params.lastlines:defaultLastLines}"
-                    size="3"
-                    onchange="updateLastlines(this.value)"
-                    onkeypress="var x= noenter();if(!x){this.blur();};return x;"
-                    style=""/>
-                    <span class="action textbtn button"
-                      title="Click to increase"
-                      onmousedown="followControl.modifyLastlines(5);return false;">+</span>
+                        Show the last
+                        <span class="action textbtn "
+                              title="Click to reduce"
+                              onmousedown="followControl.modifyLastlines(-5);
+                              return false;">-</span>
+                        <input
+                                type="text"
+                                name="lastlines"
+                                id="lastlinesvalue"
+                                value="${params.lastlines ? params.lastlines : defaultLastLines}"
+                                size="3"
+                                onchange="updateLastlines(this.value)"
+                                onkeypress="var x = noenter();
+                                if (!x) {
+                                    this.blur();
+                                }
+                                ;
+                                return x;"
+                                style=""/>
+                        <span class="action textbtn "
+                              title="Click to increase"
+                              onmousedown="followControl.modifyLastlines(5);
+                              return false;">+</span>
 
-                    lines<span id="taildelaycontrol" style="${execution.dateCompleted?'display:none':''}">,
+                        lines<span id="taildelaycontrol" style="${execution.dateCompleted ? 'display:none' : ''}">,
                     and update every
 
 
-                    <span class="action textbtn button"
-                      title="Click to reduce"
-                      onmousedown="followControl.modifyTaildelay(-1);return false;">-</span>
-                <input
-                    type="text"
-                    name="taildelay"
-                    id="taildelayvalue"
-                    value="1"
-                    size="2"
-                    onchange="updateTaildelay(this.value)"
-                    onkeypress="var x= noenter();if(!x){this.blur();};return x;"
-                    style=""/>
-                    <span class="action textbtn button"
-                      title="Click to increase"
-                      onmousedown="followControl.modifyTaildelay(1);return false;">+</span>
+                        <span class="action textbtn "
+                              title="Click to reduce"
+                              onmousedown="followControl.modifyTaildelay(-1);
+                              return false;">-</span>
+                        <input
+                                type="text"
+                                name="taildelay"
+                                id="taildelayvalue"
+                                value="1"
+                                size="2"
+                                onchange="updateTaildelay(this.value)"
+                                onkeypress="var x = noenter();
+                                if (!x) {
+                                    this.blur();
+                                }
+                                ;
+                                return x;"
+                                style=""/>
+                        <span class="action textbtn "
+                              title="Click to increase"
+                              onmousedown="followControl.modifyTaildelay(1);
+                              return false;">+</span>
 
-                    seconds
-                </span>
-            </g:if>
-                </td>
-                <td align="right">
-                    <span style="${execution.dateCompleted ? '' : 'display:none'}" class="sepL" id="viewoptionscomplete">
-                        <g:link class="action txtbtn" style="padding:5px;"
-                            title="Download entire output file" 
-                            controller="execution" action="downloadOutput" id="${execution.id}"><img src="${resource(dir:'images',file:'icon-small-file.png')}" alt="Download" title="Download output" width="13px" height="16px"/> Download <span id="outfilesize">${filesize?filesize+' bytes':''}</span></g:link>
+                        seconds
                     </span>
+
+                    </g:if>
+                </span>
+
+                %{--<g:if test="${followmode != 'node'}">--}%
+
+                    %{--<g:expander key="outputControl"--}%
+                                %{-->Output </g:expander>--}%
+                %{--</g:if>--}%
+
+                <span class="action textbtn obs_modeSelect"><g:message code="execution.show.mode.${followmode}.label"/></span>
+                <select name="mode" class="obs_followModeSelect show_modeSelect" style="display: none;">
+                    <option value="tail" ${followmode == 'tail' ? 'selected' : ''}><g:message code="execution.show.mode.tail.label"/></option>
+                    <option value="browse" ${followmode == 'browse' ? 'selected' : ''}><g:message code="execution.show.mode.browse.label"/></option>
+                    <option value="node" ${followmode == 'node' ? 'selected' : ''}><g:message code="execution.show.mode.node.label"/></option>
+                </select>
+                </td>
+            </tr>
+            <tr >
+                <td style="text-align: right;">
+
                 </td>
             </tr>
             </table>

@@ -505,8 +505,8 @@ var FollowControl = Class.create({
         this.runningcmd.percent = data.percentLoaded;
 
         var entries = $A(data.entries);
-        if (null != data.duration) {
-            this.updateDuration(data.duration);
+        if (null != data.execDuration) {
+            this.updateDuration(data.execDuration);
         }
         if (entries != null && entries.length > 0) {
 
@@ -1232,7 +1232,7 @@ var FollowControl = Class.create({
         if ($('execDurationPct')) {
             $('execDurationPct').innerHTML = pct + "%";
         }
-        $('progressBar').style.width = (Math.floor(pct) * 4);
+        $('progressBar').style.width = (Math.floor(pct))+"%";
         $('progressBar').innerHTML = (Math.floor(pct)) + "%";
     }
 });
