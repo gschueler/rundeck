@@ -865,11 +865,13 @@ table.execoutput td.datahtml p+p{
 table.execoutput tr.alternateRow td.data{
     background: #f0f0f0;
 }
+
+table.execoutput td.data.log_severe, table.execoutput td.data.log_error {
+    color: #888;
+}
 table.execoutput td.info .SEVERE{
-    color: red;
 }
 table.execoutput td.info .ERROR{
-    color: red;
 }
 table.execoutput .ctxcounter{
     margin-left:10px;
@@ -880,8 +882,6 @@ table.execoutput .ctxcounter.SEVERE, table.execoutput .ctxcounter.ERROR{
 }
 
 .outputdisplayopts{
-    /*padding: 5px 10px;*/
-    /*margin: 0 20px;*/
     color: #999;
 }
 .optDefault{
@@ -1347,7 +1347,7 @@ span.dragHandle{
     background:white;
     border:1px solid #aaa;
     padding:5px;
-    width:220px;
+    width:320px;
 }
 
 

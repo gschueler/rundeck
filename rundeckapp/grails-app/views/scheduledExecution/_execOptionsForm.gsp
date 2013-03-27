@@ -1,20 +1,6 @@
-<div class="pageTop extra jobHead">
-    <tmpl:showHead scheduledExecution="${scheduledExecution}" iconName="icon-job" subtitle="Choose Execution Options"/>
+<%@ page import="com.dtolabs.rundeck.server.authorization.AuthConstants" %>
 
-    %{--<div style="width: 200px;" class="toolbar small">--}%
-        %{--<g:render template="/scheduledExecution/actionButtons"--}%
-                  %{--model="${[scheduledExecution: scheduledExecution, objexists: objexists, jobAuthorized: jobAuthorized]}"/>--}%
-    %{--</div>--}%
-    <div class="clear"></div>
-    
-</div>
-<div class="pageTop extra">
-<div class="pageSubtitle subtitleAction">
-        Run Job
-</div>
-    <div class="clear"></div>
-</div>
-<div class="pageBody form">
+<div class="pageBody ">
     <g:form controller="scheduledExecution" method="post">
         <g:render template="editOptions" model="${[scheduledExecution:scheduledExecution, selectedoptsmap:selectedoptsmap, selectedargstring:selectedargstring,authorized:authorized,jobexecOptionErrors:jobexecOptionErrors, optiondependencies: optiondependencies, dependentoptions: dependentoptions, optionordering: optionordering]}"/>
 
@@ -43,8 +29,8 @@
                 <g:if test="${namegroups}">
                     <div class="group_select_control" style="display:none">
                         Select:
-                        <span class="action button selectall">All</span>
-                        <span class="action button selectnone">None</span>
+                        <span class="action textbtn selectall">All</span>
+                        <span class="action textbtn selectnone">None</span>
                         <g:if test="${tagsummary}">
                             <g:render template="/framework/tagsummary"
                                       model="${[tagsummary:tagsummary,action:[classnames:'tag tagselected action button obs_tag_group',onclick:'']]}"/>
@@ -53,7 +39,7 @@
                     <g:each in="${namegroups.keySet().sort()}" var="group">
                         <div>
                             <g:set var="expkey" value="${g.rkey()}"/>
-                            <g:expander key="${expkey}" classnames="action button">
+                            <g:expander key="${expkey}" classnames="action textbtn">
                                 <g:if test="${group!='other'}">
                                     <span class="prompt">
                                     ${namegroups[group][0].encodeAsHTML()}</span>

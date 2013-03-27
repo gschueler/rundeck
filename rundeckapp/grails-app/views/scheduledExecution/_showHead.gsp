@@ -10,7 +10,7 @@
                         <g:if test="${!noimgs}"><img src="${resource(dir:'images',file:iconName+'.png')}" alt="job" style="border:0;"/></g:if>
                     </g:if>
                     <g:else>
-                        <g:set var="fileName" value="${scheduledExecution.scheduled?'clock':'job'}"/>
+                        <g:set var="fileName" value="job"/>
                         <g:if test="${execution}">
                             <g:set var="fileName" value="${execution.status=='true'?'job-ok':null==execution.dateCompleted?'job-running':execution.cancelled?'job-warn':'job-error'}"/>
                         </g:if>

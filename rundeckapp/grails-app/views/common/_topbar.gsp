@@ -45,9 +45,11 @@ function doCreateProject(){
            <g:set var="resselected" value="selected"/>
         </g:ifPageProperty>
         </g:ifPageProperty>
+       <g:if test="${!(grailsApplication.config.rundeck?.gui?.runTabEnabled in ['false',false])}">
         <g:link controller="framework" action="nodes" class=" toptab ${resselected}"  style="height:29px">
            <g:message code="gui.menu.Run"/>
         </g:link>
+       </g:if>
 
         <g:set var="wfselected" value=""/>
         <g:ifPageProperty name='meta.tabpage' >

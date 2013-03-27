@@ -1,5 +1,5 @@
 <div class="jobstats" style="clear:both;">
-    <table width="200px">
+    <table width="400px">
         <g:if test="${lastrun}">
             <tr class="lastrun">
                 <td class="statlabel">

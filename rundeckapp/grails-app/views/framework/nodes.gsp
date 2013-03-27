@@ -459,7 +459,7 @@
         /** START history
          *
          */
-        var histControl = new HistoryControl('histcontent',{compact:true,nofilters:true,projFilter:'${session.project}'});
+        var histControl = new HistoryControl('histcontent',{compact:true,nofilters:true,projFilter:'${session.project}', jobIdFilter:'null'});
         function loadHistory(){
             histControl.loadHistory();
         }

@@ -30,7 +30,6 @@
         </g:if>
         <th colspan="2"><g:message code="events.history.title.NodeFailureCount"/></th>
         <th><g:message code="jobquery.title.userFilter"/></th>
-        <th><g:message code="jobquery.title.projFilter"/></th>
         <th><g:message code="jobquery.title.endFilter"/></th>
     </tr>
     </thead>
@@ -137,9 +136,7 @@
                 ${it?.author.encodeAsHTML()}
             </td>
 
-            <td class="project">
-                ${it?.ctxProject.encodeAsHTML()}
-            </td>
+
 
             <td style="white-space:nowrap" class="right sepL">
                 <g:if test="${it.dateCompleted}">

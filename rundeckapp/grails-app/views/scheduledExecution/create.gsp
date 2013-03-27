@@ -12,9 +12,6 @@
         Create New <g:message code="domain.ScheduledExecution.title"/>
         </span>
 
-        <span class="floatr buttonholder">
-        <g:link controller="scheduledExecution" action="upload" class="button textbtn">Upload Definition&hellip;</g:link>
-        </span>
 
     </div>
     <g:render template="/scheduledExecution/createForm" model="[scheduledExecution:scheduledExecution,crontab:crontab,iscopy:iscopy,authorized:authorized]"/>

@@ -191,11 +191,11 @@ class ScheduledExecutionController  {
         def total = Execution.countByScheduledExecution(scheduledExecution)
 
         //todo: authorize job for workflow_read
-
+        def execmodel=_prepareExecute(scheduledExecution, framework)
 
         withFormat{
             html{
-                [scheduledExecution:scheduledExecution, crontab:crontab, params:params,
+                execmodel+[scheduledExecution:scheduledExecution, crontab:crontab, params:params,
             executions:executions,
             total:total,
             nextExecution:scheduledExecutionService.nextExecutionTime(scheduledExecution),

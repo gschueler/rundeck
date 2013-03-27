@@ -52,13 +52,8 @@
                                     </g:else>
                                 </span>
 
-                                %{--<g:link action="show" controller="scheduledExecution" id="${scheduledExecution.extid}" class="jobIdLink">--}%
-                                    %{--${scheduledExecution.jobName.encodeAsHTML()}</g:link>--}%
-                                <g:link controller="scheduledExecution" action="execute"
-                                            id="${scheduledExecution.extid}" class=""
-                                            onclick="if(typeof(loadExec)=='function'){loadExec(${scheduledExecution.id});return false;}">
-                                    ${scheduledExecution.jobName.encodeAsHTML()}
-                                            </g:link>
+                                <g:link action="show" controller="scheduledExecution" id="${scheduledExecution.extid}" class="jobIdLink">
+                                    ${scheduledExecution.jobName.encodeAsHTML()}</g:link>
 
                                 <g:if test="${!session.project}">
                                 <span class="project">

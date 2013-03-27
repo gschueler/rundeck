@@ -103,6 +103,9 @@
         <auth:resourceAllowed kind="job" action="${AuthConstants.ACTION_CREATE}">
         <div class=" floatr" >
             <g:link controller="scheduledExecution" action="create" class="button ">New <g:message code="domain.ScheduledExecution.title"/>&hellip;</g:link>
+
+            <g:link controller="scheduledExecution" action="upload"
+                    class="button ">Upload Definition&hellip;</g:link>
         </div>
         </auth:resourceAllowed>
     </g:if>

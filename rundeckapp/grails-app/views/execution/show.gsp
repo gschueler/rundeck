@@ -441,15 +441,7 @@
         style="display:none; ; "></div>
     <div id="fileload" style="display:none;" class="outputdisplayopts"><img src="${resource(dir:'images',file:'icon-tiny-disclosure-waiting.gif')}" alt="Spinner"/> Loading Output... <span id="fileload2percent"></span></div>
     <div id="log"></div>
-    <g:if test="${scheduledExecution}">
-        <div class="runbox">History</div>
-        <div class="pageBody">
-            <div id="histcontent"></div>
-            <g:javascript>
-                fireWhenReady('histcontent',loadHistory);
-            </g:javascript>
-        </div>
-    </g:if>
+
   </body>
 </html>
 

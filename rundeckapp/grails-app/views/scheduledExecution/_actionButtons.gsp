@@ -37,25 +37,35 @@
 </g:if>
 <g:set var="jobAuths" value="${ jobauthorizations }"/>
 <div class="buttons">
-        <span class="group floatr" id="${ukey}jobDisplayButtons${scheduledExecution.id}">
+        <span class="group " id="${ukey}jobDisplayButtons${scheduledExecution.id}">
             <g:if test="${!small }">
                 <g:if test="${!execPage}">
                     <auth:resourceAllowed kind="job" action="${AuthConstants.ACTION_DELETE}">
                         <g:if test="${jobAuths[AuthConstants.ACTION_DELETE]?.contains(idKey) }">
-                            <span class="icon button floatl" title="Delete ${g.message(code:'domain.ScheduledExecution.title')}" onclick="menus.showRelativeTo(this,'${ukey}jobDisplayDeleteConf${scheduledExecution.id}',-2,-2);return false;"><img src="${resource(dir:'images',file:'icon-small-removex.png')}" alt="delete" width="16px" height="16px"/></span>
+                            <span class="button" title="Delete ${g.message(code:'domain.ScheduledExecution.title')}" onclick="menus.showRelativeTo(this,'${ukey}jobDisplayDeleteConf${scheduledExecution.id}',-2,-2);return false;"><img src="${resource(dir:'images',file:'icon-small-removex.png')}" alt="delete" width="16px" height="16px"/>
+                            Delete</span>
                         </g:if>
                     </auth:resourceAllowed>
                 </g:if>
                 <g:if test="${jobAuths[AuthConstants.ACTION_CREATE] && jobAuths[AuthConstants.ACTION_READ]?.contains(idKey) }">
-                    <g:link controller="scheduledExecution" title="Copy Job" action="copy" id="${scheduledExecution.extid}" class="icon button floatl"><img src="${resource(dir:'images',file:'icon-small-copy.png')}" alt="copy" width="16px" height="16px"/></g:link>
+                    <g:link controller="scheduledExecution" title="Copy Job" action="copy" id="${scheduledExecution.extid}" class="button">
+                        <img src="${resource(dir:'images',file:'icon-small-copy.png')}" alt="copy" width="16px" height="16px"/>
+                        Copy
+                    </g:link>
                 </g:if>
                 <g:if test="${!execPage}">
                 <g:if test="${jobAuths[AuthConstants.ACTION_UPDATE]?.contains(idKey) }">
-                    <g:link controller="scheduledExecution" title="Edit Job" action="edit" id="${scheduledExecution.extid}" class="icon button floatl"><img src="${resource(dir:'images',file:'icon-small-edit.png')}" alt="edit" width="16px" height="16px"/></g:link>
+                    <g:link controller="scheduledExecution" title="Edit Job" action="edit" id="${scheduledExecution.extid}" class="button ">
+                        <img src="${resource(dir:'images',file:'icon-small-edit.png')}" alt="edit" width="16px" height="16px"/>
+                        Edit
+                    </g:link>
                 </g:if>
                 </g:if>
                 <g:if test="${jobAuths[AuthConstants.ACTION_READ]?.contains(idKey) }">
-                    <span class="icon action button textbtn floatl obs_bubblepopup" id="downloadlink" title="Download Job definition file"><img src="${resource(dir: 'images', file: 'icon-small-file.png')}" alt="download" width="13px" height="16px"/></span>
+                    <span class="icon action button textbtn l obs_bubblepopup" id="downloadlink" title="Download Job definition file">
+                        <img src="${resource(dir: 'images', file: 'icon-small-file.png')}" alt="download" width="13px" height="16px"/>
+                        Download
+                    </span>
                     <div  id="downloadlink_popup" style="display:none;">
                         <span class="prompt">Select a format:</span>
                         <ul>
@@ -65,14 +75,10 @@
                     </div>
                 </g:if>
             </g:if>
-            <g:if test="${jobAuthorized || jobAuths[AuthConstants.ACTION_RUN]?.contains(idKey) }">
-                <g:link controller="scheduledExecution" action="execute" id="${scheduledExecution.extid}" class="icon button floatl" onclick="if(typeof(loadExec)=='function'){loadExec(${scheduledExecution.id});return false;}"><img src="${resource(dir:'images',file:'icon-small-run.png')}" title="Run ${g.message(code:'domain.ScheduledExecution.title')}&hellip;" alt="run" width="16px" height="16px"/></g:link>
-            </g:if>
             <g:elseif test="${ !jobAuthorized }">
-                <span class="info note floatl" style="width:16px;padding: 2px;" title="${message(code:'unauthorized.job.run')}"><img src="${resource(dir:'images',file:'icon-small-warn.png')}" alt="" width="16px" height="16px"/></span>
+                <span class="info note l" style="width:16px;padding: 2px;" title="${message(code:'unauthorized.job.run')}"><img src="${resource(dir:'images',file:'icon-small-warn.png')}" alt="" width="16px" height="16px"/></span>
             </g:elseif>
             <g:else>
-                %{--<span class="floatl" style="width:16px;padding: 2px;"></span>--}%
             </g:else>
         </span>
         <div id="${ukey}jobDisplayDeleteConf${scheduledExecution.id}" class="confirmBox popout" style="display:none;">
