@@ -34,7 +34,7 @@ html, body{
 	
 	padding: 0 0 0 0;
 	margin: 0 0 0 0;
-    font: 12px/18px verdana, arial, helvetica, sans-serif;
+    font: 14px/20px verdana, arial, helvetica, sans-serif;
 }
 
 table{
@@ -595,6 +595,9 @@ div.pageBody {
 div.pageTop + div.pageBody{
     padding-top:0;
 }
+div.pageTop + div.pageBody.extra{
+    padding-top:20px;
+}
 div.pageBody.form{
     margin:10px 20px;
     border:1px solid #aaa;
@@ -790,7 +793,8 @@ table.execoutput td{
     border: 0;
 }
 table.execoutput tr.contextRow{
-    background: #ddF;
+    background: #eee;
+    font-size:12px;
 }
 table.execoutput tr.contextRow.down td{
     border-top:1px solid #bbb;
@@ -828,16 +832,16 @@ table.execoutput tr.contextRow td.rowexpicon{
 }
 
 table.execoutput td.info{
-    background: #eee;
+    /*background: #eee;*/
     padding: 1px 3px;
     vertical-align:top;
     font-family: courier,mono;
 }
 table.execoutput td.info.time{
-    color:#888;
+    color:#aaa;
 }
 table.execoutput tr.alternateRow td.info.time{
-    color:#808080;
+    color:#a0a0a0;
 }
 table.execoutput tr.alternateRow td.info{
     background: #e0e0e0;
@@ -876,12 +880,8 @@ table.execoutput .ctxcounter.SEVERE, table.execoutput .ctxcounter.ERROR{
 }
 
 .outputdisplayopts{
-    padding: 5px 10px;
-    margin: 0 20px;
-    background: #eee;
-    border-width: 1px 1px 0 1px;
-    border-style:solid;
-    border-color: #ddd;
+    /*padding: 5px 10px;*/
+    /*margin: 0 20px;*/
     color: #999;
 }
 .optDefault{
@@ -907,7 +907,6 @@ span.optgroup.secure{
 }
 
 div.progressContainer{
-    width:406px;
     background: #ddd;
     height:14px;
     border:1px solid #aaa;
@@ -1503,7 +1502,12 @@ div.presentation{
 .timeago{
     color: blue;
 }
+.executionInfo:hover .timeabs{
+    display: inline;
+    color: #555;
+}
 .timeabs{
+    display: none;
     color: #555;
 }
 
@@ -1553,13 +1557,12 @@ div.pageContainer > div.subTop{
     padding:0;
 }
 div.pageSubtitle{
-    /*font-size: 12pt;*/
+    font-size: 16px;
     font-weight: bold;
     margin: 10px 0 0 10px;
-    text-shadow:2px 2px 3px #bbb;
 }
 div.pageSubtitle.subtitleAction{
-    color: blue;
+    color: #55F;
 }
 
 /* pagination links */
@@ -1661,6 +1664,12 @@ div.filter label.additional{
 /* job display page */
 
 div.jobHead{
+    /*background: #eeeeee;*/
+}
+div.jobHead+div.execHead{
+    border-top: 1px solid #ccc;
+    background: #eeeeee;
+
 }
 div.jobHead span.jobInfo{
 
@@ -1893,6 +1902,7 @@ span.typename a{
 span.cmdname{
     color:blue;
     font-weight:normal;
+    display: none;
 }
 span.resname, span.resname a{
     color:black;

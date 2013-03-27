@@ -433,18 +433,18 @@ var FollowControl = Class.create({
         tbl.setAttribute("cellPadding", "0");
         tbl.addClassName('execoutput');
         tbl.setAttribute('id', 'cmdoutputtbl');
-        var th = tbl.createTHead();
-        var thr1 = th.insertRow(-1);
-        var thi = new Element("th");
-        thi.setAttribute("width", "20px");
-        thr1.appendChild(thi);
-        var th1 = new Element("th");
-        th1.innerHTML = "Time";
-        thr1.appendChild(th1);
-        var th2 = new Element("th");
-        th2.innerHTML = "Message";
-        th2.setAttribute('colspan', '2');
-        thr1.appendChild(th2);
+//        var th = tbl.createTHead();
+//        var thr1 = th.insertRow(-1);
+//        var thi = new Element("th");
+//        thi.setAttribute("width", "20px");
+//        thr1.appendChild(thi);
+//        var th1 = new Element("th");
+//        th1.innerHTML = "Time";
+//        thr1.appendChild(th1);
+//        var th2 = new Element("th");
+//        th2.innerHTML = "Message";
+//        th2.setAttribute('colspan', '2');
+//        thr1.appendChild(th2);
         var tbod = new Element("tbody");
         tbl.appendChild(tbod);
 
@@ -1010,8 +1010,11 @@ var FollowControl = Class.create({
         if (null == this.lastTBody) {
             this.lastTBody = tbl.tBodies[0];
         }
-        if (null == this.lastrow || this.lastrow['module'] != data['module'] || this.lastrow['command'] != data['command']
-            || this.lastrow['node'] != data['node'] || this.lastrow['context'] != data['context']) {
+        if (null == this.lastrow
+//            || this.lastrow['module'] != data['module'] || this.lastrow['command'] != data['command']
+            || this.lastrow['node'] != data['node']
+//            || this.lastrow['context'] != data['context']
+            ) {
             if (null != this.lastrow) {
                 this.createFinalContextTbody(data, tbl, ctxid);
             }

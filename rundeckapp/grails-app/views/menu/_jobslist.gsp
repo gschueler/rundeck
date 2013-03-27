@@ -51,8 +51,14 @@
                                                 width="12px" height="12px"/></span>
                                     </g:else>
                                 </span>
-                                <g:link action="show" controller="scheduledExecution" id="${scheduledExecution.extid}" class="jobIdLink">
-                                    ${scheduledExecution.jobName.encodeAsHTML()}</g:link>
+
+                                %{--<g:link action="show" controller="scheduledExecution" id="${scheduledExecution.extid}" class="jobIdLink">--}%
+                                    %{--${scheduledExecution.jobName.encodeAsHTML()}</g:link>--}%
+                                <g:link controller="scheduledExecution" action="execute"
+                                            id="${scheduledExecution.extid}" class=""
+                                            onclick="if(typeof(loadExec)=='function'){loadExec(${scheduledExecution.id});return false;}">
+                                    ${scheduledExecution.jobName.encodeAsHTML()}
+                                            </g:link>
 
                                 <g:if test="${!session.project}">
                                 <span class="project">
@@ -61,7 +67,7 @@
                                 </g:if>
                                 <span class="jobdesc" title="${scheduledExecution.description?.encodeAsHTML()}">${scheduledExecution.description?.encodeAsHTML()}</span>
                                 <span class="info note ${!execCount?'none':''}" style="margin-left:10px;">
-                                    <g:link controller="reports" action="index" params="${[jobIdFilter:scheduledExecution.id]}" title="View all Executions of this job">Executions (${execCount})</g:link>
+                                    <g:link controller="scheduledExecution" action="show" params="${[id:scheduledExecution.extid]}" title="View all Executions of this job">Executions (${execCount})</g:link>
                                 </span>
                                 </div>
                             </td>
@@ -90,7 +96,7 @@
                             </g:else>
                         </td>
                         <td style="width: 80px; vertical-align: top; white-space:nowrap; text-align:right" class="jobbuttons right">
-                            <g:render template="/scheduledExecution/actionButtons" model="${[scheduledExecution:scheduledExecution,authMap:authMap,jobauthorizations:jobauthorizations,small:true]}"/>
+                            %{--<g:render template="/scheduledExecution/actionButtons" model="${[scheduledExecution:scheduledExecution,authMap:authMap,jobauthorizations:jobauthorizations,small:true]}"/>--}%
                         </td>
 
                         </tr>

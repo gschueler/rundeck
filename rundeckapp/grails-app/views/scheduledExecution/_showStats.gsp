@@ -12,10 +12,10 @@
                         <g:relativeDate elapsed="${lastrun.dateCompleted}"/>
                     </span>
                 </td>
-                <td style="width:12px">
+                <td style="">
                     <g:link action="show" controller="execution" id="${lastrun.id}" title="View execution output"><img
                         src="${resource(dir: 'images', file: 'icon-tiny-' + (lastrun?.status == 'true' ? 'ok' : 'warn') + '.png')}"
-                        alt="" width="12px" height="12px"/></g:link>
+                        alt="" width="12px" height="12px"/> output &raquo;</g:link>
                 </td>
             </tr>
             <tr>

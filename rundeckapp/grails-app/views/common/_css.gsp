@@ -66,20 +66,6 @@
     div.progressBar{
         background: #eee url(<g:resource dir='images' file='bggrad-blue2.png'/>) repeat-x 0px 0px;
     }
-
-    table.execoutput tr.contextRow {
-        background: #ddf;
-    }
-
-    table.execoutput tr.contextRow.expandable:hover{
-        background: #ccF ;
-    }
-    table.execoutput tr.contextRow.console {
-        background: #ddd ;
-    }
-    table.execoutput tr.contextRow.expandable.console:hover{
-        background: #ccF ;
-    }
     table.execoutput tr.contextRow td.expandicon.opened{
         background: transparent url(<g:resource dir='images' file='icon-tiny-disclosure-open.png'/>) no-repeat 2px 2px;
     }

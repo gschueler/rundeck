@@ -1,8 +1,11 @@
 <%@ page import="rundeck.ScheduledExecution" %>
-        <g:set var="execInfo" value="${scheduledExecution?scheduledExecution:execution}"/>
-        <div class="jobInfo" id="jobInfo_${execution?execution.id:''}">
+        <g:set var="execInfo" value="${scheduledExecution}"/>
+        <div class="jobInfo" id="jobInfo_${execution ? execution.id : ''}">
             <g:if test="${scheduledExecution}">
-                <g:link controller="scheduledExecution" action="show" id="${scheduledExecution.extid}" class="jobIcon ${execution?.status=='true'?'jobok':execution?.cancelled?'jobwarn':'joberror'}" absolute="${absolute?'true':'false'}">
+                <g:link controller="scheduledExecution" action="show" id="${scheduledExecution.extid}"
+                    title="View Job Definition for: ${scheduledExecution?.jobName.encodeAsHTML()}"
+                        class="jobIcon ${execution?.status=='true'?'jobok':execution?.cancelled?'jobwarn':'joberror'}"
+                        absolute="${absolute?'true':'false'}">
                     <g:if test="${iconName}">
                         <g:if test="${!noimgs}"><img src="${resource(dir:'images',file:iconName+'.png')}" alt="job" style="border:0;"/></g:if>
                     </g:if>
@@ -45,23 +48,10 @@
                 </g:if>
             </span>
             
-            <g:if test="${execution}">
-                <span class="jobInfoPart">
-                    <span class="partContent">
-                    <g:if test="${!noimgs}"><img src="${resource(dir:'images',file:'icon-tiny-rarrow-sep.png')}" alt=""/></g:if>
-                    <g:link
-                        controller="execution"
-                        action="show"
-                        id="${execution.id}"
-                         absolute="${absolute?'true':'false'}"
-                        params="${followparams?.findAll{it.value}}">Execution at <g:relativeDate atDate="${execution.dateStarted}" /> by <span class="username">${execution.user}</span></g:link>
-                    </span>
-                </span>
-            </g:if>
-            <g:if test="${execInfo instanceof ScheduledExecution && execInfo?.uuid}">
-                <div><span class="jobuuid desc" title="UUID for this job">UUID: ${execInfo?.uuid.encodeAsHTML()}</span></div>
-                <div><span class="jobid desc" title="internal ID for this job">ID: ${execInfo?.id}</span></div>
-            </g:if>
+
+            %{--<g:if test="${execInfo instanceof ScheduledExecution && execInfo?.uuid}">--}%
+                %{--<div><span class="jobuuid desc" title="UUID for this job">UUID: ${execInfo?.uuid.encodeAsHTML()}</span></div>--}%
+                %{--<div><span class="jobid desc" title="internal ID for this job">ID: ${execInfo?.id}</span></div>--}%
+            %{--</g:if>--}%
 
         </div>
-        

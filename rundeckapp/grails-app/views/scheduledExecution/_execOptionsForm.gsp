@@ -1,11 +1,16 @@
-<div class="pageTop extra">
-<div class="jobHead">
+<div class="pageTop extra jobHead">
     <tmpl:showHead scheduledExecution="${scheduledExecution}" iconName="icon-job" subtitle="Choose Execution Options"/>
+
+    %{--<div style="width: 200px;" class="toolbar small">--}%
+        %{--<g:render template="/scheduledExecution/actionButtons"--}%
+                  %{--model="${[scheduledExecution: scheduledExecution, objexists: objexists, jobAuthorized: jobAuthorized]}"/>--}%
+    %{--</div>--}%
     <div class="clear"></div>
     
 </div>
+<div class="pageTop extra">
 <div class="pageSubtitle subtitleAction">
-        Choose Execution Options
+        Run Job
 </div>
     <div class="clear"></div>
 </div>
