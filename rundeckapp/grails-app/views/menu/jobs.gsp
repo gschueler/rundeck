@@ -383,18 +383,6 @@
 
     </div>
 </div>
-<div class="runbox">
-    <g:if test="${reportQueryParams}">
-        <g:link controller="reports" action="index" params="${reportQueryParams ?: [:]}">History</g:link>
-    </g:if>
-    <g:else>History</g:else>
-</div>
-    <div class="pageBody">
-        <div id="histcontent"></div>
-        <g:javascript>
-            fireWhenReady('histcontent',loadHistory);
-        </g:javascript>
 
-    </div>
 </body>
 </html>
