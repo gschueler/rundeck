@@ -200,7 +200,7 @@
         </g:elseif>
         <div class="buttons" id="formbuttons">
 
-            <g:actionSubmit id="execFormCancelButton" value="Cancel"/>
+            %{--<g:actionSubmit id="execFormCancelButton" value="Cancel"/>--}%
             <g:actionSubmit value="Run ${g.message(code:'domain.ScheduledExecution.title')} Now" id="execFormRunButton"/>
 
         </div>
