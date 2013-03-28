@@ -1333,26 +1333,26 @@ class ScheduledExecutionController  {
 
 
     def execute = {
-
-        if (!params.id) {
-            log.error("Parameter id is required")
-            flash.error = "Parameter id is required"
-            response.setStatus(500)
-            return error.call()
-        }
-        Framework framework = frameworkService.getFrameworkFromUserSession(session,request)
-        def scheduledExecution = scheduledExecutionService.getByIDorUUID(params.id)
-        if (!scheduledExecution) {
-            log.error("No Job found for id: " + params.id)
-            flash.error = "No Job found for id: " + params.id
-            response.setStatus(404)
-            return error.call()
-        }
-        if(!frameworkService.authorizeProjectJobAll(framework, scheduledExecution, [AuthConstants.ACTION_RUN], scheduledExecution.project)){
-            return unauthorized("Execute Job ${scheduledExecution.extid}")
-        }
-        def model = _prepareExecute(scheduledExecution, framework)
-        return model
+        return redirect(action: show,params: params)
+//        if (!params.id) {
+//            log.error("Parameter id is required")
+//            flash.error = "Parameter id is required"
+//            response.setStatus(500)
+//            return error.call()
+//        }
+//        Framework framework = frameworkService.getFrameworkFromUserSession(session,request)
+//        def scheduledExecution = scheduledExecutionService.getByIDorUUID(params.id)
+//        if (!scheduledExecution) {
+//            log.error("No Job found for id: " + params.id)
+//            flash.error = "No Job found for id: " + params.id
+//            response.setStatus(404)
+//            return error.call()
+//        }
+//        if(!frameworkService.authorizeProjectJobAll(framework, scheduledExecution, [AuthConstants.ACTION_RUN], scheduledExecution.project)){
+//            return unauthorized("Execute Job ${scheduledExecution.extid}")
+//        }
+//        def model = _prepareExecute(scheduledExecution, framework)
+//        return model
     }
 
     private _prepareExecute(ScheduledExecution scheduledExecution, final def framework){
