@@ -171,27 +171,24 @@
                         </g:if>
 
                     </g:else>
-                    %{--<g:relativeDate--}%
-                        %{--atDate="${execution.dateStarted}"/> --}%
                     by <span class="username">${execution.user}</span></g:link>
-                    %{--<g:if test="${null != execution.dateStarted}">--}%
-                        %{--<g:relativeDate elapsed="${execution.dateStarted}" agoClass="timeago"/>--}%
-                    %{--</g:if>--}%
             </span>
 
 
 
         %{--Download output button--}%
         <span style="${execution.dateCompleted ? '' : 'display:none'}" class="sepL" id="viewoptionscomplete">
-            <g:link class="" style="padding:5px;"
-                    title="Download entire output file"
-                    controller="execution" action="downloadOutput" id="${execution.id}">
+            <g:link
+                    title="View raw output"
+                    controller="execution" action="downloadOutput" id="${execution.id}" params="${[view:'inline',formatted:'false']}">
+                raw
+            </g:link>
+            <g:link class="sepL"
+                    title="Download entire output file ${filesize ? filesize + ' bytes' : ''}"
+                    controller="execution" action="downloadOutput" id="${execution.id}" >
                 &darr;
-                %{--<img--}%
-                    %{--src="${resource(dir: 'images', file: 'button-downarrow-gray.png')}" alt="Download" title="Download output"--}%
-                    %{--width="16px" height="16px"/> --}%
-                <span
-                    id="outfilesize">${filesize ? filesize + ' bytes' : ''}</span></g:link>
+                %{--<span id="outfilesize"></span> --}%
+                download</g:link>
         </span>
 
             %{--
@@ -277,7 +274,7 @@
         <div class="clear"></div>
     </div>
 
-  <div id="progressContainer" class="progressContainer">
+  <div id="progressContainer" class="progressContainer boxy">
       <div class="progressBar" id="progressBar"
            title="Progress is an estimate based on average execution time for this ${g.message(code: 'domain.ScheduledExecution.title')}.">0%</div>
   </div>
@@ -287,20 +284,6 @@
 
         <table width="100%">
             <tr>
-                %{--<td class="buttonholder" style="padding:10px;">--}%
-
-                    %{----}%
-                    %{--<span class="obs_modeSelect">--}%
-                        %{--<span class="action textbtn" title="Follow Mode">--}%
-                            %{--${followmode}--}%
-                        %{--</span>--}%
-                    %{--</span>--}%
-                    %{--<span style="display: none" class="show_modeSelect">--}%
-                        %{--<g:select value="${followmode}" from="${['tail','browse','node']}" class="followModeSelect"></g:select>--}%
-                    %{--</span>--}%
-
-
-                %{--</td>--}%
                 <td style="text-align: right;">
                 %{--
                 Follow output controls expander
@@ -310,20 +293,6 @@
                 <span class="presentation show_modeSelect" style="display:none" id="outputControl">
                     <span id="fullviewopts" style="${followmode != 'browse' ? 'display:none' : ''}">
 
-                        %{--<span class="action textbtn button"--}%
-                        %{--title="Click to change"--}%
-                        %{--id="ctxshowgroupoption"--}%
-                        %{--onclick="followControl.setGroupOutput($('ctxshowgroup').checked);">--}%
-                        %{--<input--}%
-                        %{--type="checkbox"--}%
-                        %{--name="ctxshowgroup"--}%
-                        %{--id="ctxshowgroup"--}%
-                        %{--value="true"--}%
-                        %{--${followmode == 'tail' ? '' : 'checked="CHECKED"'}--}%
-                        %{--style=""/>--}%
-                        %{--<label for="ctxshowgroup">Group output</label>--}%
-                        %{--</span>--}%
-                        %{--&nbsp;--}%
                         &nbsp;
                         <span class="action textbtn"
                               title="Click to change"
