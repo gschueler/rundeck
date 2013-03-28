@@ -917,6 +917,12 @@ div.progressContainer{
     -webkit-border-radius: 5px;
 }
 
+div.progressContainer.boxy, div.progressContainer.small.boxy {
+    border-radius: 0px;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+}
+
 div.progressContainer.small{
     width:106px;
     height: 18px;
@@ -952,6 +958,13 @@ div.progressBar{
     overflow-x:hidden;
     overflow-y:hidden;
     line-height: 24px;
+}
+
+div.progressContainer.boxy div.progressBar,div.progressContainer.small.boxy div.progressBar{
+    border-radius: 0px;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+
 }
 div.progressContainer.small div.progressBar{
     line-height: 18px;
