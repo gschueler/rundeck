@@ -105,13 +105,15 @@
         %{--TODO: list plugin types--}%
         <g:each in="${notificationPlugins?.keySet()}" var="pluginName">
         <g:set var="plugin" value="${notificationPlugins[pluginName]}"/>
+        <g:set var="pluginInstance" value="${notificationPlugins[pluginName]['instance']}"/>
         <g:set var="pkey" value="${g.rkey()}"/>
         <g:set var="definedNotif" value="${scheduledExecution?.findNotification('onsuccess',pluginName)}"/>
         <g:set var="definedConfig" value="${definedNotif?.configuration?:[:]}"/>
+        <g:set var="pluginDescription" value="${plugin.description}"/>
         <div>
             <span>
                 <g:checkBox name="notifyOnsuccessPlugin.${pluginName.encodeAsHTML()}" value="true" checked="${definedNotif ? true : false}"/>
-                <label for="notifyOnsuccessPlugin.${pluginName.encodeAsHTML()}">${pluginName}</label>
+                <label for="notifyOnsuccessPlugin.${pluginName.encodeAsHTML()}">${pluginDescription['title']?: pluginDescription['name']?: pluginName}</label>
             </span>
             <span id="notifSuccessholderPlugin${pkey}" style="${wdgt.styleVisible(if: definedNotif ? true : false)}"
                   class="notificationplugin">
@@ -121,24 +123,22 @@
                               %{--rows="6" cols="40">${params.notifySuccessPluginContent?.encodeAsHTML()}</textarea>--}%
                 %{--</label>--}%
             %{--custom HTML--}%
-                <g:set var="prefix" value="${('notifySuccessPluginConfig.' + pluginName + '.').encodeAsHTML()}"/>
-                <g:set var="customHtml" value="${plugin.renderHtmlForm(prefix, definedConfig)}"/>
-                <g:if test="${customHtml}">
-                    <!--  BEGIN: HTML from plugin: ${pluginName} -->
-                    ${customHtml}
-                    <!--  END: HTML from plugin: ${pluginName} -->
+                <g:if test="${pluginDescription['description']}">
+                    <span class="info note">${pluginDescription['description']?.encodeAsHTML()}</span>
                 </g:if>
-                <g:else>
-                    <g:each in="${plugin.configurationProperties?.keySet()}" var="confKey">
-                        <label for="${rkey}_conf_${confKey.encodeAsHTML()}">${plugin.configurationProperties[confKey]['title']?:confKey}</label>
-                        <g:if test="${plugin.configurationProperties[confKey]}">
-                            <input type="text" name="notifySuccessPluginConfig.${pluginName.encodeAsHTML()}.${confKey.encodeAsHTML()}" value="${definedConfig?.get(confKey)}"
-                                id="${rkey}_conf_${confKey.encodeAsHTML()}"
-                            />
-                        </g:if>
-                        <span class="info note">${plugin.configurationProperties[confKey]['description'].encodeAsHTML()}</span>
-                    </g:each>
-                </g:else>
+                <g:set var="prefix" value="${('notifySuccessPluginConfig.' + pluginName + '.').encodeAsHTML()}"/>
+                %{--XXX: TODO: use plugin descriptor properties?--}%
+                <g:each in="${pluginInstance.configurationProperties?.keySet()}" var="confKey">
+                    <label for="${rkey}_conf_${confKey.encodeAsHTML()}">${pluginInstance.configurationProperties[confKey]['title']?:confKey}</label>
+                    <g:if test="${pluginInstance.configurationProperties[confKey]}">
+                        <input type="text" name="notifySuccessPluginConfig.${pluginName.encodeAsHTML()}.${confKey.encodeAsHTML()}"
+                               placeholder="${pluginInstance.configurationProperties[confKey]['placeholder']?.encodeAsHTML()}"
+                               value="${definedConfig?.get(confKey)?.encodeAsHTML()}"
+                            id="${rkey}_conf_${confKey.encodeAsHTML()}"
+                        />
+                    </g:if>
+                    <span class="info note">${pluginInstance.configurationProperties[confKey]['description']?.encodeAsHTML()}</span>
+                </g:each>
 
                 %{--<g:hasErrors bean="${scheduledExecution}" field="notifySuccessUrl">--}%
                     %{--<div class="fieldError">--}%

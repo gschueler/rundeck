@@ -2,10 +2,14 @@ package com.dtolabs.rundeck.server.plugins
 
 import com.dtolabs.rundeck.core.execution.service.MissingProviderException
 import com.dtolabs.rundeck.core.execution.service.ProviderLoaderException
+import com.dtolabs.rundeck.core.execution.workflow.steps.PluginAdapterUtility
 import com.dtolabs.rundeck.core.plugins.PluggableProviderService
 import com.dtolabs.rundeck.core.plugins.PluggableService
 import com.dtolabs.rundeck.core.plugins.ProviderIdent
 import com.dtolabs.rundeck.core.plugins.ServiceProviderLoader
+import com.dtolabs.rundeck.core.plugins.configuration.DescribableService
+import com.dtolabs.rundeck.core.plugins.configuration.Description
+import com.dtolabs.rundeck.plugins.util.DescriptionBuilder
 import org.apache.log4j.Logger
 import org.springframework.beans.factory.BeanNotOfRequiredTypeException
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
@@ -25,6 +29,8 @@ class RundeckPluginRegistry implements ApplicationContextAware{
     HashMap pluginRegistryMap
     def ApplicationContext applicationContext
     def ServiceProviderLoader rundeckServerServiceProviderLoader
+    def File pluginDirectory
+    def File pluginCacheDirectory
 
     /**
      * Load a plugin instance with the given bean or provider name
@@ -32,7 +38,7 @@ class RundeckPluginRegistry implements ApplicationContextAware{
      * @param service provider service
      * @return
      */
-    public Object loadPluginByName(String name, PluggableService service){
+    public Object loadPluginByName(String name, PluggableProviderService service){
         try {
             def beanName = pluginRegistryMap[name]
             if(beanName){
@@ -62,14 +68,37 @@ class RundeckPluginRegistry implements ApplicationContextAware{
      * @return
      */
     public Map<String,Object> listPlugins(Class groovyPluginType, PluggableProviderService service){
+        def list=listPluginDescriptors(groovyPluginType,service)
+        def Map map=[:]
+        list.each {k,v->
+            map[k]=v['instance']
+        }
+        map
+    }
+    /**
+     * List all plugin type definitions that are either ServiceProvider plugins of the given service name,
+     * or are groovy plugins of the given type
+     * @param providerServiceName
+     * @param groovyPluginType
+     * @return
+     */
+    public Map<String,Object> listPluginDescriptors(Class groovyPluginType, PluggableProviderService service){
         def list=[:]
-        log.error("pluginRegistryMap: ${pluginRegistryMap}")
         pluginRegistryMap.each { k, String v ->
             try {
                 def bean = applicationContext.getBean(v)
 //                def test = groovyPluginType.cast(bean)
                 if(bean){
-                    list[k]=bean
+                    list[k]=[instance:bean,
+                            description:[
+                                name:k,
+                            ],
+                            file: new File(pluginDirectory, k + ".groovy")
+                    ]
+                    //try to check annotations
+                    if(PluginAdapterUtility.canBuildDescription(bean)){
+                        list[k]['description']= PluginAdapterUtility.buildDescription(bean,DescriptionBuilder.builder())
+                    }
                 }else{
                     log.error("bean not right type: ${bean}, class: ${bean.class.name}, assignable: ${groovyPluginType.isAssignableFrom(bean.class)}")
                 }
@@ -80,8 +109,29 @@ class RundeckPluginRegistry implements ApplicationContextAware{
             }
         }
         if(rundeckServerServiceProviderLoader && service){
-            service.listProviders().each{ ProviderIdent ident->
-                list[ident.providerName]=rundeckServerServiceProviderLoader.loadProvider(service,ident.providerName)
+            service.listProviders().each { ProviderIdent ident ->
+                def instance = rundeckServerServiceProviderLoader.loadProvider(service, ident.providerName)
+                if (!list[ident.providerName]) {
+                    list[ident.providerName] = [:]
+                }
+                list[ident.providerName] += [
+                        instance: instance,
+                        description: [
+                                name:ident.providerName
+                        ]
+                ]
+            }
+            if (service instanceof DescribableService) {
+                DescribableService desc = (DescribableService) service
+                def descriptions = desc.listDescriptions()
+                descriptions.each {Description d->
+                    if (!list[d.name]) {
+                        list[d.name] = [:]
+                    }
+                    list[d.name] += [
+                        description: d,
+                    ]
+                }
             }
         }
 

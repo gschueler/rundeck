@@ -67,7 +67,16 @@ public class NotificationService implements ApplicationContextAware{
     }
     def Map listNotificationPlugins(){
         def plugins=[:]
-        plugins=rundeckPluginRegistry.listPlugins(NotificationPlugin, notificationPluginProviderService)
+        plugins=rundeckPluginRegistry.listPluginDescriptors(NotificationPlugin, notificationPluginProviderService)
+        //clean up name of any Groovy plugin without annotations that ends with "NotificationPlugin"
+        plugins.each {key,Map plugin->
+            def desc = plugin.description
+            if(desc && desc instanceof Map){
+                if(desc.name.endsWith("NotificationPlugin")){
+                    desc.name=desc.name.replaceAll(/NotificationPlugin$/,'')
+                }
+            }
+        }
         System.err.println("listed plugins: ${plugins}")
 
         plugins
