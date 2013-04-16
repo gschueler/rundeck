@@ -2,9 +2,11 @@ package com.dtolabs.rundeck.plugin.example;
 
 import com.dtolabs.rundeck.plugins.notification.NotificationPlugin;
 import com.dtolabs.rundeck.core.plugins.Plugin;
+import com.dtolabs.rundeck.plugins.descriptions.PluginDescription;
 import java.util.*;
 
 @Plugin(service="Notification",name="example")
+@PluginDescription(title="Example Plugin", description="An example Plugin for Rundeck Notifications.")
 public class ExampleNotificationPlugin implements NotificationPlugin{
 
     public ExampleNotificationPlugin(){
@@ -25,13 +27,6 @@ public class ExampleNotificationPlugin implements NotificationPlugin{
 
         }};
         return map;
-    }
-
-    public String renderHtmlForm(String inputPrefix, Map config) {
-        return 
-"<label>Test input:\n"+
-"<input type=\"text\" name=\""+inputPrefix+"test\">\n"+
-"</label>";
     }
 
     public Map validateForm(Map config) {
