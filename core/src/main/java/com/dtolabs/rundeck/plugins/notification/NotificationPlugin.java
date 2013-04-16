@@ -17,6 +17,5 @@ public interface NotificationPlugin {
      */
     public boolean postNotification(String trigger,Map executionData,Map config);
     public Map getConfigurationProperties();
-    public String renderHtmlForm(String inputPrefix, Map config);
     public Map validateForm(Map config);
 }
