@@ -3,11 +3,11 @@ package com.dtolabs.rundeck.server.plugins
 import com.dtolabs.rundeck.core.execution.service.MissingProviderException
 import com.dtolabs.rundeck.core.execution.service.ProviderLoaderException
 import com.dtolabs.rundeck.core.execution.workflow.steps.PluginAdapterUtility
+import com.dtolabs.rundeck.core.execution.workflow.steps.PropertyResolver
+import com.dtolabs.rundeck.core.execution.workflow.steps.PropertyResolverFactory
 import com.dtolabs.rundeck.core.plugins.PluggableProviderService
-import com.dtolabs.rundeck.core.plugins.PluggableService
 import com.dtolabs.rundeck.core.plugins.ProviderIdent
 import com.dtolabs.rundeck.core.plugins.ServiceProviderLoader
-import com.dtolabs.rundeck.core.plugins.configuration.DescribableService
 import com.dtolabs.rundeck.core.plugins.configuration.Description
 import com.dtolabs.rundeck.plugins.util.DescriptionBuilder
 import org.apache.log4j.Logger
@@ -38,11 +38,52 @@ class RundeckPluginRegistry implements ApplicationContextAware{
      * @param service provider service
      * @return
      */
+    public Object configurePluginByName(String name, PluggableProviderService service, Map configuration) {
+        Map pluginDesc = loadPluginDescriptorByName(name, service)
+        Object plugin=pluginDesc['instance']
+
+//        if (null != configuration) {
+//            configuration = DataContextUtils.replaceDataReferences(configuration, context.getDataContext());
+//        }
+        def description = pluginDesc['description']
+        if(description && description instanceof Description){
+            final PropertyResolver resolver = PropertyResolverFactory.createInstanceResolver(configuration);
+            final Map<String, Object> config = PluginAdapterUtility.configureProperties(resolver, description, plugin);
+        }
+        plugin
+    }
+    /**
+     * Load a plugin instance with the given bean or provider name
+     * @param name name of bean or provider
+     * @param service provider service
+     * @return
+     */
     public Object loadPluginByName(String name, PluggableProviderService service){
+        return loadPluginDescriptorByName(name,service)?.get('instance')
+    }
+    /**
+     * Load a plugin instance with the given bean or provider name
+     * @param name name of bean or provider
+     * @param service provider service
+     * @return
+     */
+    public Object loadPluginDescriptorByName(String name, PluggableProviderService service){
+        def beanDesc=[:]
         try {
             def beanName = pluginRegistryMap[name]
             if(beanName){
-                return applicationContext.getBean(beanName)
+                def bean = applicationContext.getBean(beanName)
+                beanDesc=[instance:bean,
+                        description: [
+                                name: name,
+                        ],
+                        file: new File(pluginDirectory, name + ".groovy")
+                ]
+                //try to check annotations
+                if (PluginAdapterUtility.canBuildDescription(bean)) {
+                    beanDesc['description'] = PluginAdapterUtility.buildDescription(bean, DescriptionBuilder.builder())
+                }
+                return beanDesc
             }
         } catch (NoSuchBeanDefinitionException e) {
             log.error("plugin Spring bean does not exist: ${name}")
@@ -50,7 +91,18 @@ class RundeckPluginRegistry implements ApplicationContextAware{
         //try loading via ServiceProviderLoader
         if(rundeckServerServiceProviderLoader && service){
             try {
-                return rundeckServerServiceProviderLoader.loadProvider(service,name)
+                def instance = rundeckServerServiceProviderLoader.loadProvider(service, name)
+                beanDesc= [
+                        instance: instance,
+                        description: [
+                                name: name
+                        ]
+                ]
+                def d = service.listDescriptions().find {it.name==name}
+                if(d){
+                    beanDesc.description=d
+                }
+                return beanDesc
             } catch (MissingProviderException exception) {
                 log.error("plugin Provider does not exist: ${name}")
             } catch (ProviderLoaderException exception) {
@@ -121,17 +173,11 @@ class RundeckPluginRegistry implements ApplicationContextAware{
                         ]
                 ]
             }
-            if (service instanceof DescribableService) {
-                DescribableService desc = (DescribableService) service
-                def descriptions = desc.listDescriptions()
-                descriptions.each {Description d->
-                    if (!list[d.name]) {
-                        list[d.name] = [:]
-                    }
-                    list[d.name] += [
-                        description: d,
-                    ]
+            service.listDescriptions().each {Description d->
+                if (!list[d.name]) {
+                    list[d.name] = [:]
                 }
+                list[d.name].description=d
             }
         }
 
