@@ -1259,7 +1259,7 @@ class ScheduledExecutionService /*implements ApplicationContextAware*/{
                     }
                 }
                 if (failed) {
-                    return
+                    return //closure
                 }
                 def addrs = arr.findAll {it.trim()}.join(",")
                 n = new Notification(eventTrigger: trigger, type: 'email', content: addrs)
@@ -1285,20 +1285,38 @@ class ScheduledExecutionService /*implements ApplicationContextAware*/{
                     }
                 }
                 if (failed) {
-                    return
+                    return //closure
                 }
                 def addrs = arr.findAll {it.trim()}.join(",")
                 n = new Notification(eventTrigger: trigger, type: 'url', content: addrs)
             }else{
                 //plugin type
                 System.err.println("try to save notification type: ${notif.type}")
-                def plugin=notificationService.getNotificationPlugin(notif.type)
-                if(!plugin){
-                    return
+                def pluginDesc=notificationService.getNotificationPluginDescriptor(notif.type)
+                if(!pluginDesc){
+                    return //closure
                 }
-                //TODO: validate config
-                def validation=plugin.validateForm(notif.content)
+                def validation= notificationService.validatePluginConfig(notif.type,notif.content)
                 System.err.println("plugin validation: ${validation}")
+                if(!validation.valid){
+                    failed = true
+                    if(!params['notificationValidation']){
+                        params['notificationValidation']=[:]
+                    }
+                    if(!params['notificationValidation'][trigger]){
+                        params['notificationValidation'][trigger]=[:]
+                    }
+                    params['notificationValidation'][trigger][notif.type]=validation
+                    scheduledExecution.errors.rejectValue(
+                            'notifications',
+                            'scheduledExecution.notifications.invalidPlugin.message',
+                            [notif.type] as Object[],
+                            'Invalid Configuration for plugin: {0}'
+                    )
+                }
+                if (failed) {
+                    return //closure
+                }
                 //TODO: better config test
                 def data = [type: notif.type, config: notif.content]
                 System.err.println("plugin data: ${data}")
@@ -1403,6 +1421,8 @@ class ScheduledExecutionService /*implements ApplicationContextAware*/{
                     )
                 }
                 n.scheduledExecution = scheduledExecution
+            }else{
+                //TODO: plugin
             }
         }
         return failed
