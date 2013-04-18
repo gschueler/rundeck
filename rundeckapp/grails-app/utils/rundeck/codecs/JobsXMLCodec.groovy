@@ -188,8 +188,11 @@ class JobsXMLCodec {
         convertXmlWorkflowToMap(map.sequence)
 
         if(null!=map.notification){
-            def triggers=map.notification?.keySet().findAll { it.startsWith('on') }
-            if(!map.notification || !triggers){
+            if(!map.notification || !(map.notification instanceof Map)){
+                throw new JobXMLException("notification section had no trigger elements")
+            }
+            def triggers = map.notification?.keySet().findAll { it.startsWith('on') }
+            if( !triggers){
                 throw new JobXMLException("notification section had no trigger elements")
             }
             def convertPluginToMap={Map plugin->

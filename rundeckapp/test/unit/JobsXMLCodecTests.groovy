@@ -2533,7 +2533,7 @@ class JobsXMLCodecTests extends GroovyTestCase {
             def jobs = JobsXMLCodec.decode(xml0)
             fail "parsing should have failed"
         } catch (Exception e) {
-            assertEquals ("notification section had no onsuccess or onfailure element",e.message)
+            assertEquals ("notification section had no trigger elements",e.message)
         }
         //missing email element
         def xml1 = """<joblist>
@@ -2563,7 +2563,7 @@ class JobsXMLCodecTests extends GroovyTestCase {
             def jobs = JobsXMLCodec.decode(xml1)
             fail "parsing should have failed"
         } catch (Exception e) {
-            assertEquals ("notification 'onsuccess' element had missing 'email' or 'webhook' element",e.message)
+            assertEquals ("notification 'onsuccess' element had missing 'email' or 'webhook' or 'plugin' element",e.message)
         }
         //missing email attribute
         def xml2 = """<joblist>
@@ -2656,7 +2656,7 @@ class JobsXMLCodecTests extends GroovyTestCase {
             def jobs = JobsXMLCodec.decode(xml4)
             fail "parsing should have failed"
         } catch (Exception e) {
-            assertEquals ("notification 'onfailure' element had missing 'email' or 'webhook' element",e.message)
+            assertEquals ("notification 'onfailure' element had missing 'email' or 'webhook' or 'plugin' element",e.message)
         }
         //missing email attribute
         def xml5 = """<joblist>
