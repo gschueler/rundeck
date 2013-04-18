@@ -168,6 +168,7 @@ class ScheduledExecutionController  {
             total:total,
             nextExecution:scheduledExecutionService.nextExecutionTime(scheduledExecution),
             max: params.max?params.max:10,
+                notificationPlugins: notificationService.listNotificationPlugins(),
             offset:params.offset?params.offset:0])
     }
     def show = {

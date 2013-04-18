@@ -180,7 +180,7 @@
                     </g:elseif>
                     <g:else>
                         %{--plugin display--}%
-                        <g:set var="desc" value="${notificationPlugins[notify.type]?.description}"/>
+                        <g:set var="desc" value="${notificationPlugins?.get(notify.type)?.description}"/>
                         <g:if test="${desc && desc instanceof Description}">
 
                             <g:render template="/framework/renderPluginConfig"
