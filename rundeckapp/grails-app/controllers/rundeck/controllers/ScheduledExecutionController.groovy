@@ -773,7 +773,6 @@ class ScheduledExecutionController  {
             }
             def nodeStepTypes = frameworkService.getNodeStepPluginDescriptions(framework)
             def stepTypes = frameworkService.getStepPluginDescriptions(framework)
-            System.err.println("render edit after update")
             return render(view:'edit', model: [scheduledExecution:scheduledExecution,
                        nextExecutionTime:scheduledExecutionService.nextExecutionTime(scheduledExecution),
                     projects: frameworkService.projects(framework),
