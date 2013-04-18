@@ -201,6 +201,7 @@ class ScheduledExecutionController  {
             executions:executions,
             total:total,
             nextExecution:scheduledExecutionService.nextExecutionTime(scheduledExecution),
+            notificationPlugins: notificationService.listNotificationPlugins(),
             max: params.max?params.max:10,
             offset:params.offset?params.offset:0]
 
