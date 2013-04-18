@@ -50,10 +50,6 @@ beans={
         }
     }
 
-    //dev test
-    test2NotificationPlugin(TestNotificationPlugin)
-    pluginRegistry['test2NotificationPlugin']='test2NotificationPlugin'
-
     /**
      * Registry bean contains both kinds of plugin
      */
