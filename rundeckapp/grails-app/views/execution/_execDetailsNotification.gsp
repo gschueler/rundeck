@@ -19,4 +19,7 @@
                       model="${[values: notification.configuration, description: desc, hideTitle: true]}"/>
         </span>
     </g:if>
+    <g:elseif test="${!notificationPlugins?.get(notification.type)}">
+        <span class="warn note">Plugin not found: ${notification.type?.encodeAsHTML()}</span>
+    </g:elseif>
 </g:else>
