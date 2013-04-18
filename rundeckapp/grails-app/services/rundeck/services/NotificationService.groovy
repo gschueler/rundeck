@@ -170,10 +170,10 @@ public class NotificationService implements ApplicationContextAware{
                 }else if(n.type=='url'){    //sending notification of a status trigger for the Job
                     def Execution exec = content.execution
                     //iterate through the URLs, and submit a POST to the destination with the XML Execution result
+                    final state = ExecutionController.getExecutionState(exec)
                     String xmlStr = doWithMockRequest {
                         def writer = new StringWriter()
                         def xml = new MarkupBuilder(writer)
-                        final state = ExecutionController.getExecutionState(exec)
 
                         xml.'notification'(trigger:trigger,status:state,executionId:exec.id){
                             new ExecutionController().renderApiExecutions([exec], [:], delegate)
