@@ -192,16 +192,41 @@ class JobsXMLCodec {
             if(!map.notification || !triggers){
                 throw new JobXMLException("notification section had no trigger elements")
             }
+            def convertPluginToMap={Map plugin->
+                def e=plugin.remove('entry')
+                def confMap=[:]
+                if(e instanceof Map){
+                    confMap[e['key']]=e['value']
+                }else if(e instanceof Collection){
+                    e.each{
+                        confMap[it['key']] = it['value']
+                    }
+                }
+                plugin['config']=confMap
+            }
             triggers.each{trigger->
                 if(null!=map.notification[trigger]){
-                    if(!map.notification[trigger] || null==map.notification[trigger].email && null == map.notification[trigger].webhook){
-                        throw new JobXMLException("notification '${trigger}' element had missing 'email' or 'webhook' element")
+                    if(!map.notification[trigger] || null==map.notification[trigger].email && null == map.notification[trigger].webhook
+                            && null == map.notification[trigger].plugin
+                    ){
+                        throw new JobXMLException("notification '${trigger}' element had missing 'email' or 'webhook' or 'plugin' element")
                     }
                     if(null!=map.notification[trigger].email && (!map.notification[trigger].email || !map.notification[trigger].email.recipients)){
                         throw new JobXMLException("${trigger} email had blank or missing 'recipients' attribute")
                     }
                     if(null !=map.notification[trigger].webhook && (!map.notification[trigger].webhook || !map.notification[trigger].webhook.urls)){
                         throw new JobXMLException("${trigger} webhook had blank or missing 'urls' attribute")
+                    }
+                    if(null !=map.notification[trigger].plugin){
+                        if(!map.notification[trigger].plugin){
+                            throw new JobXMLException("${trigger} plugin element was empty")
+                        }
+                        if(map.notification[trigger].plugin instanceof Map && !map.notification[trigger].plugin.type){
+                            throw new JobXMLException("${trigger} plugin had blank or missing 'type' attribute")
+                        }
+                        if(map.notification[trigger].plugin instanceof Collection && !map.notification[trigger].plugin.every{it.type}){
+                            throw new JobXMLException("${trigger} plugin had blank or missing 'type' attribute")
+                        }
                     }
                     if(map.notification[trigger].email){
                         map.notification[trigger].recipients=map.notification[trigger].email.remove('recipients')
@@ -210,6 +235,13 @@ class JobsXMLCodec {
                     if(map.notification[trigger].webhook){
                         map.notification[trigger].urls = map.notification[trigger].webhook.remove('urls')
                         map.notification[trigger].remove('webhook')
+                    }
+                    if(map.notification[trigger].plugin && map.notification[trigger].plugin instanceof Map){
+                        convertPluginToMap(map.notification[trigger].plugin)
+                    }else if(map.notification[trigger].plugin && map.notification[trigger].plugin instanceof Collection){
+                        map.notification[trigger].plugin.each{
+                            convertPluginToMap(it)
+                        }
                     }
                 }
             }
@@ -358,6 +390,19 @@ class JobsXMLCodec {
 
         convertWorkflowMapForBuilder(map.sequence)
         if(map.notification){
+            def convertNotificationPlugin={Map pluginMap->
+                def confMap = pluginMap.remove('config')
+                BuilderUtil.makeAttribute(pluginMap, 'type')
+                confMap.each { k, v ->
+                    if (!pluginMap['config']) {
+                        pluginMap['config'] = [entry: []]
+                    }
+                    def entryMap= [key: k, value: v]
+                    BuilderUtil.makeAttribute(entryMap,'key')
+                    BuilderUtil.makeAttribute(entryMap,'value')
+                    pluginMap['config']['entry'] <<  entryMap
+                }
+            }
             map.notification.keySet().findAll { it.startsWith('on') }.each{trigger->
                 if(map.notification[trigger]){
                     if(map.notification[trigger]?.recipients){
@@ -368,12 +413,11 @@ class JobsXMLCodec {
                     }
                     if(map.notification[trigger]?.plugin){
                         if(map.notification[trigger]?.plugin instanceof Map){
-                            def Map pluginMap = map.notification[trigger]?.plugin
-                            BuilderUtil.makeAttribute(pluginMap, 'type')
+                            convertNotificationPlugin(map.notification[trigger]?.plugin)
                         }else if(map.notification[trigger]?.plugin instanceof Collection){
                             //list of plugins,
                             map.notification[trigger].plugin.each{Map plugin->
-                                BuilderUtil.makeAttribute(plugin, 'type')
+                                convertNotificationPlugin(plugin)
                             }
                         }
                     }
