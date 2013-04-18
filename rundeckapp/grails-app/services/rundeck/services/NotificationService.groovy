@@ -49,6 +49,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
  */
 
 public class NotificationService implements ApplicationContextAware{
+    boolean transactional = false
 
     ApplicationContext applicationContext
     def grailsApplication
