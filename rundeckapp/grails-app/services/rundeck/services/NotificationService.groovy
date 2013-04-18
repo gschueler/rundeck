@@ -208,13 +208,15 @@ public class NotificationService implements ApplicationContextAware{
                     didsend=!webhookfailure
                 }else if (n.type) {
                     //prep execution data
-                    def execMap=doWithMockRequest {
+                    def Map execMap=doWithMockRequest {
                         new ExecutionController().exportExecutionData([content.execution])[0]
                     }
                     //TBD: nodestatus will migrate to execution data
-                    execMap['nodestatus'] = content['nodestatus']
+                    if(content['nodestatus']){
+                        execMap['nodestatus'] = content['nodestatus']
+                    }
 
-                    didsend=triggerPlugin(trigger,execMap,n)
+                    didsend=triggerPlugin(trigger,execMap,n.type, n.configuration)
                 }else{
                     log.error("Unsupported notification type: " + n.type);
                 }
@@ -233,31 +235,25 @@ public class NotificationService implements ApplicationContextAware{
     /**
      * Perform a plugin notification
      * @param trigger trigger name
-     * @param source job source
+     * @param data data content for the plugin
      * @param content content for notification
-     * @param n notification definition
+     * @param type plugin type
+     * @param config user configuration
      */
-    private boolean triggerPlugin(String trigger, Map execMap,Notification n){
-
-        //read config content as json
-        final ObjectMapper mapper = new ObjectMapper()
-        def Map config = null
-        if (n.content) {
-            config = mapper.readValue(n.content, Map.class)
-        }
+    private boolean triggerPlugin(String trigger, Map data,String type, Map config){
         //replace exec info data references in config???
 
         //load plugin and configure with config values
-        def plugin = configureNotificationPlugin(n.type, config)
+        def plugin = configureNotificationPlugin(type, config)
         if (!plugin) {
-            log.error("No Notification plugin found of type: " + n.type)
+            log.error("No Notification plugin found of type: " + type)
             return false
         }
 
         //invoke plugin
         //TODO: use executor
-        if (!plugin.postNotification(trigger, execMap, config)) {
-            log.error("Notification Failed: " + n.type);
+        if (!plugin.postNotification(trigger, data, config)) {
+            log.error("Notification Failed: " + type);
             return false
         }
         true
