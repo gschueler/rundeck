@@ -3,7 +3,6 @@ import com.dtolabs.rundeck.core.plugins.ServiceProviderLoader
 import com.dtolabs.rundeck.core.utils.GrailsServiceInjectorJobListener
 import com.dtolabs.rundeck.server.plugins.PluginCustomizer
 import com.dtolabs.rundeck.server.plugins.RundeckPluginRegistry
-import com.dtolabs.rundeck.server.plugins.notification.TestNotificationPlugin
 import com.dtolabs.rundeck.server.plugins.services.NotificationPluginProviderService
 import groovy.io.FileType
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean
