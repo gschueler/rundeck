@@ -12,14 +12,83 @@ Currently there are three conditions that can trigger notifications:
 * `onsuccess` - the Job completed without error
 * `onfailure` - the Job failed or was aborted
 
-Rundeck has two "built-in" notification types that can be configured for Jobs:
+Rundeck has two built-in notification types that can be configured for Jobs:
 
 1. Send an email to a list of addresses
 2. POST XML to a list of URLs
 
 We now support plugins as well.
 
-The Notification service in Rundeck operates slightly differently than other [available services](plugin-development.html#available-services), and so plugins operate slightly differently.
+## Plugin execution
+
+When a notification is defined for a Job, and the associated trigger occurs, your plugin will be executed
+and passed in two sets of Map data:
+
+1. Configuration data - the user-supplied configuration for the plugin
+2. Execution data - information about the Job and Execution for the notification
+
+### Configuration data
+
+The Configuration data is fully custom depending on your plugin, and is described in the [Plugin configuration properties](#plugin-configuration-properties) section.
+
+### Execution data
+
+The execution data is included as a Map containing the following keys and values:
+
+`id`
+  :  ID of the execution
+`href`
+  :  URL to the execution output view
+`status`
+  :  Execution state ('running','failed','aborted','succeeded')
+`user`
+  :  User who started the job
+`dateStarted`
+  :  Start time (java.util.Date)
+`dateStartedUnixtime`
+  :  Start time as milliseconds since epoch (long)
+`dateStartedW3c`
+  :  Start time as a W3C formatted String
+`description`
+  :  Summary string for the execution
+`argstring`
+  :  Argument string for any job options
+`project`
+  :  Project name
+`loglevel`
+  :  Loglevel string ('ERROR','WARN','INFO','VERBOSE','DEBUG')
+
+The following values may be available after the job is finished (not available for `onstart` trigger):
+
+`failedNodeListString`
+  :  Comma-separated list of any nodes that failed, if present
+`failedNodeList`
+  :  Java List of any node names that failed, if present
+`dateEnded`
+  :  End time (java.util.Date)
+`dateEndedUnixtime`
+  :  End time as milliseconds since epoch (long)
+`dateEndedW3c`
+  :  End time as W3C formatted string
+`abortedby`
+  :  User who aborted the execution
+
+* `job` information is in a `job` entry and contains another Map:
+
+    `id`
+      :  Job ID
+    `href`
+      :  URL to Job view page
+    `name`
+      :  Job name
+    `group`
+      :  Job group
+    `project`
+      :  Project name
+    `description`
+      :  Job Description
+    `averageDuration`
+      :  Average job duration in Milliseconds, if available
 
 ## Plugin configuration properties
 
