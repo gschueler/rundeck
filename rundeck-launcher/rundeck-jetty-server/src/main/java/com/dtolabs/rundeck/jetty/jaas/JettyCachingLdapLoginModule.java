@@ -213,7 +213,7 @@ public class JettyCachingLdapLoginModule extends AbstractLoginModule {
 
     protected boolean _reportStatistics;
 
-    protected static final ConcurrentHashMap<String, CachedUserInfo> USERINFOCACHE = 
+    protected static final ConcurrentHashMap<String, CachedUserInfo> USERINFOCACHE =
         new ConcurrentHashMap<String, CachedUserInfo>();
     
     /**
@@ -443,39 +443,7 @@ public class JettyCachingLdapLoginModule extends AbstractLoginModule {
             String webUserName = ((NameCallback) callbacks[0]).getName();
             Object webCredential = ((ObjectCallback) callbacks[1]).getObject();
 
-            if (webUserName == null || webCredential == null) {
-                setAuthenticated(false);
-                return isAuthenticated();
-            }
-
-            loginAttempts++;
-            
-            if(_reportStatistics)
-            {
-                DecimalFormat percentHit = new DecimalFormat("#.##");
-                Log.info("Login attempts: " + loginAttempts + ", Hits: " + userInfoCacheHits + 
-                        ", Ratio: " + percentHit.format((double)userInfoCacheHits / loginAttempts * 100f) + "%.");
-            }
-            
-            if (_forceBindingLogin) {
-                return bindingLogin(webUserName, webCredential);
-            }
-
-            // This sets read and the credential
-            UserInfo userInfo = getUserInfo(webUserName);
-
-            if (userInfo == null) {
-                setAuthenticated(false);
-                return false;
-            }
-
-            setCurrentUser(new JAASUserInfo(userInfo));
-
-            if (webCredential instanceof String) {
-                return credentialLogin(Credential.getCredential((String) webCredential));
-            }
-
-            return credentialLogin(webCredential);
+            return performLogin(webUserName, webCredential);
         } catch (UnsupportedCallbackException e) {
             throw new LoginException("Error obtaining callback information.");
         } catch (IOException e) {
@@ -489,6 +457,49 @@ public class JettyCachingLdapLoginModule extends AbstractLoginModule {
             }
             throw new LoginException("Error obtaining user info.");
         }
+    }
+
+    /**
+     * Attempt to login using the provided username, password
+     * @param webUserName
+     * @param webCredential
+     * @return
+     * @throws Exception
+     */
+    protected boolean performLogin(String webUserName, Object webCredential) throws Exception {
+        if (webUserName == null || webCredential == null) {
+            setAuthenticated(false);
+            return isAuthenticated();
+        }
+
+        loginAttempts++;
+
+        if (_reportStatistics) {
+            DecimalFormat percentHit = new DecimalFormat("#.##");
+            Log.info("Login attempts: " + loginAttempts + ", Hits: " + userInfoCacheHits +
+                    ", Ratio: " + percentHit.format((double) userInfoCacheHits / loginAttempts * 100f) + "%.");
+        }
+
+
+        if (_forceBindingLogin) {
+            return bindingLogin(webUserName, webCredential);
+        }
+
+        // This sets read and the credential
+        UserInfo userInfo = getUserInfo(webUserName);
+
+        if (userInfo == null) {
+            setAuthenticated(false);
+            return false;
+        }
+
+        setCurrentUser(new JAASUserInfo(userInfo));
+
+        if (webCredential instanceof String) {
+            return credentialLogin(Credential.getCredential((String) webCredential));
+        }
+
+        return credentialLogin(webCredential);
     }
 
     /**
@@ -631,7 +642,7 @@ public class JettyCachingLdapLoginModule extends AbstractLoginModule {
                 .toString(_debug))));
 
         _rolePrefix = (String) options.get("rolePrefix");
-        
+
         _reportStatistics = Boolean.parseBoolean(String.valueOf(getOption(options, "reportStatistics", Boolean
                 .toString(_reportStatistics))));
 
@@ -673,7 +684,7 @@ public class JettyCachingLdapLoginModule extends AbstractLoginModule {
     }
 
     @SuppressWarnings("unchecked")
-    private String getOption(Map options, String key, String defaultValue) {
+    protected String getOption(Map options, String key, String defaultValue) {
         Object value = options.get(key);
 
         if (value == null) {
