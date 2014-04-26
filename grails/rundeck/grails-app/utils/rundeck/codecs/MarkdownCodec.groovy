@@ -1,4 +1,7 @@
 package rundeck.codecs
+
+import org.markdownj.MarkdownProcessor
+
 /*
  * Copyright 2010 DTO Labs, Inc. (http://dtolabs.com)
  *
@@ -14,7 +17,6 @@ package rundeck.codecs
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.petebevin.markdown.MarkdownProcessor
 
 /*
  * MarkdownCodec.java
