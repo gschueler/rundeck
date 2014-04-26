@@ -43,7 +43,7 @@
     <dependency>
         <groupId>org.rundeck</groupId>
         <artifactId>rundeck-core</artifactId>
-        <version>2.1.1-SNAPSHOT</version>
+        <version>${version}</version>
         <scope>compile</scope>
         
       <exclusions>
@@ -66,18 +66,48 @@
       </exclusions>
 
     </dependency>
-                    
+
+    <dependency>
+        <groupId>org.rundeck</groupId>
+        <artifactId>rundeck-storage-api</artifactId>
+        <version>${version}</version>
+        <scope>compile</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.rundeck</groupId>
+        <artifactId>rundeck-storage-conf</artifactId>
+        <version>${version}</version>
+        <scope>compile</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.rundeck</groupId>
+        <artifactId>rundeck-storage-data</artifactId>
+        <version>${version}</version>
+        <scope>compile</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.rundeck</groupId>
+        <artifactId>rundeck-storage-filesys</artifactId>
+        <version>${version}</version>
+        <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>15.0</version>
+        <scope>compile</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.markdownj</groupId>
+        <artifactId>markdownj-core</artifactId>
+        <version>0.4</version>
+        <scope>compile</scope>
+    </dependency>
 
                     
 
-        <!--<dependency>-->
-            <!--<groupId>org.grails.plugins</groupId>-->
-            <!--<artifactId>tomcat</artifactId>-->
-            <!--<version>${grails.version}</version>-->
-            <!--<scope>provided</scope>-->
-            <!--<type>zip</type>-->
-        <!--</dependency>-->
-        
+
     <dependency>
         <groupId>org.grails.plugins</groupId>
         <artifactId>twitter-bootstrap</artifactId>
@@ -169,20 +199,20 @@
                     
 
 
-    <!--<dependency>-->
-        <!--<groupId>org.rundeck.grails.plugins</groupId>-->
-        <!--<artifactId>webrealms</artifactId>-->
-        <!--<version>0.4</version>-->
-        <!--<scope>compile</scope>-->
-        <!--<type>grails-plugin</type>-->
-    <!--</dependency>-->
-    <!--<dependency>-->
-        <!--<groupId>org.rundeck.grails.plugins</groupId>-->
-        <!--<artifactId>metricsweb</artifactId>-->
-        <!--<version>2.0.0-SNAPSHOT</version>-->
-        <!--<scope>compile</scope>-->
-        <!--<type>grails-plugin</type>-->
-    <!--</dependency>-->
+    <dependency>
+        <groupId>org.rundeck.grails.plugins</groupId>
+        <artifactId>webrealms</artifactId>
+        <version>0.4</version>
+        <scope>runtime</scope>
+        <type>grails-plugin</type>
+    </dependency>
+    <dependency>
+        <groupId>org.rundeck.grails.plugins</groupId>
+        <artifactId>metricsweb</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
+        <scope>compile</scope>
+        <type>grails-plugin</type>
+    </dependency>
 
     </dependencies>
 

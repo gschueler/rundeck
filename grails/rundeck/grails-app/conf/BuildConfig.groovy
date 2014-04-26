@@ -43,9 +43,6 @@ if (System.properties["grails.local.repo"]) {
 }
 println "Grails Local Repo: ${grailsLocalRepo}"
 
-//grails.plugin.location.webrealms = "webrealms"
-//grails.plugin.location.metricsweb = "metricsweb"
-
 grails.project.dependency.resolution = {
     pom true
     inherits "global" // inherit Grails' default dependencies
@@ -73,45 +70,9 @@ grails.project.dependency.resolution = {
     rundeckVersion = System.getProperty("RUNDECK_VERSION", appVersion)
     println "Application Version: ${rundeckVersion}"
     plugins {
-//        runtime ":hibernate:$grailsVersion"
-//        compile ":code-coverage:1.2.6"
-//        build ':jetty:2.0.3'
-//        compile ":twitter-bootstrap:3.0.3"
-//        compile ":asset-pipeline:1.3.3"
-//        compile ":less-asset-pipeline:1.2.1"
     }
     dependencies {
 
-//        test 'org.yaml:snakeyaml:1.9', 'org.apache.ant:ant:1.7.1', 'org.apache.ant:ant-jsch:1.7.1',
-//             'com.jcraft:jsch:0.1.50', 'log4j:log4j:1.2.16', 'commons-collections:commons-collections:3.2.1',
-//             'commons-codec:commons-codec:1.5', 'com.fasterxml.jackson.core:jackson-databind:2.0.2',
-//                'com.google.guava:guava:15.0'
-//        test("org.rundeck:rundeck-core:${rundeckVersion}"){
-//            changing=true
-//        }
-//
-//        compile 'org.yaml:snakeyaml:1.9', 'org.apache.ant:ant:1.7.1', 'org.apache.ant:ant-jsch:1.7.1',
-//                'com.jcraft:jsch:0.1.50','log4j:log4j:1.2.16','commons-collections:commons-collections:3.2.1',
-//                'commons-codec:commons-codec:1.5', 'com.fasterxml.jackson.core:jackson-databind:2.0.2',
-//                'com.codahale.metrics:metrics-core:3.0.1',
-//                'com.google.guava:guava:15.0'
-//        compile("org.rundeck:rundeck-core:${rundeckVersion}") {
-//            changing = true
-//            excludes("xalan")
-//        }
-//        compile("org.rundeck:rundeck-storage-filesys:${rundeckVersion}")
-//
-//        runtime 'org.yaml:snakeyaml:1.9', 'org.apache.ant:ant:1.7.1', 'org.apache.ant:ant-launcher:1.7.1',
-//                'org.apache.ant:ant-jsch:1.7.1','com.jcraft:jsch:0.1.50', 'org.springframework:spring-test:3.0.5.RELEASE',
-//                'log4j:log4j:1.2.16' ,'commons-collections:commons-collections:3.2.1','commons-codec:commons-codec:1.5',
-//                'com.fasterxml.jackson.core:jackson-databind:2.0.2', 'postgresql:postgresql:9.1-901.jdbc4',
-//                'com.google.guava:guava:15.0'
-//        runtime("org.rundeck:rundeck-core:${rundeckVersion}") {
-//            changing = true
-//        }
-//        runtime("org.rundeck:rundeck-jetty-server:${rundeckVersion}") {
-//            changing = true
-//        }
     }
 }
 grails.war.resources = { stagingDir, args ->
