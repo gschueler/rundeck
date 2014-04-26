@@ -13,7 +13,7 @@
         <module>rundeck-storage</module>
         <module>core</module>
         <module>plugins</module>
-        <module>rundeckapp</module>
+        <module>grails</module>
         <module>rundeck-launcher</module>
     </modules>
 
