@@ -33,7 +33,7 @@ if(props.'release'){
 def debug=Boolean.getBoolean('debug')?:("-debug" in args)
 def version=props.currentVersion+tag
 
-def warFile= "rundeckapp/target/rundeck-${version}.war"
+def warFile= "grails/rundeck/target/rundeck-${version}.war"
 def coreJarFile = "core/${target}/rundeck-core-${version}.jar"
 def launcherJarFile = "rundeck-launcher/launcher/${target}/rundeck-launcher-${version}.jar"
 
