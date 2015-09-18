@@ -103,7 +103,7 @@ class LoggingServiceTests  {
 
 
         def lfmock = mockFor(LogFileStorageService)
-        lfmock.demand.getLogFileWriterForExecution(1..1) { Execution e2, defaultMeta ->
+        lfmock.demand.getLogFileWriterForExecution(1..1) { Execution e2, defaultMeta, x ->
             assertEquals(1, e2.id)
             assertEquals([test: "blah"], defaultMeta)
             writer
@@ -169,7 +169,7 @@ class LoggingServiceTests  {
         def writer = new testWriter()
         writer.name = "filewritertest1"
         def lfmock = mockFor(LogFileStorageService)
-        lfmock.demand.getLogFileWriterForExecution(1..1) { Execution e2, defaultMeta ->
+        lfmock.demand.getLogFileWriterForExecution(1..1) { Execution e2, defaultMeta, x ->
             assertEquals(1, e2.id)
             assertEquals([test: "blah"], defaultMeta)
             writer

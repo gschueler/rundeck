@@ -180,7 +180,7 @@ class ExecutionJobTest  {
     }
     class testThreshold implements ThresholdValue{
         Long thresholdValue
-        String thresholdReason
+        String description
         String action
         boolean wasMet
         boolean thresholdWasMet(){
