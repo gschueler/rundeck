@@ -3,7 +3,7 @@ class WebrealmsGrailsPlugin {
     def DEFAULT_CONFIG_FILE = "DefaultWebrealmsConfig"
     def APP_CONFIG_FILE     = "WebrealmsConfig"
 
-    def version = 0.4
+    def version = 0.5
     def dependsOn = [:]
 
     // TODO Fill in these fields
@@ -87,7 +87,34 @@ Simply generates definitions in web.xml to define login configuration with parti
                     }
                 }
             }
+            addFilters(config, xml)
+        }
+    }
 
+    def addFilters(ConfigObject config,def xml) {
+        def filterNodes = xml.'context-param'
+        if (filterNodes.size() > 0) {
+
+            def filterElement = filterNodes[filterNodes.size() - 1]
+            filterElement + {
+                'filter' {
+                    'filter-name'("webrealmsForwardedAuthenticationFilter")
+                    'filter-class'("org.grails.plugins.webrealms.ForwardedAuthenticationFilter")
+                }
+            }
+
+
+            def mappingNodes = xml.'filter'
+            if (mappingNodes.size() > 0) {
+
+                def mappingElement = mappingNodes[mappingNodes.size() - 1]
+                mappingElement + {
+                    'filter-mapping' {
+                        'filter-name'("webrealmsForwardedAuthenticationFilter")
+                        'url-pattern'("/*")
+                    }
+                }
+            }
         }
     }
 	                                      
