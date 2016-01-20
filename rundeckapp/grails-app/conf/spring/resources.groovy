@@ -28,7 +28,9 @@ import org.rundeck.web.infosec.ContainerPrincipalRoleSource
 import org.rundeck.web.infosec.ContainerRoleSource
 import org.rundeck.web.infosec.HMacSynchronizerTokensManager
 import groovy.io.FileType
+import org.rundeck.web.infosec.LocalPropertiesRoleSource
 import org.rundeck.web.infosec.PreauthenticatedAttributeRoleSource
+import org.rundeck.web.infosec.PreauthenticatedHeaderRoleSource
 import org.springframework.core.task.SimpleAsyncTaskExecutor
 import rundeck.services.PasswordFieldsService
 import rundeck.services.scm.ScmJobImporter
@@ -189,6 +191,17 @@ beans={
         enabled=grailsApplication.config.rundeck?.security?.authorization?.preauthenticated?.enabled in [true,'true']
         attributeName=grailsApplication.config.rundeck?.security?.authorization?.preauthenticated?.attributeName
         delimiter=grailsApplication.config.rundeck?.security?.authorization?.preauthenticated?.delimiter
+    }
+    preauthenticatedHeaderRoleSource(PreauthenticatedHeaderRoleSource){
+        enabled=grailsApplication.config.rundeck?.security?.authorization?.preauthenticatedHeader?.enabled in [true,'true']
+        headerName=grailsApplication.config.rundeck?.security?.authorization?.preauthenticatedHeader?.headerName
+        delimiter=grailsApplication.config.rundeck?.security?.authorization?.preauthenticatedHeader?.delimiter
+    }
+    localPropertiesRoleSource(LocalPropertiesRoleSource){
+        enabled=grailsApplication.config.rundeck?.security?.authorization?.localProperties?.enabled in [true,'true']
+        legacyFormatSkipFirst=grailsApplication.config.rundeck?.security?.authorization?.localProperties?.legacyFormatSkipFirst in [true,'true']
+        file=grailsApplication.config.rundeck?.security?.authorization?.localProperties?.file
+        delimiter=grailsApplication.config.rundeck?.security?.authorization?.localProperties?.delimiter
     }
 
     def storageDir= new File(varDir, 'storage')

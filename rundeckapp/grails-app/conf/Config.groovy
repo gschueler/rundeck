@@ -158,6 +158,15 @@ rundeck.security.authorization.preauthenticated.enabled=false
 rundeck.security.authorization.preauthenticated.attributeName=null
 rundeck.security.authorization.preauthenticated.delimiter=','
 
+rundeck.security.authorization.preauthenticatedHeader.enabled=false
+rundeck.security.authorization.preauthenticatedHeader.headerName=null
+rundeck.security.authorization.preauthenticatedHeader.delimiter=','
+
+rundeck.security.authorization.localProperties.enabled=false
+rundeck.security.authorization.localProperties.file=null
+rundeck.security.authorization.localProperties.legacyFormatSkipFirst=false
+rundeck.security.authorization.localProperties.delimiter=','
+
 rundeck.web.metrics.servlets.metrics.enabled = true
 rundeck.web.metrics.servlets.ping.enabled = true
 rundeck.web.metrics.servlets.threads.enabled = true
