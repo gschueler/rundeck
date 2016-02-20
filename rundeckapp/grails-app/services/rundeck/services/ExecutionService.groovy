@@ -1,5 +1,6 @@
 package rundeck.services
 
+import com.dtolabs.rundeck.app.internal.logging.LogFlusher
 import com.dtolabs.rundeck.app.internal.workflow.MultiWorkflowExecutionListener
 import com.dtolabs.rundeck.app.support.*
 import com.dtolabs.rundeck.core.authorization.AuthContext
@@ -791,9 +792,10 @@ class ExecutionService implements ApplicationContextAware, StepExecutor, NodeSte
                     execution,framework,authContext,jobcontext,extraParamsExposed)
 
             def wfEventListener = new WorkflowEventLoggerListener(executionListener)
-
+            def logOutFlusher = new LogFlusher()
+            def logErrFlusher = new LogFlusher()
             def multiListener = MultiWorkflowExecutionListener.create(executionListener,
-                    [executionListener, wfEventListener,execStateListener, /*new EchoExecListener() */])
+                    [executionListener, wfEventListener,execStateListener, logOutFlusher,logErrFlusher, /*new EchoExecListener() */])
 
             if(scheduledExecution) {
                 if(!extraParamsExposed){
@@ -824,8 +826,12 @@ class ExecutionService implements ApplicationContextAware, StepExecutor, NodeSte
             }
             //install custom outputstreams for System.out and System.err for this thread and any child threads
             //output will be sent to loghandler instead.
-            sysThreadBoundOut.installThreadStream(loggingService.createLogOutputStream(loghandler, LogLevel.NORMAL, executionListener));
-            sysThreadBoundErr.installThreadStream(loggingService.createLogOutputStream(loghandler, LogLevel.ERROR, executionListener));
+            sysThreadBoundOut.installThreadStream(
+                    loggingService.createLogOutputStream(loghandler, LogLevel.NORMAL, executionListener, logOutFlusher)
+            );
+            sysThreadBoundErr.installThreadStream(
+                    loggingService.createLogOutputStream(loghandler, LogLevel.ERROR, executionListener, logErrFlusher)
+            );
             //create service object for the framework and listener
             Thread thread = new WorkflowExecutionServiceThread(framework.getWorkflowExecutionService(),item, executioncontext)
             thread.start()
@@ -833,7 +839,9 @@ class ExecutionService implements ApplicationContextAware, StepExecutor, NodeSte
         }catch(Exception e) {
             log.error("Failed while starting execution: ${execution.id}", e)
             loghandler.logError('Failed to start execution: ' + e.getClass().getName() + ": " + e.message)
+            sysThreadBoundOut.close()
             sysThreadBoundOut.removeThreadStream()
+            sysThreadBoundErr.close()
             sysThreadBoundErr.removeThreadStream()
             loghandler.close()
             return null
