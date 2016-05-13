@@ -29,19 +29,50 @@ import org.owasp.html.Sanitizers
 class SanitizedHTMLCodec {
     def grailsApplication
     static final PolicyFactory POLICY =
-        Sanitizers.BLOCKS.
-                and(Sanitizers.FORMATTING).
-                and(Sanitizers.IMAGES).
-                and(Sanitizers.LINKS).
-                and(new HtmlPolicyBuilder().
-                            //allow 'class' attribute on these elements
-                            allowElements('em', 'p', 'i', 'b', 'div', 'a', 'span', 'h1', 'h2',
-                                          'h3', 'h4', 'pre', 'code').
-                            allowAttributes('class').onElements('p', 'i', 'b', 'div', 'a',
-                                                                'span', 'h1', 'h2', 'h3', 'h4',
-                                                                'pre', 'code').
-                            toFactory()
-                )
+            Sanitizers.BLOCKS.
+                    and(Sanitizers.FORMATTING).
+                    and(Sanitizers.IMAGES).
+                    and(Sanitizers.LINKS).
+                    and(new HtmlPolicyBuilder().
+                        //allow these elements
+                                allowElements(
+                                        'em',
+                                        'p',
+                                        'i',
+                                        'b',
+                                        'div',
+                                        'a',
+                                        'span',
+                                        'h1',
+                                        'h2',
+                                        'h3',
+                                        'h4',
+                                        'pre',
+                                        'code',
+                                        'table',
+                                        'tr',
+                                        'td',
+                                        'th'
+                                ).
+                        //allow 'class' attribute on these elements
+                                allowAttributes('class').
+                                onElements(
+                                        'p',
+                                        'i',
+                                        'b',
+                                        'div',
+                                        'a',
+                                        'span',
+                                        'h1',
+                                        'h2',
+                                        'h3',
+                                        'h4',
+                                        'pre',
+                                        'code',
+                                        'td'
+                                ).
+                                toFactory()
+                    )
 
     static debugLog = { str ->
         log.debug(str)
@@ -56,7 +87,8 @@ class SanitizedHTMLCodec {
         @Override
         void discardedAttributes(final Object t, final String s, final String... strings) {
             debugLog("HTML Sanitizer audit: Discarding attrs for tag: " + s + ": " +
-                             "attrs: " + (strings as List))
+                             "attrs: " + (strings as List)
+            )
         }
     }
     static encode = { str ->
