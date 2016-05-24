@@ -212,14 +212,16 @@ class ExecutionController extends ControllerBase{
                 }
             }
         }
-//        def state = workflowService.readWorkflowStateForExecution(e)
-//        if(!state){
-////            state= workflowService.previewWorkflowStateForExecution(e)
-//        }
-        return [scheduledExecution: e.scheduledExecution?:null,execution:e, filesize:filesize,
+        return [scheduledExecution: e.scheduledExecution?:null,
+                execution:e,
+                filesize:filesize,
                 nextExecution: e.scheduledExecution?.scheduled ? scheduledExecutionService.nextExecutionTime(e.scheduledExecution) : null,
                 orchestratorPlugins: orchestratorPluginService.listOrchestratorPlugins(),
-                enext: enext, eprev: eprev,stepPluginDescriptions: pluginDescs, ]
+                strategyPlugins: scheduledExecutionService.getWorkflowStrategyPluginDescriptions(),
+                enext: enext,
+                eprev: eprev,
+                stepPluginDescriptions: pluginDescs,
+        ]
     }
     def delete = {
         withForm{
