@@ -1049,7 +1049,7 @@ function _applyMarkdeep(el){
 function _remoteSanitizeHTML(t, callback){
     "use strict";
     return jQuery.ajax({
-        url:appLinks.scheduledExecutionSanitizeHtml,
+        url:_genUrl(appLinks.scheduledExecutionMarkdeep,{format:'json'}),
         method:'POST',
         dataType:'json',
         contentType:'application/json',
@@ -1073,7 +1073,7 @@ function _initMarkdeep(){
         window.markdeep = Object.freeze({
             format: function (t, e, c) {
                 "use strict";
-                _remoteSanitizeHTML(orig.format(t, e), function (suc, sanitized, err) {
+                _remoteSanitizeHTML(t, function (suc, sanitized, err) {
                     if (suc) {
                         c(sanitized);
                     }else{

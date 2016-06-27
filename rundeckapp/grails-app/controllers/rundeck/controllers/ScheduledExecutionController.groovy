@@ -29,6 +29,8 @@ import org.apache.commons.httpclient.util.DateUtil
 import org.apache.log4j.Logger
 import org.apache.log4j.MDC
 import org.codehaus.groovy.grails.web.json.JSONElement
+import org.mozilla.javascript.Scriptable
+import org.mozilla.javascript.ScriptableObject
 import org.quartz.CronExpression
 import org.quartz.Scheduler
 import org.springframework.web.multipart.MultipartHttpServletRequest
@@ -449,6 +451,50 @@ class ScheduledExecutionController  extends ControllerBase{
 
 
         dataMap
+    }
+
+    def assetProcessorService
+    def grailsLinkGenerator
+    def markdeep(){
+        def inputText
+        if(params.content){
+            inputText=params.content.replaceAll('(\r\n)','\n')
+        }else if(request.format=='json'){
+            inputText=request.JSON.content
+        }
+        if(!inputText){
+            return [content:'']
+        }
+
+        org.mozilla.javascript.Context cx = org.mozilla.javascript.Context.enter();
+        def result='';
+        try {
+// Object.prototype, Function prototype, etc.
+            Scriptable scope = cx.initStandardObjects();
+            def bytes2 = assetProcessorService.serveAsset('util/fake', 'application/javascript', 'js',)
+            def bytes = assetProcessorService.serveAsset('util/markdeep', 'application/javascript', 'js',)
+            def scriptB = '''
+window.markdeep.format(content,true);
+'''
+            //scope.associateValue('content',content)
+            cx.evaluateReader(scope, new StringReader(new String(bytes2)), 'fake.js', 0, null);
+            cx.evaluateReader(scope, new StringReader(new String(bytes)), 'markdeep.js', 0, null);
+            ScriptableObject.putProperty(scope, "content", inputText)
+            result = cx.evaluateString(scope, scriptB, 'inline.js', 0, null);
+        }finally{
+            cx.exit()
+        }
+
+        withFormat {
+            html{
+                return [content:inputText,result:result.toString().encodeAsSanitizedHTML()]
+            }
+            json{
+                return render(contentType: 'application/json'){
+                    content = result.toString().encodeAsSanitizedHTML()
+                }
+            }
+        }
     }
 
     /**
