@@ -384,6 +384,45 @@ class ScheduledExecutionService implements ApplicationContextAware, Initializing
         claimed
     }
     /**
+     * list scheduling for any jobs assigned to fromServerUUID, or not assigned if it is null
+     * @param toServerUUID uuid to assign to scheduled jobs
+     * @param fromServerUUID uuid to claim from, or null to claim from unassigned jobs
+     *
+     * @return Map of job ID to boolean, indicating whether the job was claimed
+     */
+    def List<ScheduledExecution> listScheduledJobs(
+            String fromServerUUID = null,
+            boolean selectAll = false,
+            String projectFilter = null,
+            String jobid = null
+    )
+    {
+        List<ScheduledExecution> result = []
+        def queryFromServerUUID = fromServerUUID
+        def queryProject = projectFilter
+        ScheduledExecution.withTransaction {
+            ScheduledExecution.withCriteria {
+                eq('scheduled', true)
+                if (!selectAll) {
+                    if (queryFromServerUUID) {
+                        eq('serverNodeUUID', queryFromServerUUID)
+                    } else {
+                        isNull('serverNodeUUID')
+                    }
+                }
+                if (queryProject) {
+                    eq('project', queryProject)
+                }
+                if(jobid){
+                    eq('uuid',jobid)
+                }
+            }.each { ScheduledExecution se ->
+                result<< se
+            }
+        }
+        result
+    }
+    /**
      * Remove all scheduling for job executions, triggered when passive mode is enabled
      * @param serverUUID
      */

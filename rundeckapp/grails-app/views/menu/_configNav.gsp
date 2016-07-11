@@ -41,6 +41,11 @@
                 <g:message code="gui.menu.KeyStorage" default="Key Storage"/>
             </g:link>
         </li>
+        <li class="${selected == 'scheduler' ? 'active' : ''}">
+            <g:link controller="menu" action="scheduler" params="[project: params.project ?: request.project]">
+                <g:message code="gui.menu.Scheduler" default="Scheduler"/>
+            </g:link>
+        </li>
         <li class="${selected == 'syscfg' ? 'active' : ''}">
             <g:link controller="menu" action="systemConfig" params="[project: params.project ?: request.project]">
                 <g:message code="gui.menu.SystemConfig" default="System Configuration"/>

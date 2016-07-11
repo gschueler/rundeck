@@ -1268,6 +1268,17 @@ section{
     background: @panel-footer-bg;
   }
 
+  th{
+    &.th-default{
+      .text-header();
+      .table-footer();
+      .text-center();
+    }
+    &.th-muted{
+      .th-default();
+      .text-muted();
+    }
+  }
 
   //node detail
 

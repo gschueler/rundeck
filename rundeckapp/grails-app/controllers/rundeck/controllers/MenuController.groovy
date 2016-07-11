@@ -47,6 +47,7 @@ import rundeck.services.framework.RundeckProjectConfigurable
 
 import javax.servlet.http.HttpServletResponse
 import java.lang.management.ManagementFactory
+import java.text.SimpleDateFormat
 
 class MenuController extends ControllerBase implements ApplicationContextAware{
     FrameworkService frameworkService
@@ -677,6 +678,33 @@ class MenuController extends ControllerBase implements ApplicationContextAware{
             ]
     }
 
+    def scheduler(){
+
+    }
+    def listSchedules(){
+        def fromUUID=frameworkService.serverUUID
+        List<ScheduledExecution> list=scheduledExecutionService.listScheduledJobs(fromUUID,false,params.project?:null)
+        def format=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+        withFormat{
+            json{
+                render(contentType: 'application/json'){
+                    scheduledJobs = list.collect {
+                        def nextExec = scheduledExecutionService.nextExecutionTime(it)?:scheduledExecutionService.tempNextExecutionTime(it)
+                        [
+                                jobId:it.extid,
+                                project:it.project,
+                                jobName:it.jobName,
+                                jobGroup:it.groupPath,
+                                nextExecution: nextExec,
+                                scheduleEnabled:it.scheduleEnabled,
+                                executionEnabled:it.executionEnabled,
+                                crontab:it.generateCrontabExression()
+                        ]
+                    }
+                }
+            }
+        }
+    }
     public def resumeIncompleteLogStorage(Long id){
         withForm{
 
@@ -1813,7 +1841,7 @@ class MenuController extends ControllerBase implements ApplicationContextAware{
         }
 
 
-        def list = ScheduledExecution.findAllByServerNodeUUID(uuid)
+        def list = scheduledExecutionService.listScheduledJobs(uuid)
         //filter authorized jobs
         Map<String, UserAndRolesAuthContext> projectAuths = [:]
         def authForProject = { String project ->

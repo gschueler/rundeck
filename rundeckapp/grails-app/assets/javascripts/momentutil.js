@@ -33,9 +33,9 @@
     formatTimeSimple : function (text) {
         return self.formatTime(text, 'h:mm:ss a');
     },
-    formatTimeAtDate : function (text) {
-        var time = moment(text);
-        if (!text || !time.isValid()) {
+
+    formatMomentAtDate : function (time) {
+        if (!time.isValid()) {
             return '';
         }
         var now = moment();
@@ -56,6 +56,13 @@
             return time.format('M/d ha');
         }
     },
+
+ formatTimeAtDate : function (text) {
+     if (!text) {
+         return '';
+     }
+     return MomentUtil.formatMomentAtDate(moment(text));
+ },
     formatDurationSimple : function (ms) {
         if (ms < 0) {
             return '';
