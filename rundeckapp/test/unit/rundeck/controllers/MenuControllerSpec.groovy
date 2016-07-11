@@ -8,6 +8,7 @@ import rundeck.ScheduledExecution
 import rundeck.Workflow
 import rundeck.services.ApiService
 import rundeck.services.FrameworkService
+import rundeck.services.ScheduledExecutionService
 import spock.lang.Specification
 
 /**
@@ -50,6 +51,7 @@ class MenuControllerSpec extends Specification {
         def testUUID = UUID.randomUUID().toString()
         controller.apiService = Mock(ApiService)
         controller.frameworkService = Mock(FrameworkService)
+        controller.scheduledExecutionService = Mock(ScheduledExecutionService)
         ScheduledExecution job1 = new ScheduledExecution(createJobParams(jobName:'job1'))
         job1.scheduled=true
         job1.serverNodeUUID=testUUID
@@ -70,6 +72,7 @@ class MenuControllerSpec extends Specification {
         1 * controller.frameworkService.authorizeProjectJobAll(_,job1,['read'],'AProject')>>true
         1 * controller.frameworkService.isClusterModeEnabled()>>true
         1 * controller.apiService.renderSuccessXml(_,_,_)
+        1 * controller.scheduledExecutionService.listScheduledJobs(testUUID)>>[job1]
 
     }
     def "scheduler list other server jobs"() {
@@ -78,6 +81,7 @@ class MenuControllerSpec extends Specification {
         def uuid2 = UUID.randomUUID().toString()
         controller.apiService = Mock(ApiService)
         controller.frameworkService = Mock(FrameworkService)
+        controller.scheduledExecutionService = Mock(ScheduledExecutionService)
         ScheduledExecution job1 = new ScheduledExecution(createJobParams(jobName:'job1'))
         job1.scheduled=true
         job1.serverNodeUUID=testUUID
@@ -98,6 +102,7 @@ class MenuControllerSpec extends Specification {
         1 * controller.frameworkService.authorizeProjectJobAll(_,job2,['read'],'AProject')>>true
         1 * controller.frameworkService.isClusterModeEnabled()>>true
         1 * controller.apiService.renderSuccessXml(_,_,_)
+        1 * controller.scheduledExecutionService.listScheduledJobs(uuid2)>>[job2]
 
     }
 }
