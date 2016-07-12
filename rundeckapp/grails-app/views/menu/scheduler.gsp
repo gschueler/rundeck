@@ -56,14 +56,13 @@
         <h1>Scheduler</h1>
         <g:ifServletContextAttributeExists attribute="SERVER_UUID">
             <div class="well well-sm  well-embed">
-            Scheduled Jobs for this cluster node
+                Scheduled Jobs for this cluster node
 
-            <div class=" rundeck-server-uuid"
-                  data-server-uuid="${enc(attr: servletContextAttribute(attribute: 'SERVER_UUID'))}"
-                  data-server-name="${enc(attr: servletContextAttribute(attribute: 'FRAMEWORK_NODE'))}">
-            </div>
-            ID
-            ${servletContextAttribute(attribute: 'SERVER_UUID')}
+                <div class=" rundeck-server-uuid"
+                     data-server-uuid="${enc(attr: servletContextAttribute(attribute: 'SERVER_UUID'))}"
+                     data-server-name="${enc(attr: servletContextAttribute(attribute: 'FRAMEWORK_NODE'))}">
+                </div>
+                ${servletContextAttribute(attribute: 'SERVER_UUID')}
             </div>
         </g:ifServletContextAttributeExists>
 
