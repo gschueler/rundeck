@@ -96,8 +96,8 @@ class ScheduledExecutionController  extends ControllerBase{
             flipExecutionEnabledBulk:'POST',
             flipScheduleDisabledBulk:'POST',
             flipScheduleEnabledBulk:'POST',
-            flipScheduleEnabled:'POST',
-            flipExecutionEnabled: 'POST',
+            flipScheduleEnabled:['POST','GET'],
+            flipExecutionEnabled: ['POST','GET'],
             runJobInline: 'POST',
             runJobNow: 'POST',
             runAdhocInline: 'POST',
@@ -218,18 +218,18 @@ class ScheduledExecutionController  extends ControllerBase{
             ]
 
             if (frameworkService.authorizeApplicationResourceAny(authContext,
-                                                                 frameworkService.authResourceForProject(params.project),
+                                                                 frameworkService.authResourceForProject(scheduledExecution.project),
                                                                  [AuthConstants.ACTION_ADMIN, AuthConstants.ACTION_EXPORT])) {
-                if(scmService.projectHasConfiguredExportPlugin(params.project)) {
+                if(scmService.projectHasConfiguredExportPlugin(scheduledExecution.project)) {
                     model.scmExportEnabled = true
                     model.scmExportStatus = scmService.exportStatusForJobs([scheduledExecution])
-                    model.scmExportRenamedPath=scmService.getRenamedJobPathsForProject(params.project)?.get(scheduledExecution.extid)
+                    model.scmExportRenamedPath=scmService.getRenamedJobPathsForProject(scheduledExecution.project)?.get(scheduledExecution.extid)
                 }
             }
             if (frameworkService.authorizeApplicationResourceAny(authContext,
-                                                                 frameworkService.authResourceForProject(params.project),
+                                                                 frameworkService.authResourceForProject(scheduledExecution.project),
                                                                  [AuthConstants.ACTION_ADMIN, AuthConstants.ACTION_IMPORT])) {
-                if(scmService.projectHasConfiguredPlugin('import',params.project)) {
+                if(scmService.projectHasConfiguredPlugin('import',scheduledExecution.project)) {
                     model.scmImportEnabled = true
                     model.scmImportStatus = scmService.importStatusForJobs([scheduledExecution])
                 }
@@ -1016,7 +1016,6 @@ class ScheduledExecutionController  extends ControllerBase{
     }
 
     def flipScheduleEnabled() {
-        withForm{
         if (!params.id) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST)
             return renderErrorView(g.message(code: 'api.error.parameter.required', args: ['id']))
@@ -1024,16 +1023,29 @@ class ScheduledExecutionController  extends ControllerBase{
 
         def jobid = params.id
 
-            def ScheduledExecution scheduledExecution = scheduledExecutionService.getByIDorUUID(jobid)
-            if (notFoundResponse(scheduledExecution, 'Job', params.id)) {
-                return
-            }
+        def ScheduledExecution scheduledExecution = scheduledExecutionService.getByIDorUUID(jobid)
+        if (notFoundResponse(scheduledExecution, 'Job', params.id)) {
+            return
+        }
 
-            Framework framework = frameworkService.getRundeckFramework()
-            UserAndRolesAuthContext authContext = frameworkService.getAuthContextForSubjectAndProject(
-                    session.subject,
-                    scheduledExecution.project
-            )
+        Framework framework = frameworkService.getRundeckFramework()
+        UserAndRolesAuthContext authContext = frameworkService.getAuthContextForSubjectAndProject(
+                session.subject,
+                scheduledExecution.project
+        )
+        if (!frameworkService.authorizeProjectJobAll(authContext,
+                                                     scheduledExecution,
+                                                     [AuthConstants.ACTION_TOGGLE_SCHEDULE],
+                                                     scheduledExecution.project
+        )) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN)
+            return renderErrorView(g.message(code:'api.error.item.unauthorized', args: ['Toggle Schedule', 'Job ID', params.id]))
+        }
+        if(request.method=='GET'){
+            return render(view: 'flipScheduledExecutionValue',model:[scheduledExecution:scheduledExecution,flipSchedule:true])
+        }
+        withForm{
+
             def changeinfo = [method: 'update', change: 'modify', user: session.user]
 
             //pass session-stored edit state in params map
@@ -1049,6 +1061,9 @@ class ScheduledExecutionController  extends ControllerBase{
             if(params.returnToJob=='true'){
                 return redirect(controller: 'scheduledExecution', action: 'show', params: [project: params.project,id:scheduledExecution.extid])
             }
+            if(params.returnToScheduler){
+                return redirect(controller: 'menu', action: 'scheduler', params: [project: params.project])
+            }
             redirect(controller: 'menu', action: 'jobs', params: [project: params.project])
 
         }.invalidToken{
@@ -1059,24 +1074,35 @@ class ScheduledExecutionController  extends ControllerBase{
     }
 
     def flipExecutionEnabled() {
+        if (!params.id) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST)
+            return renderErrorView(g.message(code: 'api.error.parameter.required', args: ['id']))
+        }
+
+        def jobid = params.id
+        def ScheduledExecution scheduledExecution = scheduledExecutionService.getByIDorUUID(jobid)
+        if (notFoundResponse(scheduledExecution, 'Job', params.id)) {
+            return
+        }
+        Framework framework = frameworkService.getRundeckFramework()
+        UserAndRolesAuthContext authContext = frameworkService.getAuthContextForSubjectAndProject(
+                session.subject,
+                scheduledExecution.project
+        )
+
+        if (!frameworkService.authorizeProjectJobAll(authContext, scheduledExecution, [AuthConstants.ACTION_TOGGLE_EXECUTION],
+                                                     scheduledExecution.project)) {
+            response.status= HttpServletResponse.SC_FORBIDDEN
+            return renderErrorView(g.message( code  : 'api.error.item.unauthorized', args: ['Toggle Execution', 'Job ID', params.id]))
+        }
+
+        if(request.method=='GET'){
+            return render(view: 'flipScheduledExecutionValue',
+                          model:[scheduledExecution:scheduledExecution,flipSchedule:false])
+        }
         withForm{
 
-            if (!params.id) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST)
-                return renderErrorView(g.message(code: 'api.error.parameter.required', args: ['id']))
-            }
 
-            def jobid = params.id
-            def ScheduledExecution scheduledExecution = scheduledExecutionService.getByIDorUUID(jobid)
-            if (notFoundResponse(scheduledExecution, 'Job', params.id)) {
-                return
-            }
-
-            Framework framework = frameworkService.getRundeckFramework()
-            UserAndRolesAuthContext authContext = frameworkService.getAuthContextForSubjectAndProject(
-                    session.subject,
-                    scheduledExecution.project
-            )
             def changeinfo = [method: 'update', change: 'modify', user: authContext.username]
 
             //pass session-stored edit state in params map
@@ -1091,6 +1117,9 @@ class ScheduledExecutionController  extends ControllerBase{
             }
             if(params.returnToJob=='true'){
                 return redirect(controller: 'scheduledExecution', action: 'show', params: [project: params.project,id:scheduledExecution.extid])
+            }
+            if(params.returnToScheduler){
+                return redirect(controller: 'menu', action: 'scheduler', params: [project: params.project])
             }
             redirect(controller: 'menu', action: 'jobs', params: [project: params.project])
 
