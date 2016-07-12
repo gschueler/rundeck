@@ -684,7 +684,7 @@ class MenuController extends ControllerBase implements ApplicationContextAware{
     def listSchedules(){
         def fromUUID=frameworkService.serverUUID
         List<ScheduledExecution> list=scheduledExecutionService.listScheduledJobs(fromUUID,false,params.project?:null)
-        def format=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+        def format=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX")
         withFormat{
             json{
                 render(contentType: 'application/json'){
@@ -695,7 +695,7 @@ class MenuController extends ControllerBase implements ApplicationContextAware{
                                 project:it.project,
                                 jobName:it.jobName,
                                 jobGroup:it.groupPath,
-                                nextExecution: nextExec,
+                                nextExecution: format.format(nextExec),
                                 scheduleEnabled:it.scheduleEnabled,
                                 executionEnabled:it.executionEnabled,
                                 crontab:it.generateCrontabExression()

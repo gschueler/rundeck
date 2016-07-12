@@ -72,6 +72,7 @@
                 <th class="th-muted text-small">Project</th>
                 <th class="th-muted text-small">Job</th>
                 <th class="th-muted text-small">Schedule</th>
+                <th class="th-muted text-small">Cron</th>
             </tr>
             </thead>
             <tbody data-bind="foreach: scheduledJobs">
@@ -124,10 +125,12 @@
                           title="Schedule is disabled">
                         <g:icon name="ban-circle"/>
                     </span>
-                    <span data-bind="if: nextExecution">
-                        <span data-bind="text: nextExecDate"></span>
-                        <span data-bind="text: '('+relativeNextExecDate()+')'"></span>
+                    <span data-bind="if: nextExecution" >
+                        <span data-bind="text: nextExecDate, attr: {title: nextExecDateFormat}"></span>
+                        <span data-bind="text: '('+relativeNextExecDate()+')', attr: {title: nextExecDateFormat}"></span>
                     </span>
+                </td>
+                <td>
                     <code>
                         <span data-bind="text: crontab"></span>
                     </code>
