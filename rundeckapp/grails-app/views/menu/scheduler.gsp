@@ -90,6 +90,17 @@
         // project:"${params.project}"
         }
         });
+        jQuery(function(){
+        "use strict";
+
+            jQuery('table').on('click','.act_job_action_dropdown',function(){
+                var id=jQuery(this).data('jobId');
+                var el=jQuery(this).parent().find('.dropdown-menu');
+                el.load(
+                    _genUrl(appLinks.scheduledExecutionActionMenuFragment,{id:id})
+                );
+            });
+        });
     </g:javascript>
 </head>
 
@@ -147,6 +158,20 @@
                         <g:icon name="book"/>
                         <span data-bind="text: jobTitle"></span>
                     </a>
+
+                    <div class="btn-group">
+                        <button type="button"
+                                class="btn btn-default btn-sm btn-link dropdown-toggle act_job_action_dropdown"
+                                title="${g.message(code: 'click.for.job.actions')}"
+                                data-bind="attr: {'data-job-id': jobId }"
+                                data-toggle="dropdown"
+                                aria-expanded="false">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li role="presentation" class="dropdown-header"><g:message code="loading.text"/></li>
+                        </ul>
+                    </div>
                 </td>
                 <td data-bind="css: {'text-muted': !scheduleEnabled() }">
 
