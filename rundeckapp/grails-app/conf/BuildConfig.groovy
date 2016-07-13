@@ -118,7 +118,9 @@ grails.project.dependency.resolution = {
                 'org.owasp.encoder:encoder:1.2',
                 'org.quartz-scheduler:quartz:2.2.1',
                 'org.markdownj:markdownj-core:0.4',
-                'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20160614.1'
+                'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20160614.1',
+                'org.jasypt:jasypt:1.9.2',
+                'org.bouncycastle:bcprov-jdk15on:1.51'
 
         compile("org.rundeck:rundeck-core:${rundeckVersion}")
         compile("org.rundeck:rundeck-storage-filesys:${rundeckVersion}")
