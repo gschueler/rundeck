@@ -111,8 +111,10 @@ public class JschNodeExecutor implements NodeExecutor, Describable {
 
     public static final String NODE_ATTR_SUDO_COMMAND_ENABLED = "command-enabled";
     public static final String NODE_ATTR_SUDO_PROMPT_PATTERN = "prompt-pattern";
+    public static final String NODE_ATTR_SUDO_PROMPT_FAILURE_PATTERN = "prompt-failure-pattern";
     public static final String DEFAULT_SUDO_PROMPT_PATTERN = "^\\[sudo\\] password for .+: .*";
     public static final String NODE_ATTR_SUDO_FAILURE_PATTERN = "failure-pattern";
+    public static final String NODE_ATTR_SUDO_SUCCESS_PATTERN = "success-pattern";
     public static final String DEFAULT_SUDO_FAILURE_PATTERN = "^.*try again.*";
     public static final String NODE_ATTR_SUDO_COMMAND_PATTERN = "command-pattern";
     public static final String DEFAULT_SUDO_COMMAND_PATTERN = "^sudo$";

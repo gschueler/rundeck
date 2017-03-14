@@ -97,8 +97,6 @@ public class RuleEvaluator implements Authorization, AclRuleSetSource {
             final Set<Attribute> environment
     )
     {
-        long userMatchStart = System.currentTimeMillis();
-
         if (f.getEnvironment() != null) {
             final EnvironmentalContext environment1 = f.getEnvironment();
             if (!environment1.isValid()) {

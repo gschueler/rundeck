@@ -230,18 +230,16 @@ public class Setup implements CLIToolLogger {
 
     private File copyToNativeLineEndings(InputStream input, File destFile) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(input));
-        final OutputStream out= new FileOutputStream(destFile);
-        try{
-            final BufferedWriter writer=new BufferedWriter(new OutputStreamWriter(out));
-            String line=bufferedReader.readLine();
-            while (line != null) {
-                writer.write(line);
-                writer.newLine();
-                line = bufferedReader.readLine();
+        try (OutputStream out = new FileOutputStream(destFile)) {
+            try (final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out))) {
+                String line = bufferedReader.readLine();
+                while (line != null) {
+                    writer.write(line);
+                    writer.newLine();
+                    line = bufferedReader.readLine();
+                }
+                writer.flush();
             }
-            writer.flush();
-        }finally {
-            out.close();
         }
         return destFile;
 

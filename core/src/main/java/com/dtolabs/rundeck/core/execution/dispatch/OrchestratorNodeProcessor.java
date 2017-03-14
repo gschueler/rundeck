@@ -63,7 +63,7 @@ public class OrchestratorNodeProcessor {
 
     public boolean execute() throws ExecutionException{
         for (int i=0;i<threadCount;i++) {
-            threadPool.submit(new OrchestratorRunnable());
+            Future<Boolean> ignore = threadPool.submit(new OrchestratorRunnable());
         }
         boolean success=true;
         try {

@@ -54,8 +54,6 @@ public final class Base64 {
     public static final boolean isBase64(byte[] b) {
         if (b.length < 4)
             return false;
-        else if (b.length == 0)
-            return true;
         String t = new String(b);
         int end = 0;
         if (t.endsWith("=="))

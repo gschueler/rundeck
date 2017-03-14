@@ -20,7 +20,7 @@ import static com.dtolabs.rundeck.core.plugins.configuration.StringRenderingCons
                                  "step")
 
 public class SequentialWorkflowStrategy implements WorkflowStrategy {
-    public static String PROVIDER_NAME = "sequential";
+    public static final String PROVIDER_NAME = "sequential";
 
     @PluginProperty(
             title = " ",

@@ -124,12 +124,12 @@ public class TestBaseWorkflowStrategy extends AbstractBaseTest {
                     if (null != executionContext.getFlowControl()) {
                         if (result.getControlBehavior() == ControlBehavior.Halt) {
                             if (null != result.getStatusString()) {
-                                executionContext.getFlowControl().Halt(result.getStatusString());
+                                executionContext.getFlowControl().haltFlow(result.getStatusString());
                             } else {
-                                executionContext.getFlowControl().Halt(result.isSuccess());
+                                executionContext.getFlowControl().haltFlow(result.isSuccess());
                             }
                         } else if (result.getControlBehavior() == ControlBehavior.Continue) {
-                            executionContext.getFlowControl().Continue();
+                            executionContext.getFlowControl().continueFlow();
                         }
                     }
                     return result.isSuccess() ? new StepExecutionResultImpl() :
@@ -279,7 +279,7 @@ public class TestBaseWorkflowStrategy extends AbstractBaseTest {
         expectResult1.put("cmd", testCmd1);
         expectResult1.put("keepgoing", true);
         FlowController result = new FlowController();
-        result.Halt(false);
+        result.haltFlow(false);
         assertExecWFItems(
                 mkTestItems(testCmd1),
                 false,
@@ -304,7 +304,7 @@ public class TestBaseWorkflowStrategy extends AbstractBaseTest {
         expectResult1.put("cmd", testCmd1);
         expectResult1.put("keepgoing", true);
         FlowController result = new FlowController();
-        result.Halt(true);
+        result.haltFlow(true);
         assertExecWFItems(
                 mkTestItems(testCmd1),
                 false,
@@ -329,7 +329,7 @@ public class TestBaseWorkflowStrategy extends AbstractBaseTest {
         expectResult1.put("cmd", testCmd1);
         expectResult1.put("keepgoing", true);
         FlowController result = new FlowController();
-        result.Halt("test1");
+        result.haltFlow("test1");
         assertExecWFItems(
                 mkTestItems(testCmd1),
                 false,
@@ -354,7 +354,7 @@ public class TestBaseWorkflowStrategy extends AbstractBaseTest {
         expectResult1.put("cmd", testCmd1);
         expectResult1.put("keepgoing", true);
         FlowController result = new FlowController();
-        result.Continue();
+        result.continueFlow();
         assertExecWFItems(
                 mkTestItems(testCmd1),
                 false,

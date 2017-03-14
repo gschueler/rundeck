@@ -24,6 +24,7 @@
 package com.dtolabs.rundeck.core.plugins;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -83,6 +84,35 @@ class VersionCompare {
         //ignore tag
         return 0;
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final VersionCompare that = (VersionCompare) o;
+
+        if (majString != null ? !majString.equals(that.majString) : that.majString != null) {
+            return false;
+        }
+        if (minString != null ? !minString.equals(that.minString) : that.minString != null) {
+            return false;
+        }
+        return patchString != null ? patchString.equals(that.patchString) : that.patchString == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = majString != null ? majString.hashCode() : 0;
+        result = 31 * result + (minString != null ? minString.hashCode() : 0);
+        result = 31 * result + (patchString != null ? patchString.hashCode() : 0);
+        return result;
+    }
+
     /**
      * Return true if this verison is at least as big as the given version
      */
@@ -136,10 +166,10 @@ class VersionCompare {
         return vers;
     }
 
-    public static class fileComparator implements Comparator<File>{
+    public static class FileComparator implements Comparator<File> {
         Map<File,VersionCompare> versions;
 
-        public fileComparator(final Map<File, VersionCompare> versions) {
+        public FileComparator(final Map<File, VersionCompare> versions) {
             this.versions = versions;
         }
 

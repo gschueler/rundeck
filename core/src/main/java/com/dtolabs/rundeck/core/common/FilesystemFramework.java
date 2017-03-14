@@ -64,23 +64,6 @@ public class FilesystemFramework implements IFilesystemFramework {
     public static File getConfigDir(File baseDir) {
         return new File(Constants.getFrameworkConfigDir(baseDir.getAbsolutePath()));
     }
-    /**
-     * Returns an instance of Framework object.  Loads the framework.projects.dir property value, or defaults to basedir/projects
-     *
-     * @param rdeck_base_dir     path name to the rdeck_base
-     * @return a Framework instance
-     */
-    public static FilesystemFramework getInstanceWithoutProjectsDir(final String rdeck_base_dir) {
-        File baseDir = new File(rdeck_base_dir);
-        File propertyFile = getPropertyFile(getConfigDir(baseDir));
-        String projectsDir=null;
-        if(propertyFile.exists()){
-            PropertyRetriever propertyRetriever = FilesystemFramework.createPropertyRetriever(baseDir);
-            projectsDir = propertyRetriever.getProperty("framework.projects.dir");
-        }
-        return new FilesystemFramework(new File(rdeck_base_dir), new File(projectsDir));
-    }
-
 
     @Override
     public File getFrameworkProjectsBaseDir() {

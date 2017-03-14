@@ -395,10 +395,7 @@ public class DefaultFileCopierUtil implements FileCopierUtil {
             //determine based on node
             extension = defaultRemoteFileExtensionForNode(node);
         }
-        final String remoteFilename = appendRemoteFileExtension(
-                cleanFileName(tempfilename),
-                null != extension ? cleanFileName(extension) : null
-        );
+        final String remoteFilename = appendRemoteFileExtension( cleanFileName(tempfilename), cleanFileName(extension));
         final String remotedir = getRemoteDirForNode(node, project, framework);
 
         return remotedir + remoteFilename;

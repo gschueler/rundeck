@@ -103,18 +103,16 @@ public class ResourceXMLParser {
 
             final Document doc;
             if(null==this.doc){
-                final InputStream in;
                 if(null!=file){
-                    in = new FileInputStream(file);
-                }else{
-                    in = input;
-                }
-                try{
-                    doc=reader.read(in);
-                }finally{
-                    if(null!=file){
-                        in.close();
+                    try (InputStream in = new FileInputStream(file)) {
+                        try {
+                            doc = reader.read(in);
+                        } finally {
+                            in.close();
+                        }
                     }
+                } else {
+                    doc = reader.read(input);
                 }
             }else{
                 doc=this.doc;

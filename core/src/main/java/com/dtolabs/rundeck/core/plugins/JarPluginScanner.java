@@ -68,8 +68,12 @@ public class JarPluginScanner extends DirPluginScanner {
         }
         
         // Create the directories
-        this.cachedir.mkdirs();
-        this.pluginJarCacheDirectory.mkdirs();
+        if (!this.cachedir.mkdirs()) {
+            log.warn("Failed to mkdir: " + this.cachedir);
+        }
+        if (!this.pluginJarCacheDirectory.mkdirs()) {
+            log.warn("Failed to mkdir: " + this.pluginJarCacheDirectory);
+        }
     }
 
     public boolean isValidPluginFile(final File file) {

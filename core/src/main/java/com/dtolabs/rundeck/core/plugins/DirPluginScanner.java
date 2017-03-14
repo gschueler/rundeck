@@ -84,7 +84,7 @@ abstract class DirPluginScanner implements PluginScanner {
             }
         }
         //currently resolve via filename
-        final Comparator<File> c = new VersionCompare.fileComparator(versions);
+        final Comparator<File> c = new VersionCompare.FileComparator(versions);
         final List<File> sorted = new ArrayList<File>(toCompare);
         Collections.sort(sorted, c);
         if (sorted.size() > 0) {

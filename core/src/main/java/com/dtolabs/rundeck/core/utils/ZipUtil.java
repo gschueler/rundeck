@@ -149,44 +149,50 @@ public class ZipUtil {
     public static void extractZip(final String path, final File dest, final FilenameFilter filter, final renamer rename,
                                   final streamCopier copier) throws IOException {
         final ZipFile jar = new ZipFile(path);
-        final Enumeration<? extends ZipEntry> enumeration = jar.entries();
-        while (enumeration.hasMoreElements()) {
-            final ZipEntry entry = enumeration.nextElement();
-            if (null != filter && !filter.accept(dest, entry.getName())) {
-                continue;
-            }
-            String name = entry.getName();
-            if (null != rename) {
-                name = rename.rename(name);
-            }
-            final File destFile = new File(dest, name);
-            if (entry.isDirectory() && !destFile.isDirectory()) {
-                if (!destFile.mkdirs()) {
-                    throw new IOException("Unable to make directory: " + destFile);
+
+        try {
+            final Enumeration<? extends ZipEntry> enumeration = jar.entries();
+            while (enumeration.hasMoreElements()) {
+                final ZipEntry entry = enumeration.nextElement();
+                if (null != filter && !filter.accept(dest, entry.getName())) {
+                    continue;
                 }
-            } else if (!entry.isDirectory()) {
-                if (!destFile.exists()) {
-                    //create parent dirs if necessary
-                    File parent = destFile.getParentFile();
-                    if(!parent.exists() && !parent.mkdirs()){
-                        throw new IOException("Unable to create parent dir for file: " + destFile.getAbsolutePath());
-                    }
-                    if (!destFile.createNewFile()) {
-                        throw new IOException("Unable to create file: " + destFile.getAbsolutePath());
-                    }
+                String name = entry.getName();
+                if (null != rename) {
+                    name = rename.rename(name);
                 }
-                InputStream entryStream = jar.getInputStream(entry);
-                FileOutputStream fileOut = new FileOutputStream(destFile);
-                try{
-                    if (null != copier) {
-                        copier.copyStream(entryStream, fileOut);
-                    } else {
-                        copyStream(entryStream, fileOut);
+                final File destFile = new File(dest, name);
+                if (entry.isDirectory() && !destFile.isDirectory()) {
+                    if (!destFile.mkdirs()) {
+                        throw new IOException("Unable to make directory: " + destFile);
                     }
-                }finally{
-                    fileOut.close();
+                } else if (!entry.isDirectory()) {
+                    if (!destFile.exists()) {
+                        //create parent dirs if necessary
+                        File parent = destFile.getParentFile();
+                        if (!parent.exists() && !parent.mkdirs()) {
+                            throw new IOException("Unable to create parent dir for file: " +
+                                                  destFile.getAbsolutePath());
+                        }
+                        if (!destFile.createNewFile()) {
+                            throw new IOException("Unable to create file: " + destFile.getAbsolutePath());
+                        }
+                    }
+                    InputStream entryStream = jar.getInputStream(entry);
+                    FileOutputStream fileOut = new FileOutputStream(destFile);
+                    try {
+                        if (null != copier) {
+                            copier.copyStream(entryStream, fileOut);
+                        } else {
+                            copyStream(entryStream, fileOut);
+                        }
+                    } finally {
+                        fileOut.close();
+                    }
                 }
             }
+        } finally {
+            jar.close();
         }
     }
 

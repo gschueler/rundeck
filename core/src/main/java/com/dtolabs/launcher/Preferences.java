@@ -157,29 +157,21 @@ public class Preferences {
 
     // load properties file
     private static void loadDefaults(Properties defaultProperties, String propertiesFile) throws IOException {
-        FileInputStream fis = new FileInputStream(propertiesFile);
-        try {
+        try (FileInputStream fis = new FileInputStream(propertiesFile)) {
             defaultProperties.load(fis);
-        } finally {
-            if(null!=fis){
-                fis.close();
-            }
         }
     }
     // load properties file
     public static void loadResourcesDefaults(Properties defaultProperties, String propertiesFileName) throws IOException {
         final String resource = Setup.TEMPLATE_RESOURCES_PATH + "/" + propertiesFileName;
-        InputStream is = Preferences.class.getClassLoader().getResourceAsStream(
-            resource);
+        InputStream is = Preferences.class.getClassLoader().getResourceAsStream(resource);
         if(null==is) {
             throw new IOException("Unable to load resource: " + resource);
         }
         try {
             defaultProperties.load(is);
         } finally {
-            if (null != is) {
-                is.close();
-            }
+            is.close();
         }
     }
 

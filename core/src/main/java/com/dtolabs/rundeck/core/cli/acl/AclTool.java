@@ -36,6 +36,8 @@ import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import static com.dtolabs.rundeck.core.authorization.Explanation.Code.REJECTED_DENIED;
+
 /**
  * Created by greg on 4/2/15.
  */
@@ -498,7 +500,6 @@ public class AclTool extends BaseTool {
             }
             if (cli.hasOption(ATTRS_OPT)) {
                 attrsMap = new HashMap<>();
-                cli.getOptionValues(ATTRS_OPT);
                 String key = null;
                 for (String s : cli.getOptionValues(ATTRS_OPT)) {
                     if (key == null) {
@@ -779,14 +780,14 @@ public class AclTool extends BaseTool {
             log(
                     (decision.isAuthorized()
                      ? "+"
-                     : decision.explain().getCode() == Explanation.Code.REJECTED_DENIED ? "!" : "-") +
+                     : decision.explain().getCode() == REJECTED_DENIED ? "!" : "-") +
                     " " +
                     decision.getAction() +
                     ": " +
                     title +
                     (decision.isAuthorized() ? "" : (" [" + decision.explain().getCode() + "]"))
             );
-            if(!decision.isAuthorized() && decision.explain().getCode() == Explanation.Code.REJECTED_DENIED) {
+            if (!decision.isAuthorized() && decision.explain().getCode() == REJECTED_DENIED) {
                 verbose(
                         "  " + decision.explain().toString()
                 );
@@ -1547,7 +1548,6 @@ public class AclTool extends BaseTool {
     }
 
     private ParsePart parsePart(String name, String line, final String delimiter, final boolean allowMultiple) {
-        Map<String, Object> resourceMap = new HashMap<>();
         int len = 0;
         String test = line;
         int v = test.indexOf(name + "<");
@@ -1560,7 +1560,7 @@ public class AclTool extends BaseTool {
             return null;
         }
         String restext = r1.substring(0, v2);
-        resourceMap = parseMap(restext, delimiter, allowMultiple);
+        Map<String, Object> resourceMap = parseMap(restext, delimiter, allowMultiple);
         if (null == resourceMap) {
             return null;
         }
@@ -1572,7 +1572,6 @@ public class AclTool extends BaseTool {
     }
 
     private ParsePart parseString(String name, String line) {
-        Map<String, String> resourceMap = new HashMap<>();
         int len = 0;
         String test = line;
         int v = test.indexOf(name + "<");
@@ -1705,7 +1704,7 @@ public class AclTool extends BaseTool {
         ruleMap.putAll(s);
 
         stringHashMap.put("for", ruleMap);
-        stringHashMap.put("description", authRequest.description != null ? authRequest.description : "generated");
+        stringHashMap.put("description", "generated");
 
 
         return stringHashMap;
@@ -1772,12 +1771,13 @@ public class AclTool extends BaseTool {
                                 "A matching rule declared that the requested action be DENIED."
                         );
                         wasDenied = true;
+                    default:
+                        //noop
                 }
                 testPassed = false;
             } else {
-                switch (decision.explain().getCode()) {
-                    case REJECTED_DENIED:
-                        wasDenied = true;
+                if (REJECTED_DENIED.equals(decision.explain().getCode())) {
+                    wasDenied = true;
                 }
                 if (argVerbose) {
                     log(decision.toString());
@@ -1835,7 +1835,6 @@ public class AclTool extends BaseTool {
     }
 
     private class AuthRequest {
-        String description;
         Map<String, Object> resourceMap;
         boolean regexMatch;
         boolean containsMatch;

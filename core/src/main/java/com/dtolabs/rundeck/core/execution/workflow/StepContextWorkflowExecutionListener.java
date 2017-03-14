@@ -18,7 +18,6 @@ package com.dtolabs.rundeck.core.execution.workflow;
 
 import com.dtolabs.rundeck.core.utils.NullablePairImpl;
 import com.dtolabs.rundeck.core.utils.Pair;
-import com.dtolabs.rundeck.core.utils.PairImpl;
 import com.dtolabs.rundeck.core.utils.Pairs;
 
 import java.util.ArrayList;
@@ -30,8 +29,8 @@ import java.util.List;
 public class StepContextWorkflowExecutionListener<NODE, STEP> implements StepNodeContextListener<NODE, STEP>,
         StepNodeContext<NODE, STEP> {
 
-    public class ctxPair extends NullablePairImpl<STEP, NODE> implements Pair<STEP,NODE> {
-        ctxPair(STEP first, NODE second) {
+    public class CtxPair extends NullablePairImpl<STEP, NODE> implements Pair<STEP,NODE> {
+        CtxPair(STEP first, NODE second) {
             super(first, second);
         }
     }
@@ -40,15 +39,15 @@ public class StepContextWorkflowExecutionListener<NODE, STEP> implements StepNod
      */
     private InheritableThreadLocal<STEP> localStep = new InheritableThreadLocal<STEP>();
     private InheritableThreadLocal<NODE> localNode = new InheritableThreadLocal<NODE>();
-    private InheritableThreadLocal<ContextStack<ctxPair>> contextStack = new
-            InheritableThreadLocal<ContextStack<ctxPair>>();
+    private InheritableThreadLocal<ContextStack<CtxPair>> contextStack = new
+            InheritableThreadLocal<ContextStack<CtxPair>>();
 
     public void beginContext() {
         STEP info = localStep.get();
         NODE node = localNode.get();
         if (null != info) {
             //within another workflow already, so push context onto stack
-            ctxPair pair = new ctxPair(info, node);
+            CtxPair pair = new CtxPair(info, node);
             if (null != contextStack.get()) {
                 contextStack.set(contextStack.get().copyPush(pair));
             } else {
@@ -60,11 +59,11 @@ public class StepContextWorkflowExecutionListener<NODE, STEP> implements StepNod
     }
 
     public void finishContext() {
-        ContextStack<ctxPair> stack = contextStack.get();
+        ContextStack<CtxPair> stack = contextStack.get();
         if (null != stack) {
             //pop any workflow context already on stack
             if (stack.size() > 0) {
-                ctxPair pop = stack.pop();
+                CtxPair pop = stack.pop();
                 localStep.set(pop.getFirst());
                 localNode.set(pop.getSecond());
             } else {
@@ -115,9 +114,9 @@ public class StepContextWorkflowExecutionListener<NODE, STEP> implements StepNod
         NODE node = localNode.get();
         if (null != step) {
             if (null != contextStack.get()) {
-                return getPairs(contextStack.get().copyPush(new ctxPair(step, node)).stack());
+                return getPairs(contextStack.get().copyPush(new CtxPair(step, node)).stack());
             } else {
-                return getPairs(ContextStack.create(new ctxPair(step, node)).stack());
+                return getPairs(ContextStack.create(new CtxPair(step, node)).stack());
             }
         } else if (null != contextStack.get()) {
             List<Pair<STEP, NODE>> stack = getPairs(contextStack.get().stack());
@@ -131,9 +130,9 @@ public class StepContextWorkflowExecutionListener<NODE, STEP> implements StepNod
         }
     }
 
-    private List<Pair<STEP, NODE>> getPairs(List<ctxPair> stack) {
+    private List<Pair<STEP, NODE>> getPairs(List<CtxPair> stack) {
         ArrayList<Pair<STEP, NODE>> pairs = new ArrayList<Pair<STEP, NODE>>();
-        for (ctxPair ctxPair : stack) {
+        for (CtxPair ctxPair : stack) {
             pairs.add(ctxPair);
         }
         return pairs;

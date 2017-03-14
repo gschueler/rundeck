@@ -96,26 +96,16 @@ public class PoliciesCache implements Iterable<PolicyCollection> {
             final long lastmod = source.getLastModified().getTime();
             if (null == entry || lastmod > entry.modTime) {
                     if (!source.isValid()) {
-                        CacheItem remove = cache.remove(source.getIdentity());
+                        final CacheItem ignore = cache.remove(source.getIdentity());
                         entry = null;
-//                        cacheRemove++;
                     } else {
-//                        cacheMiss++;
                         PolicyCollection entry1 = createEntry(source);
-                        if (null != entry1) {
-                            entry = new CacheItem(entry1, lastmod);
-                            cache.put(source.getIdentity(), entry);
-                        } else {
-                            cache.remove(source.getIdentity());
-                            entry = null;
-                        }
+                        entry = new CacheItem(entry1, lastmod);
+                        cache.put(source.getIdentity(), entry);
                     }
             }else{
-//                cacheUnmodifiedHit++;
                 entry.touch(checkTime);
             }
-        }else{
-//            cacheHit++;
         }
         return null != entry ? entry.policyCollection : null;
     }

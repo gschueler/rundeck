@@ -141,7 +141,7 @@ public class JschScpFileCopier extends BaseFileCopier implements FileCopier, Des
                         scriptfile :
                         writeTempFile(
                                 context,
-                                scriptfile,
+                                null,
                                 input,
                                 script
                         );
@@ -162,7 +162,7 @@ public class JschScpFileCopier extends BaseFileCopier implements FileCopier, Des
                     StepFailureReason.ConfigurationFailure, e);
         }
 
-        /**
+        /*
          * Copy the file over
          */
         context.getExecutionListener().log(3,"copying file: '" + localTempfile.getAbsolutePath()

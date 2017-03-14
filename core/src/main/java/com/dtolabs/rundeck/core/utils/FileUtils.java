@@ -76,10 +76,12 @@ public class FileUtils {
     public static boolean deleteDir(final File dir) {
         if (dir.isDirectory()) {
             final String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
-                final boolean success = deleteDir(new File(dir, children[i]));
-                if (!success) {
-                    return false;
+            if (children != null) {
+                for (final String aChildren : children) {
+                    final boolean success = deleteDir(new File(dir, aChildren));
+                    if (!success) {
+                        return false;
+                    }
                 }
             }
         }
@@ -96,8 +98,10 @@ public class FileUtils {
     public static void deleteDirOnExit(final File dir) {
         if (dir.isDirectory()) {
             final String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
-                deleteDirOnExit(new File(dir, children[i]));
+            if (children != null) {
+                for (final String aChildren : children) {
+                    deleteDirOnExit(new File(dir, aChildren));
+                }
             }
         }
 

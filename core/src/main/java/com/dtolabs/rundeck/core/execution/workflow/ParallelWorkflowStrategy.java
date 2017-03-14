@@ -20,7 +20,7 @@ import static com.dtolabs.rundeck.core.execution.workflow.EngineWorkflowExecutor
 @Plugin(name = "parallel", service = ServiceNameConstants.WorkflowStrategy)
 @PluginDescription(title = "Parallel", description = "Run all steps in parallel")
 public class ParallelWorkflowStrategy implements WorkflowStrategy {
-    public static String PROVIDER_NAME = "parallel";
+    public static final String PROVIDER_NAME = "parallel";
 
     @Override
     public int getThreadCount() {

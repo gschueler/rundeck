@@ -26,15 +26,15 @@ public interface FlowControl {
     /**
      * execution halts with custom status
      */
-    public void Halt(String statusString);
+    public void haltFlow(String statusString);
 
     /**
      * execution halts with success or failure
      */
-    public void Halt(boolean success);
+    public void haltFlow(boolean success);
 
     /**
      * execution continues
      */
-    public void Continue();
+    public void continueFlow();
 }

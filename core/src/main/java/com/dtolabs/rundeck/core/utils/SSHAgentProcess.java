@@ -55,10 +55,10 @@ public class SSHAgentProcess {
             InputStream is = process.getInputStream();
 
             byte[] buff = new byte[2048];
-            is.read(buff);
+            int len=is.read(buff);
             is.close();
 
-            String agentOutput = new String(buff);
+            String agentOutput = new String(buff,0,len);
             String[] splitAgentOutput = agentOutput.split(";");
 
             String[] splitSocketPath = splitAgentOutput[0].split("=");

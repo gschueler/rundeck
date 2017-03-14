@@ -140,7 +140,13 @@ class SudoResponder implements Responder {
                     frameworkProject,
                     framework
             );
-            inputFailurePattern = null;
+            inputFailurePattern = ResolverUtil.resolveProperty(
+                    configPrefix + JschNodeExecutor.NODE_ATTR_SUDO_PROMPT_FAILURE_PATTERN,
+                    null,
+                    node,
+                    frameworkProject,
+                    framework
+            );
             responseFailurePattern = ResolverUtil.resolveProperty(
                     configPrefix + JschNodeExecutor.NODE_ATTR_SUDO_FAILURE_PATTERN,
                     JschNodeExecutor.DEFAULT_SUDO_FAILURE_PATTERN,
@@ -148,7 +154,13 @@ class SudoResponder implements Responder {
                     frameworkProject,
                     framework
             );
-            responseSuccessPattern = null;
+            responseSuccessPattern = ResolverUtil.resolveProperty(
+                    configPrefix + JschNodeExecutor.NODE_ATTR_SUDO_SUCCESS_PATTERN,
+                    null,
+                    node,
+                    frameworkProject,
+                    framework
+            );
             inputMaxLines = ResolverUtil.resolveIntProperty(
                     configPrefix + JschNodeExecutor.NODE_ATTR_SUDO_PROMPT_MAX_LINES,
                     JschNodeExecutor.DEFAULT_SUDO_PROMPT_MAX_LINES,

@@ -24,7 +24,7 @@ package com.dtolabs.rundeck.core.common;
  */
 public class FrameworkResourceException extends RuntimeException {
     private String message;
-    private IFrameworkResource resource;
+    transient private IFrameworkResource resource;
 
     FrameworkResourceException(final String message, final IFrameworkResource resource) {
         super(message);

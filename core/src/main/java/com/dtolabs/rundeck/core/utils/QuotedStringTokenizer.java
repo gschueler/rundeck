@@ -40,7 +40,7 @@ public class QuotedStringTokenizer implements Iterator<String>, Iterable<String>
         this(string.toCharArray(), 0);
     }
 
-    public QuotedStringTokenizer(char[] chars, int pos) {
+    private QuotedStringTokenizer(char[] chars, int pos) {
         this.string = chars;
         this.pos = pos;
         buffer = new ArrayDeque<String>();

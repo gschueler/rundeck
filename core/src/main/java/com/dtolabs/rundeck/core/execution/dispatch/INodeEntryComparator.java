@@ -26,6 +26,7 @@ package com.dtolabs.rundeck.core.execution.dispatch;
 import com.dtolabs.rundeck.core.common.INodeEntry;
 import com.dtolabs.rundeck.core.common.INodeSet;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -33,7 +34,8 @@ import java.util.*;
  *
  * @author Greg Schueler <a href="mailto:greg@dtosolutions.com">greg@dtosolutions.com</a>
  */
-public class INodeEntryComparator implements Comparator<INodeEntry> {
+public class INodeEntryComparator implements Comparator<INodeEntry>, Serializable {
+    static final long serialVersionUID = 1L;
     private final String rankProperty;
 
     public INodeEntryComparator(final String rankProperty) {

@@ -190,7 +190,10 @@ public abstract class BaseWorkflowExecutor implements WorkflowExecutor {
                     if(useHandlerResults){
                         stepSuccess = handlerSuccess;
                         stepResult=handlerResult;
-                        stepFailedMap = handlerFailedMap;
+                        stepFailedMap.putAll(handlerFailedMap);
+                        if (stepSuccess) {
+                            stepFailedMap.remove(stepNum);
+                        }
                         nodeFailures = handlerCaptureFailedNodesListener.getFailedNodes();
                     }
                 }

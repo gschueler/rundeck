@@ -238,13 +238,12 @@ public class FrameworkProjectConfig implements IRundeckProjectConfig, IRundeckPr
 
         try {
             if(!destfile.getParentFile().exists()){
-                destfile.getParentFile().mkdirs();
+                if(!destfile.getParentFile().mkdirs()){
+                    logger.warn("Unable to create directory: " + destfile.getParentFile());
+                }
             }
-            final FileOutputStream fileOutputStream = new FileOutputStream(destfile);
-            try {
+            try (FileOutputStream fileOutputStream = new FileOutputStream(destfile)) {
                 newProps.store(fileOutputStream, "Project " + name + " configuration, generated");
-            } finally {
-                fileOutputStream.close();
             }
         } catch (IOException e) {
             e.printStackTrace();

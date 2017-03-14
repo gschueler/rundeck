@@ -1218,8 +1218,6 @@ final class YamlPolicy implements Policy,AclRuleSetSource {
         }
 
         private void initialize() {
-            final List<ContextEvaluation> evaluations = new ArrayList<ContextEvaluation>();
-
             //require description
             final Object descriptionValue = policyDef.get(DESCRIPTION_KEY);
             if (descriptionValue == null || !(descriptionValue instanceof String)) {

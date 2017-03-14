@@ -396,13 +396,11 @@ public class NodeFirstWorkflowExecutor extends BaseWorkflowExecutor {
         }
 
         static WorkflowExecutionResult extractWorkflowResult(NodeStepResult dispatcherResult) {
-            assert dispatcherResult instanceof HasSourceResult;
             if (!(dispatcherResult instanceof HasSourceResult)) {
                 throw new IllegalArgumentException("Cannot extract source result from dispatcher result");
             }
             HasSourceResult sourced = (HasSourceResult) dispatcherResult;
             StatusResult sourceResult = sourced.getSourceResult();
-            assert sourceResult instanceof WorkflowExecutionResult;
             if (!(sourceResult instanceof WorkflowExecutionResult)) {
                 throw new IllegalArgumentException("Cannot extract workflow result from dispatcher result");
             }

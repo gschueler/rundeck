@@ -117,7 +117,7 @@ public class WorkflowStrategyService extends ChainedProviderService<WorkflowStra
                     workflowStrategy
             );
             if (description != null) {
-                config = PluginAdapterUtility.configureProperties(
+                Map<String, Object> ignore = PluginAdapterUtility.configureProperties(
                         resolver,
                         description,
                         workflowStrategy,
@@ -156,7 +156,7 @@ public class WorkflowStrategyService extends ChainedProviderService<WorkflowStra
                     workflowStrategy
             );
             if (description != null) {
-                Map<String, Object> stringObjectMap = PluginAdapterUtility.configureProperties(
+                Map<String, Object> ignore = PluginAdapterUtility.configureProperties(
                         resolver,
                         description,
                         workflowStrategy,

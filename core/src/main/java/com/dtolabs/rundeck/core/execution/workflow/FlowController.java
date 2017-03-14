@@ -27,7 +27,7 @@ public class FlowController implements FlowControl, WorkflowStatusResult {
 
 
     @Override
-    public void Halt(final String statusString) {
+    public void haltFlow(final String statusString) {
         controlBehavior = ControlBehavior.Halt;
         this.statusString = statusString;
         this.controlled=true;
@@ -35,14 +35,14 @@ public class FlowController implements FlowControl, WorkflowStatusResult {
     }
 
     @Override
-    public void Halt(final boolean success) {
+    public void haltFlow(final boolean success) {
         controlBehavior = ControlBehavior.Halt;
         this.success = success;
         this.controlled=true;
     }
 
     @Override
-    public void Continue() {
+    public void continueFlow() {
         controlBehavior = ControlBehavior.Continue;
         this.controlled = true;
     }

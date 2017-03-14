@@ -439,7 +439,9 @@ public class FrameworkProject extends FrameworkResourceParent implements IRundec
     public long storeFileResource(final String path, final InputStream input) throws IOException {
         File result = new File(getBaseDir(), path);
         if(!result.getParentFile().exists()){
-            result.getParentFile().mkdirs();
+            if (!result.getParentFile().mkdirs()) {
+                logger.warn("Unable to create directory: " + result.getParentFile());
+            }
         }
         try(FileOutputStream fos = new FileOutputStream(result)) {
            return Streams.copyStream(input, fos);

@@ -39,7 +39,7 @@ import static com.dtolabs.rundeck.core.plugins.configuration.StringRenderingCons
                    description = "Execute all steps on a node before proceeding to the next node.")
 
 public class NodeFirstWorkflowStrategy implements WorkflowStrategy {
-    public static String PROVIDER_NAME = "node-first";
+    public static final String PROVIDER_NAME = "node-first";
     @PluginProperty(
             title = " ",
             defaultValue = "<table>\n" +

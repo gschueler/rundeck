@@ -21,6 +21,7 @@ import com.dtolabs.rundeck.core.authorization.AuthorizationUtil;
 import com.dtolabs.rundeck.core.authorization.providers.Policies;
 import com.dtolabs.rundeck.core.utils.IPropertyLookup;
 import com.dtolabs.rundeck.core.utils.PropertyLookup;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.Map;
@@ -31,6 +32,7 @@ import java.util.Set;
  * Created by greg on 2/19/15.
  */
 public class FrameworkFactory {
+    static final Logger LOGGER = Logger.getLogger(FrameworkFactory.class);
     /**
      * Returns an instance of Framework object.  Loads the framework.projects.dir property value, or defaults to
      * basedir/projects
@@ -281,7 +283,9 @@ public class FrameworkFactory {
         frameworkProject.setProjectNodesFactory(nodesFactory);
         File aclPath = new File(baseDir, "acls");
         if(!aclPath.exists()) {
-            aclPath.mkdirs();
+            if(!aclPath.mkdirs()){
+                LOGGER.warn("Unable to create directory: " + aclPath);
+            }
         }
         frameworkProject.setProjectAuthorization(
                 AclsUtil.createAuthorization(

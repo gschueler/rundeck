@@ -111,7 +111,7 @@ public abstract class AbstractDescribableScriptPlugin implements Describable {
         if (o == null) {
             return defVal;
         }
-        if (o == Boolean.TRUE) {
+        if (Boolean.TRUE.equals(o)) {
             return true;
         }
         return "true".equals(o);
@@ -164,7 +164,7 @@ public abstract class AbstractDescribableScriptPlugin implements Describable {
 
                     final String valuesstr = metaStringProp(itemmeta, CONFIG_VALUES);
                     if (null != valuesstr) {
-                        final String[] split = null != valuesstr ? valuesstr.split(",") : null;
+                        final String[] split = valuesstr.split(",");
                         valueList = Arrays.asList(split);
                     } else {
                         Object vlist = itemmeta.get(CONFIG_VALUES);
