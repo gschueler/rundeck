@@ -19,7 +19,7 @@ package rundeck.services
 import com.dtolabs.rundeck.plugins.jobs.JobChangeListener
 import com.dtolabs.rundeck.plugins.scm.JobChangeEvent
 import com.dtolabs.rundeck.plugins.scm.JobSerializer
-import grails.events.Listener
+import grails.events.annotation.Subscriber
 import grails.transaction.Transactional
 import rundeck.ScheduledExecution
 import rundeck.codecs.JobsXMLCodec
@@ -50,7 +50,8 @@ class JobEventsService {
         listeners.remove(plugin)
     }
 
-    @Listener
+//    @Listener
+    @Subscriber('jobChanged')
     def jobChanged(StoredJobChangeEvent e) {
         if (!listeners) {
             return

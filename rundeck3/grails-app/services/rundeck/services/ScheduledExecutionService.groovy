@@ -92,7 +92,7 @@ class ScheduledExecutionService implements ApplicationContextAware, Initializing
     ApplicationContext applicationContext
 
     def MessageSource messageSource
-    def grailsEvents
+//    def grailsEvents
     def pluginService
     def executionUtilService
     def fileUploadService
@@ -827,7 +827,8 @@ class ScheduledExecutionService implements ApplicationContextAware, Initializing
             def event = createJobChangeEvent(JobChangeEvent.JobChangeEventType.DELETE, originalRef)
 
             //issue event directly
-            grailsEvents?.event(null, 'jobChanged', event)
+            notify('jobChanged',event)
+//            grailsEvents?.event(null, 'jobChanged', event)
         }
         return [success:success,error:errmsg]
     }
@@ -1546,7 +1547,8 @@ class ScheduledExecutionService implements ApplicationContextAware, Initializing
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     def void issueJobChangeEvent(JobChangeEvent event) {
         if (event) {
-            grailsEvents?.event(null, 'jobChanged', event)
+            notify('jobChanged',event)
+//            grailsEvents?.event(null, 'jobChanged', event)
         }
     }
     static def parseNotificationsFromParams(params){

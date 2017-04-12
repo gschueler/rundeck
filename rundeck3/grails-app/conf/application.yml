@@ -34,6 +34,10 @@ endpoints:
 
 ---
 grails:
+    servlet:
+        version: 3.0
+---
+grails:
     mime:
         disable:
             accept:

@@ -41,7 +41,10 @@ import com.dtolabs.rundeck.execution.JobReferenceFailureReason
 import com.dtolabs.rundeck.plugins.scm.JobChangeEvent
 import com.dtolabs.rundeck.server.authorization.AuthConstants
 import grails.events.EventException
-import grails.events.Listener
+import grails.events.EventPublisher
+
+//import grails.events.Listener
+import grails.events.annotation.Subscriber
 import grails.web.mapping.LinkGenerator
 import groovy.transform.ToString
 import org.apache.commons.io.FileUtils
@@ -78,7 +81,7 @@ import java.util.regex.Pattern
 /**
  * Coordinates Command executions via Ant Project objects
  */
-class ExecutionService implements ApplicationContextAware, StepExecutor, NodeStepExecutor {
+class ExecutionService implements ApplicationContextAware, StepExecutor, NodeStepExecutor, EventPublisher {
     static Logger executionStatusLogger = Logger.getLogger("org.rundeck.execution.status")
     static transactional = true
     def FrameworkService frameworkService
@@ -103,7 +106,7 @@ class ExecutionService implements ApplicationContextAware, StepExecutor, NodeSte
     def nodeService
     def grailsApplication
     def configurationService
-    def grailsEvents
+//    def grailsEvents
     def executionUtilService
     def fileUploadService
 
@@ -950,21 +953,31 @@ class ExecutionService implements ApplicationContextAware, StepExecutor, NodeSte
             StepExecutionContext executioncontext = createContext(execution, null,framework, authContext,
                     execution.user, jobcontext, multiListener, null,extraParams, extraParamsExposed,inputCharset)
 
-            def evt = grailsEvents?.event(
-                    null,
-                    'executionBeforeStart',
-                    new ExecutionPrepareEvent(
-                            execution:execution,
-                            job:scheduledExecution,
-                            context: executioncontext
-                    )
-            )
-            evt?.get()
-            def errs = evt?.getErrors()
-            if (errs) {
-                def err=(errs[0] instanceof EventException)? errs[0].cause : errs[0]
-                throw new ExecutionServiceException(err.message, err)
+            //XXX events
+            sendAndReceive('executionBeforeStart',
+                           new ExecutionPrepareEvent(
+                                   execution: execution,
+                                   job: scheduledExecution,
+                                   context: executioncontext
+                           )
+            ) {
+                println("received: $it")
             }
+//            def evt = grailsEvents?.event(
+//                    null,
+//                    'executionBeforeStart',
+//                    new ExecutionPrepareEvent(
+//                            execution:execution,
+//                            job:scheduledExecution,
+//                            context: executioncontext
+//                    )
+//            )
+//            evt?.get()
+//            def errs = evt?.getErrors()
+//            if (errs) {
+//                def err=(errs[0] instanceof EventException)? errs[0].cause : errs[0]
+//                throw new ExecutionServiceException(err.message, err)
+//            }
 
 
             //ExecutionService handles Job reference steps
@@ -1288,19 +1301,33 @@ class ExecutionService implements ApplicationContextAware, StepExecutor, NodeSte
         if (frameworkService.isClusterModeEnabled()) {
             def serverUUID = frameworkService.serverUUID
             if (e.serverNodeUUID != serverUUID) {
-                def ereply = grailsEvents?.event(
-                        'cluster',
-                        'abortExecution',
-                        [
-                                jobId      : se?.extid,
-                                executionId: e.id,
-                                project    : e.project,
-                                user       : user,
-                                killAsUser : killAsUser,
-                                uuidSource : serverUUID,
-                                uuidTarget : e.serverNodeUUID
-                        ]
-                )
+                def ereply
+                //XXX events
+                sendAndReceive('cluster_abortExecution', [
+                        jobId      : se?.extid,
+                        executionId: e.id,
+                        project    : e.project,
+                        user       : user,
+                        killAsUser : killAsUser,
+                        uuidSource : serverUUID,
+                        uuidTarget : e.serverNodeUUID
+                ]
+                ) {
+                    ereply = it
+                }
+//                def ereply = grailsEvents?.event(
+//                        'cluster',
+//                        'abortExecution',
+//                        [
+//                                jobId      : se?.extid,
+//                                executionId: e.id,
+//                                project    : e.project,
+//                                user       : user,
+//                                killAsUser : killAsUser,
+//                                uuidSource : serverUUID,
+//                                uuidTarget : e.serverNodeUUID
+//                        ]
+//                )
                 Map abortresult = [
                         abortstate: ABORT_FAILED,
                         jobstate  : getExecutionState(e),
@@ -1957,7 +1984,8 @@ class ExecutionService implements ApplicationContextAware, StepExecutor, NodeSte
         multijobflag.putIfAbsent(id, object) ?: object
     }
 
-    @Listener
+//    @Listener
+    @Subscriber('jobChanged')
     def jobChanged(StoredJobChangeEvent e) {
         if (e.eventType == JobChangeEvent.JobChangeEventType.DELETE) {
             //clear multijob sync object
@@ -2374,18 +2402,27 @@ class ExecutionService implements ApplicationContextAware, StepExecutor, NodeSte
                                 context: context
                         ]
                 )
-                grailsEvents?.event(
-                        null,
-                        'executionComplete',
-                        new ExecutionCompleteEvent(
-                                state: execution.executionState,
-                                execution:execution,
-                                job:scheduledExecution,
-                                nodeStatus: [succeeded: sucCount,failed:failedCount,total:totalCount],
-                                context: context?.dataContext
+                //XXX events
+                notify('executionComplete',new ExecutionCompleteEvent(
+                        state: execution.executionState,
+                        execution:execution,
+                        job:scheduledExecution,
+                        nodeStatus: [succeeded: sucCount,failed:failedCount,total:totalCount],
+                        context: context?.dataContext
 
-                        )
-                )
+                ))
+//                grailsEvents?.event(
+//                        null,
+//                        'executionComplete',
+//                        new ExecutionCompleteEvent(
+//                                state: execution.executionState,
+//                                execution:execution,
+//                                job:scheduledExecution,
+//                                nodeStatus: [succeeded: sucCount,failed:failedCount,total:totalCount],
+//                                context: context?.dataContext
+//
+//                        )
+//                )
             }
         }
     }

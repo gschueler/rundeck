@@ -16,7 +16,7 @@
 
 package rundeck.services
 
-import grails.events.Listener
+import grails.events.annotation.Subscriber
 import grails.transaction.Transactional
 import rundeck.services.events.ExecutionCompleteEvent
 
@@ -28,7 +28,9 @@ class ExecutionEventsService {
      * Prepares and submits logfile storage requests
      * @param event
      */
-    @Listener
+//    @Listener
+
+    @Subscriber('executionComplete')
     def executionComplete(ExecutionCompleteEvent e) {
 
         logFileStorageService.submitForStorage(e.execution)
