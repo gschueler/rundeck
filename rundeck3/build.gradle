@@ -10,8 +10,8 @@ buildscript {
     }
 }
 
-version "0.1"
-group "rundeck3"
+version "3.0.0"
+group "org.rundeck"
 
 apply plugin:"eclipse"
 apply plugin:"idea"
@@ -19,6 +19,8 @@ apply plugin:"war"
 apply plugin:"org.grails.grails-web"
 apply plugin:"org.grails.grails-gsp"
 apply plugin:"asset-pipeline"
+
+ext.rundeckVersion="2.8.1-SNAPSHOT"
 
 repositories {
     mavenLocal()
@@ -46,6 +48,26 @@ dependencies {
     testCompile "org.grails.plugins:geb"
     testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
+
+    //app
+    compile 'org.yaml:snakeyaml:1.9', 
+            'org.apache.ant:ant:1.8.3', 
+            'org.apache.ant:ant-jsch:1.8.3',
+            'com.jcraft:jsch:0.1.53', 
+            //'log4j:log4j:1.2.17', 
+            'commons-collections:commons-collections:3.2.2',
+            'commons-codec:commons-codec:1.5',
+            'com.fasterxml.jackson.core:jackson-databind:2.5.3',
+            'com.fasterxml.jackson.core:jackson-annotations:2.5.3',
+            'com.codahale.metrics:metrics-core:3.0.1',
+            'com.google.guava:guava:15.0',
+            'org.owasp.encoder:encoder:1.2',
+            'org.quartz-scheduler:quartz:2.2.1',
+            'org.markdownj:markdownj-core:0.4',
+            'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20160614.1'
+
+    compile("org.rundeck:rundeck-core:${rundeckVersion}")
+    compile("org.rundeck:rundeck-storage-filesys:${rundeckVersion}")
 }
 
 bootRun {
