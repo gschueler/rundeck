@@ -153,4 +153,7 @@ class SanitizedHTMLCodec {
     static encode = { str ->
         return POLICY.sanitize(str.toString(), changeListener, null)
     }
+    static decode = {
+        throw new UnsupportedOperationException("decode")
+    }
 }

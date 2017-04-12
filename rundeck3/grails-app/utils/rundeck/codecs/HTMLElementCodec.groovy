@@ -22,7 +22,10 @@ package rundeck.codecs
  * @since 2014-05-15
  */
 class HTMLElementCodec {
-    def encode={str->
+    static encode={str->
         str.replaceAll('<',"&lt;").replaceAll('>',"&gt;")
+    }
+    static decode= {
+        throw new UnsupportedOperationException("decode")
     }
 }

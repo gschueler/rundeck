@@ -24,7 +24,10 @@ import org.owasp.encoder.Encode
  * @since 2014-08-07
  */
 class XMLContentCodec {
-    def encode={str->
+    static encode={str->
         Encode.forXml(str)
+    }
+    static decode = {
+        throw new UnsupportedOperationException("decode")
     }
 }

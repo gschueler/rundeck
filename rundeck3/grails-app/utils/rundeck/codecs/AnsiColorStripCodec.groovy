@@ -22,7 +22,10 @@ package rundeck.codecs
  * @since 2014-05-15
  */
 class AnsiColorStripCodec {
-    def decode = { str ->
+    static decode = { str ->
         str.replaceAll('\033[\\[%\\(]((\\d{1,2})?(;\\d{1,3})*)[mGHfABCDRsuhl]','')
+    }
+    static encode = {
+        throw new UnsupportedOperationException("encode")
     }
 }

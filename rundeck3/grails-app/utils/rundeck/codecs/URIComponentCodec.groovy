@@ -27,4 +27,7 @@ class URIComponentCodec {
     static def encode = { str ->
         Encode.forUriComponent(str)
     }
+    static decode = {
+        throw new UnsupportedOperationException("decode")
+    }
 }

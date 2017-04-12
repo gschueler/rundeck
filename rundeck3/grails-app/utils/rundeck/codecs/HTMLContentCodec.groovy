@@ -24,7 +24,10 @@ import org.owasp.encoder.Encode
  * @since 2014-11-19
  */
 class HTMLContentCodec {
-    def encode = { str ->
+    static encode = { str ->
         Encode.forHtmlContent(str)
+    }
+    static decode = {
+        throw new UnsupportedOperationException("decode")
     }
 }

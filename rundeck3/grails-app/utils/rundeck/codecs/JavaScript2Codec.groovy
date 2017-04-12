@@ -24,7 +24,10 @@ import org.owasp.encoder.Encode
  * @since 2014-08-13
  */
 class JavaScript2Codec {
-    def encode = { str ->
+    static encode = { str ->
         Encode.forJavaScript(str)
+    }
+    static decode = {
+        throw new UnsupportedOperationException("decode")
     }
 }

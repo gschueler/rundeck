@@ -64,7 +64,7 @@ class AnsiColorCodec {
             47: 'bg-white',
             49: 'bg-default',
     ]
-    def decode = { string ->
+    static decode = { string ->
         def ctx = []
         def sb = new StringBuilder()
         def vals = string.split('\033[\\[%\\(]')
@@ -161,5 +161,8 @@ class AnsiColorCodec {
         }
         sb << ('' + (ctx ? ctx.collect { '</span>' }.join('') : ''))
         sb.toString()
+    }
+    static encode = {
+        throw new UnsupportedOperationException("encode")
     }
 }

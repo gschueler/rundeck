@@ -25,4 +25,7 @@ class StripHTMLCodec {
     static encode={str->
         return str.toString().replaceAll(/<.*?>/,'')
     }
+    static decode = {
+        throw new UnsupportedOperationException("decode")
+    }
 }

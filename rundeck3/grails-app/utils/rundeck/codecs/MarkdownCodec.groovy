@@ -36,4 +36,7 @@ class MarkdownCodec {
     static decode = { str ->
         return decodeStr(str)
     }
+    static encode = {
+        throw new UnsupportedOperationException("encode")
+    }
 }
