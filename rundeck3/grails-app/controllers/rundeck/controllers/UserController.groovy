@@ -32,7 +32,6 @@ class UserController extends ControllerBase{
 
     UserService userService
     FrameworkService frameworkService
-    def grailsApplication
     def apiService
     def configurationService
 
