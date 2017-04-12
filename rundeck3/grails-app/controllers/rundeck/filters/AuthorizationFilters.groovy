@@ -32,7 +32,6 @@ import rundeck.services.FrameworkService
 
 import javax.servlet.ServletContext
 import javax.servlet.http.HttpServletRequest
-import java.time.Clock
 
 /*
 * AuthorizationFilters.groovy

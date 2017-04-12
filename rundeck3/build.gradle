@@ -52,6 +52,7 @@ dependencies {
 
     //added plugins
     assets "com.bertramlabs.plugins:less-asset-pipeline:2.14.1"
+    compile 'org.grails:grails-plugin-filters:3.0.12'
 
     //http://plugins.grails.org/plugin/grails/mail
     compile 'org.grails.plugins:mail:2.0.0.RC6'
