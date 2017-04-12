@@ -39,7 +39,7 @@ public class ApiRequestFilters {
     private static final String METRIC_TIMER = 'ApiRequestFilters._METRIC_TIMER'
     private static final String REQUEST_TIME = 'ApiRequestFilters._TIMER'
 
-    def dependsOn = [AA_TimerFilters]
+    def dependsOn = [/*AA_TimerFiltersDisabled*/]
 
     def MetricRegistry metricRegistry
     def messageSource
@@ -144,14 +144,14 @@ public class ApiRequestFilters {
 
                 if (!params.api_version) {
                     flash.errorCode = 'api.error.api-version.required'
-                    AA_TimerFilters.afterRequest(request, response, session)
+//                    AA_TimerFiltersDisabled.afterRequest(request, response, session)
                     logDetail(request, params.toString(), actionName, controllerName, 'api.error.api-version.required')
                     apiService.renderErrorFormat(response,[code: 'api.error.api-version.required'])
                     return false
                 }
                 def unsupported = !(VersionMap.containsKey(params.api_version))
                 if (unsupported) {
-                    AA_TimerFilters.afterRequest(request, response, session)
+//                    AA_TimerFiltersDisabled.afterRequest(request, response, session)
                     logDetail(request, params.toString(), actionName, controllerName, 'api.error.api-version.unsupported')
                     apiService.renderErrorFormat(response,
                             [

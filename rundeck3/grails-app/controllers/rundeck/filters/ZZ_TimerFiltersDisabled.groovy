@@ -16,14 +16,14 @@
 
 package rundeck.filters
 
-class ZZ_TimerFilters {
+class ZZ_TimerFiltersDisabled {
 
-    def dependsOn = [AA_TimerFilters]
+    def dependsOn = [/*AA_TimerFiltersDisabled*/]
 
     def filters = {
         all(controller:'user', action:'logout',invert:true) {
             after = {
-                AA_TimerFilters.afterRequest(request,response,session)
+//                AA_TimerFiltersDisabled.afterRequest(request, response, session)
             }
         }
     }

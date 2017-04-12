@@ -83,7 +83,7 @@ public class ProjectSelectFilters {
                         flash.errorArgs= [params.project]
                         params.project=null
                         render(view: '/common/error')
-                        AA_TimerFilters.afterRequest(request, response, session)
+//                        AA_TimerFiltersDisabled.afterRequest(request, response, session)
                         return false
                     }
                     if (selected
@@ -96,7 +96,7 @@ public class ProjectSelectFilters {
                         request.titleCode = 'request.error.unauthorized.title'
                         params.project = null
                         render(view: '/common/error')
-                        AA_TimerFilters.afterRequest(request, response, session)
+//                        AA_TimerFiltersDisabled.afterRequest(request, response, session)
                         return false
                     }
                 }

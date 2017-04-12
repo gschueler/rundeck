@@ -24,7 +24,7 @@ import org.grails.web.util.WebUtils
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-class AA_TimerFilters {
+class AA_TimerFiltersDisabled {
     static final Logger logger = Logger.getLogger('org.rundeck.web.requests')
     static requests=[:]
     public static final String _TIMER = 'AA_TimerFilters._TIMER'
@@ -33,7 +33,7 @@ class AA_TimerFilters {
     public static final String _REPORTS = 'AA_TimerFilters._reports'
     public static final String _REQ_URI = 'AA_TimerFilters._req_uri'
     def MetricRegistry metricRegistry
-
+    def dependsOn = []
     /**
      * Mark recording request for ident
      * @param request
