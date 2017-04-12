@@ -16,11 +16,13 @@
 
 package rundeck.services
 
-import grails.events.annotation.Subscriber
 import grails.transaction.Transactional
+import reactor.spring.context.annotation.Consumer
+import reactor.spring.context.annotation.Selector
 import rundeck.services.events.ExecutionCompleteEvent
 
 @Transactional
+@Consumer
 class ExecutionEventsService {
     LogFileStorageService logFileStorageService
 
@@ -30,7 +32,7 @@ class ExecutionEventsService {
      */
 //    @Listener
 
-    @Subscriber('executionComplete')
+    @Selector('executionComplete')
     def executionComplete(ExecutionCompleteEvent e) {
 
         logFileStorageService.submitForStorage(e.execution)

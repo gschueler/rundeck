@@ -40,10 +40,7 @@ import com.dtolabs.rundeck.execution.JobExecutionItem
 import com.dtolabs.rundeck.execution.JobReferenceFailureReason
 import com.dtolabs.rundeck.plugins.scm.JobChangeEvent
 import com.dtolabs.rundeck.server.authorization.AuthConstants
-import grails.events.EventPublisher
 
-//import grails.events.Listener
-import grails.events.annotation.Subscriber
 import grails.web.mapping.LinkGenerator
 import groovy.transform.ToString
 import org.apache.log4j.Logger
@@ -56,6 +53,8 @@ import org.springframework.context.MessageSource
 import org.springframework.validation.ObjectError
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.servlet.support.RequestContextUtils as RCU
+import reactor.spring.context.annotation.Consumer
+import reactor.spring.context.annotation.Selector
 import rundeck.*
 import rundeck.filters.ApiRequestFilters
 import rundeck.services.events.ExecutionPrepareEvent
@@ -79,7 +78,8 @@ import java.util.regex.Pattern
 /**
  * Coordinates Command executions via Ant Project objects
  */
-class ExecutionService implements ApplicationContextAware, StepExecutor, NodeStepExecutor, EventPublisher {
+@Consumer
+class ExecutionService implements ApplicationContextAware, StepExecutor, NodeStepExecutor {
     static Logger executionStatusLogger = Logger.getLogger("org.rundeck.execution.status")
     static transactional = true
     def FrameworkService frameworkService
@@ -1982,8 +1982,7 @@ class ExecutionService implements ApplicationContextAware, StepExecutor, NodeSte
         multijobflag.putIfAbsent(id, object) ?: object
     }
 
-//    @Listener
-    @Subscriber('jobChanged')
+    @Selector('jobChanged')
     def jobChanged(StoredJobChangeEvent e) {
         if (e.eventType == JobChangeEvent.JobChangeEventType.DELETE) {
             //clear multijob sync object

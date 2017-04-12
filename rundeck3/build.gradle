@@ -64,7 +64,7 @@ dependencies {
     //http://plugins.grails.org/plugin/uberall/grails-executor
     compile 'org.grails.plugins:grails-executor:0.4'
 
-    compile 'org.grails.plugins:events:3.3.0.M1'
+//    compile 'org.grails.plugins:events:3.3.0.M1'
     //app
     compile 'org.yaml:snakeyaml:1.9', 
             'org.apache.ant:ant:1.8.3', 
