@@ -40,14 +40,12 @@ import com.dtolabs.rundeck.execution.JobExecutionItem
 import com.dtolabs.rundeck.execution.JobReferenceFailureReason
 import com.dtolabs.rundeck.plugins.scm.JobChangeEvent
 import com.dtolabs.rundeck.server.authorization.AuthConstants
-import grails.events.EventException
 import grails.events.EventPublisher
 
 //import grails.events.Listener
 import grails.events.annotation.Subscriber
 import grails.web.mapping.LinkGenerator
 import groovy.transform.ToString
-import org.apache.commons.io.FileUtils
 import org.apache.log4j.Logger
 import org.apache.log4j.MDC
 import org.hibernate.StaleObjectStateException
@@ -1483,7 +1481,7 @@ class ExecutionService implements ApplicationContextAware, StepExecutor, NodeSte
             //delete all files
             def deletedfiles = 0
             files.each { file ->
-                if (!FileUtils.deleteQuietly(file)) {
+                if (!file.delete()) {
                     log.warn("Failed to delete file while deleting execution ${e.id}: ${file.absolutePath}")
                 } else {
                     deletedfiles++

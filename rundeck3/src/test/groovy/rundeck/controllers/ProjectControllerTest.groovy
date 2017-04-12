@@ -23,7 +23,6 @@ import com.dtolabs.rundeck.core.authentication.Group
 import com.dtolabs.rundeck.core.authentication.Username
 import com.dtolabs.rundeck.core.authorization.AuthContext
 import com.dtolabs.rundeck.core.authorization.UserAndRolesAuthContext
-import com.dtolabs.rundeck.core.common.FrameworkProject
 import com.dtolabs.rundeck.server.authorization.AuthConstants
 
 import grails.test.mixin.TestFor

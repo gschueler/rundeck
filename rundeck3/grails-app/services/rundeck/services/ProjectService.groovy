@@ -30,7 +30,6 @@ import com.google.common.cache.RemovalNotification
 import grails.async.Promises
 import groovy.transform.ToString
 import groovy.xml.MarkupBuilder
-import org.apache.commons.io.FileUtils
 import org.springframework.beans.factory.InitializingBean
 import com.dtolabs.rundeck.core.common.IRundeckProject
 import org.springframework.transaction.TransactionStatus
@@ -46,6 +45,8 @@ import rundeck.services.logging.ExecutionFileDeletePolicy
 import rundeck.services.logging.ExecutionFileProducer
 import rundeck.services.logging.ProducedExecutionFile
 
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.jar.Attributes
@@ -1219,7 +1220,7 @@ class ProjectService implements InitializingBean, ExecutionFileProducer{
                             LoggingService.LOG_FILE_FILETYPE, false)
                     File newfile = new File(filename)
                     try{
-                        FileUtils.moveFile(oldfile, newfile)
+                        Files.move(oldfile.toPath(), newfile.toPath(), StandardCopyOption.REPLACE_EXISTING)
                     }catch (IOException exc) {
                         execerrors<<"Failed to move temp log file to destination: ${newfile.absolutePath} (old id ${oldids[e]}): ${exc.message}"
                         log.error("Failed to move temp log file to destination: ${newfile.absolutePath} (old id ${oldids[e]})", exc)
@@ -1237,7 +1238,7 @@ class ProjectService implements InitializingBean, ExecutionFileProducer{
                             WorkflowService.STATE_FILE_FILETYPE, false)
                     File newfile = new File(filename)
                     try {
-                        FileUtils.moveFile(statefile, newfile)
+                        Files.move(statefile.toPath(), newfile.toPath(), StandardCopyOption.REPLACE_EXISTING)
                     } catch (IOException exc) {
                         execerrors<<"Failed to move temp state file to destination: ${newfile.absolutePath} (old id ${oldids[e]}): ${exc.message}"
                         log.error("Failed to move temp state file to destination: ${newfile.absolutePath} (old id ${oldids[e]})", exc)

@@ -22,7 +22,6 @@ import grails.test.mixin.*
 import groovy.util.slurpersupport.GPathResult
 import groovy.xml.MarkupBuilder
 import org.codehaus.groovy.grails.plugins.testing.GrailsMockHttpServletResponse
-import org.junit.*
 import rundeck.filters.ApiRequestFilters
 
 import javax.servlet.http.HttpServletResponse
