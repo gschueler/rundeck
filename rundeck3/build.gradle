@@ -44,10 +44,24 @@ dependencies {
     profile "org.grails.profiles:web"
     runtime "com.bertramlabs.plugins:asset-pipeline-grails:2.14.1"
     runtime "com.h2database:h2"
+
     testCompile "org.grails:grails-plugin-testing"
     testCompile "org.grails.plugins:geb"
     testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
+
+    //added plugins
+    assets "com.bertramlabs.plugins:less-asset-pipeline:2.14.1"
+
+    //http://plugins.grails.org/plugin/grails/mail
+    compile 'org.grails.plugins:mail:2.0.0.RC6'
+    //compile ':twitter-bootstrap:3.3.5'
+    //tbd: http://plugins.grails.org/plugin/kensiprell/bootstrap-framework
+
+    //http://plugins.grails.org/plugin/grails/quartz
+    compile 'org.grails.plugins:quartz:2.0.12'
+    //http://plugins.grails.org/plugin/uberall/grails-executor
+    compile 'org.grails.plugins:grails-executor:0.4'
 
     //app
     compile 'org.yaml:snakeyaml:1.9', 
