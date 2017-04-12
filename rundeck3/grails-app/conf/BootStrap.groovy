@@ -25,8 +25,6 @@ import com.dtolabs.rundeck.core.utils.ThreadBoundOutputStream
 import com.dtolabs.rundeck.util.quartz.MetricsSchedulerListener
 import com.dtolabs.utils.Streams
 import grails.util.Environment
-import org.codehaus.groovy.grails.plugins.web.filters.FilterConfig
-import org.codehaus.groovy.grails.plugins.web.filters.FilterToHandlerAdapter
 import org.grails.plugins.metricsweb.CallableGauge
 import org.quartz.Scheduler
 import org.springframework.web.context.WebApplicationContext
@@ -87,12 +85,7 @@ class BootStrap {
 
          servletContext.setAttribute("app.ident",grailsApplication.metadata['build.ident'])
          log.info("Starting ${appname} ${servletContext.getAttribute('app.ident')} ($shortBuildDate) ...")
-         /*filterInterceptor.handlers.sort { FilterToHandlerAdapter handler1,
-                                           FilterToHandlerAdapter handler2 ->
-             FilterConfig filter1 = handler1.filterConfig
-             FilterConfig filter2 = handler2.filterConfig
-             filter1.name <=> filter2.name
-         }*/
+
 
          def String rdeckBase
          if(!grailsApplication.config.rdeck.base){

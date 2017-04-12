@@ -16,8 +16,8 @@
 
 package com.dtolabs.rundeck.server.filters;
 
+import grails.core.GrailsApplication;
 import org.apache.log4j.Logger;
-import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -53,7 +53,7 @@ public class AuthFilter implements Filter {
             throw new IllegalStateException("grailsApplication not found in context");
         }
 
-        Map map = grailsApplication.getFlatConfig();
+        Map map = grailsApplication.getConfig();
         Object o = map.get("rundeck.security.authorization.preauthenticated.enabled");
         enabled = Boolean.parseBoolean(o.toString());
         rolesAttribute = (String) map.get("rundeck.security.authorization.preauthenticated.attributeName");

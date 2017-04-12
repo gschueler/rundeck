@@ -43,8 +43,8 @@ import com.dtolabs.rundeck.server.plugins.loader.ApplicationContextPluginFileSou
 import com.dtolabs.rundeck.server.plugins.loader.PluginFileManifest
 import com.dtolabs.rundeck.server.plugins.loader.PluginFileSource
 import com.dtolabs.utils.Streams
+import grails.core.GrailsApplication
 import grails.spring.BeanBuilder
-import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory
 import org.springframework.beans.factory.groovy.GroovyBeanDefinitionReader

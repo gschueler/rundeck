@@ -16,7 +16,8 @@
 
 package rundeck.filters
 
-import org.codehaus.groovy.grails.web.servlet.mvc.SynchronizerTokensHolder
+import org.grails.web.servlet.mvc.SynchronizerTokensHolder
+
 
 /**
  * Allows using HTTP headers to supply synchronizer tokens, they are injected in the parameters map before invoking

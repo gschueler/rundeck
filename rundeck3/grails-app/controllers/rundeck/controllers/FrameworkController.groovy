@@ -37,6 +37,7 @@ import com.dtolabs.shared.resources.ResourceXMLGenerator
 
 import grails.converters.JSON
 import grails.converters.XML
+import grails.web.servlet.mvc.GrailsParameterMap
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import rundeck.Execution
@@ -63,7 +64,6 @@ import com.dtolabs.rundeck.core.resources.format.ResourceFormatGeneratorExceptio
 import com.dtolabs.rundeck.core.execution.service.NodeExecutorService
 import com.dtolabs.rundeck.core.execution.service.FileCopierService
 
-import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 import com.dtolabs.client.utils.Constants
 import com.dtolabs.rundeck.server.authorization.AuthConstants
 import com.dtolabs.rundeck.core.common.NodeSetImpl

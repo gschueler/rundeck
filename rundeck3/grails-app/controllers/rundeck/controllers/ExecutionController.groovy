@@ -33,7 +33,7 @@ import com.dtolabs.rundeck.app.support.ExecutionQuery
 import com.dtolabs.rundeck.core.utils.OptsUtil
 import com.dtolabs.rundeck.server.authorization.AuthConstants
 import grails.converters.JSON
-import org.codehaus.groovy.grails.web.mapping.LinkGenerator
+import grails.web.mapping.LinkGenerator
 import rundeck.CommandExec
 import rundeck.Execution
 import rundeck.ScheduledExecution
@@ -1225,7 +1225,7 @@ class ExecutionController extends ControllerBase{
     /**
      * Render execution list xml given a List of executions, and a builder delegate
      */
-    public def renderApiExecutions= { LinkGenerator grailsLinkGenerator, List execlist, paging=[:],delegate ->
+    public def renderApiExecutions= { LinkGenerator grailsLinkGenerator, List execlist, paging=[:], delegate ->
         apiService.renderExecutionsXml(execlist.collect{ Execution e->
             [
                 execution:e,
