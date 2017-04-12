@@ -26,8 +26,7 @@ import grails.validation.Validateable
  * $Id$
  */
 
-@Validateable
-public class QueueQuery extends ExecQuery {
+public class QueueQuery extends ExecQuery implements Validateable{
     String runningFilter
 
     static constraints = {

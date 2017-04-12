@@ -22,8 +22,7 @@ import grails.validation.Validateable
 /**
  * Created by greg on 10/27/15.
  */
-@Validateable
-class ScmPluginTypeRequest extends ScmIntegrationRequest {
+class ScmPluginTypeRequest extends ScmIntegrationRequest implements Validateable{
     String type
 
     static constraints={

@@ -23,8 +23,7 @@ import org.grails.databinding.BindUsing
 /**
  * Input for performing an action
  */
-@Validateable
-class ScmAction {
+class ScmAction implements Validateable{
     /**
      * Input field key/value
      */

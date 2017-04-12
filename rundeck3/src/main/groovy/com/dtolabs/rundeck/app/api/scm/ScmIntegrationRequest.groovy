@@ -22,8 +22,7 @@ import grails.validation.Validateable
 /**
  * Created by greg on 10/27/15.
  */
-@Validateable
-class ScmIntegrationRequest implements ProjectRequest,IntegrationRequest{
+class ScmIntegrationRequest implements ProjectRequest, IntegrationRequest, Validateable {
     String project
     String integration
 

@@ -25,8 +25,7 @@ import grails.validation.Validateable
  * Created: Feb 13, 2008 4:18:48 PM
  * $Id$
  */
-@Validateable
-class BaseQuery {
+class BaseQuery implements Validateable{
     Integer max
     Integer offset
     String sortBy
