@@ -16,7 +16,6 @@
 
 package com.dtolabs.rundeck.util
 
-import org.codehaus.groovy.grails.web.json.JSONObject
 
 /**
  * JSON request handling utilities
@@ -61,6 +60,6 @@ class JsonUtil {
      * @return null if the data is null or Json NULL, the input value otherwise
      */
     static def jsonNull(data) {
-        JSONObject.NULL == data ? null : data
+        null == data ? null : data
     }
 }
