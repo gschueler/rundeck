@@ -16,9 +16,10 @@
 
 package com.dtolabs.rundeck.util
 
+import org.grails.web.converters.Converter
+
 import java.util.zip.ZipOutputStream
 import java.util.zip.ZipEntry
-import org.codehaus.groovy.grails.web.converters.Converter
 
 /*
  * ZipBuilder.groovy
