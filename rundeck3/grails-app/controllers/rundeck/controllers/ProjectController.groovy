@@ -24,6 +24,7 @@ import com.dtolabs.rundeck.core.authorization.Validation
 import com.dtolabs.rundeck.core.common.Framework
 import com.dtolabs.rundeck.core.common.IRundeckProject
 import com.dtolabs.rundeck.server.authorization.AuthConstants
+import com.dtolabs.utils.Streams
 import rundeck.filters.ApiRequestFilters
 import rundeck.services.ApiService
 import rundeck.services.ArchiveOptions
@@ -33,7 +34,6 @@ import rundeck.services.ProjectServiceException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import java.text.SimpleDateFormat
-import org.apache.commons.fileupload.util.Streams
 import org.springframework.web.multipart.MultipartHttpServletRequest
 
 class ProjectController extends ControllerBase{
@@ -102,7 +102,7 @@ class ProjectController extends ControllerBase{
         response.setHeader("Content-Disposition", "attachment; filename=\"${project}-${dateStamp}.rdproject.jar\"")
 
         outfile.withInputStream {instream->
-            Streams.copy(instream,response.outputStream,false)
+            Streams.copyStream(instream, response.outputStream)
         }
         outfile.delete()
     }

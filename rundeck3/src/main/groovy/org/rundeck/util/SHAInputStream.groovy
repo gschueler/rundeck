@@ -16,7 +16,7 @@
 
 package org.rundeck.util
 
-import org.apache.commons.fileupload.util.Streams
+import com.dtolabs.utils.Streams
 
 import java.security.DigestInputStream
 import java.security.MessageDigest
@@ -53,7 +53,13 @@ class SHAInputStream extends DigestInputStream {
      * @return
      */
     String consumeAndGetSHAString() {
-        Streams.copy(this, null, false)
+        Streams.copyStream(this, new OutputStream() {
+            @Override
+            void write(final int b) throws IOException {
+                //drop
+            }
+        }
+        )
         return getSHAString()
     }
 

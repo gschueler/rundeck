@@ -19,8 +19,8 @@ package rundeck.services
 import com.dtolabs.rundeck.core.storage.ResourceMeta
 import com.dtolabs.rundeck.core.storage.StorageTree
 import com.dtolabs.rundeck.core.storage.StorageUtil
+import com.dtolabs.utils.Streams
 import grails.transaction.Transactional
-import org.apache.commons.fileupload.util.Streams
 import org.rundeck.storage.api.PathUtil
 import org.rundeck.storage.api.Resource
 import org.rundeck.storage.data.DataUtil
@@ -92,7 +92,11 @@ class ConfigStorageService implements StorageManager {
     long loadFileResource(String path, OutputStream output) {
         def storagePath = (path.startsWith("/") ? path : "/${path}")
         def resource = getStorage().getResource(storagePath)
-        Streams.copy(resource.contents.inputStream, output, true)
+        try {
+            return Streams.copyStream(resource.contents.inputStream, output)
+        }finally{
+            output.close()
+        }
     }
     /**
      * Update existing resource, fails if it does not exist

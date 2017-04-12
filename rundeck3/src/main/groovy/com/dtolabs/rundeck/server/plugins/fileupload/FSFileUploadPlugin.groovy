@@ -21,8 +21,8 @@ import com.dtolabs.rundeck.core.plugins.configuration.PropertyScope
 import com.dtolabs.rundeck.plugins.descriptions.PluginDescription
 import com.dtolabs.rundeck.plugins.descriptions.PluginProperty
 import com.dtolabs.rundeck.plugins.file.FileUploadPlugin
+import com.dtolabs.utils.Streams
 import groovy.transform.ToString
-import org.apache.commons.fileupload.util.Streams
 
 import java.nio.file.Files
 
@@ -70,7 +70,7 @@ class FSFileUploadPlugin implements FileUploadPlugin {
         long copied = -1
         try {
             output.withOutputStream { out ->
-                copied = Streams.copy(content, out, false)
+                copied = Streams.copyStream(content, out)
             }
         } catch (IOException e) {
             if (output.exists()) {

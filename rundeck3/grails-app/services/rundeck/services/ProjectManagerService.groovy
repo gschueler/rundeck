@@ -38,6 +38,7 @@ import com.dtolabs.rundeck.server.projects.ProjectFile
 import com.dtolabs.rundeck.server.projects.ProjectInfo
 import com.dtolabs.rundeck.server.projects.RundeckProject
 import com.dtolabs.rundeck.server.projects.RundeckProjectConfig
+import com.dtolabs.utils.Streams
 import com.google.common.base.Optional
 import com.google.common.cache.Cache
 import com.google.common.cache.CacheBuilder
@@ -47,7 +48,6 @@ import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.ListenableFutureTask
 import grails.transaction.Transactional
-import org.apache.commons.fileupload.util.Streams
 import org.rundeck.storage.api.PathUtil
 import org.rundeck.storage.api.Resource
 import org.rundeck.storage.data.DataUtil
@@ -269,7 +269,7 @@ class ProjectManagerService implements ProjectManager, ApplicationContextAware, 
     long readProjectFileResource(String projectName, String path, OutputStream output) {
         def storagePath = "projects/" + projectName + (path.startsWith("/")?path:"/${path}")
         def resource = getStorage().getResource(storagePath)
-        Streams.copy(resource.contents.inputStream,output,false)
+        Streams.copyStream(resource.contents.inputStream, output)
     }
     /**
      * Read or load the cached contents of a project file
