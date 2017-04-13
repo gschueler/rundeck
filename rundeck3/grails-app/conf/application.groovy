@@ -72,9 +72,12 @@ environments {
         grails.profiler.disable=true
     }
     development{
-        grails.serverURL="http://localhost:9090/rundeck"
+        //grails.serverURL="http://localhost:9090/rundeck"
         plugin.refreshDelay=5000
         grails.profiler.disable=false
+        rdeck.base='build/rdeck_base'
+
+        rundeck.authorization.anonymous=true
     }
     test {
         grails.profiler.disable=true
