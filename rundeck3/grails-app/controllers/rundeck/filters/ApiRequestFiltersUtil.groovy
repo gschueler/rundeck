@@ -34,15 +34,14 @@ import javax.servlet.http.HttpServletResponse
  * 
  */
 
-public class ApiRequestFilters {
+public class ApiRequestFiltersUtil {
     static final Logger logger = Logger.getLogger('org.rundeck.api.requests')
-    private static final String METRIC_TIMER = 'ApiRequestFilters._METRIC_TIMER'
-    private static final String REQUEST_TIME = 'ApiRequestFilters._TIMER'
+    static final String METRIC_TIMER = 'ApiRequestFilters._METRIC_TIMER'
+    static final String REQUEST_TIME = 'ApiRequestFilters._TIMER'
 
     def dependsOn = [/*AA_TimerFiltersDisabled*/]
 
     def MetricRegistry metricRegistry
-    def messageSource
     def apiService
     public static final int V1 = 1
     public static final int V2 = 2
@@ -102,8 +101,8 @@ public class ApiRequestFilters {
         }
     }
 
-    def allowed_actions = ["renderError", "invalid", "error"]
-    def allowed_pre_api_reqs=[
+    static def allowed_actions = ["renderError", "invalid", "error"]
+    static def allowed_pre_api_reqs=[
             'user':['login','loggedout'],
             'menu':['index','home'],
     ]

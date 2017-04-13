@@ -36,9 +36,9 @@ import spock.lang.Unroll
  * @since 4/4/17
  */
 @TestFor(ApiController)
-@Mock([AA_TimerFiltersDisabled, ApiRequestFilters, RefererFilters])
+@Mock([AA_TimerFiltersDisabled, ApiRequestFiltersUtil, RefererInterceptor])
 @TestMixin(FiltersUnitTestMixin)
-class RefererFiltersSpec extends Specification {
+class RefererInterceptorSpec extends Specification {
     static doWithSpring = {
         configurationService(ConfigurationService)
         metricRegistry(MetricRegistry)

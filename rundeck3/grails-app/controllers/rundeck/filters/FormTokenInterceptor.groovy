@@ -23,19 +23,31 @@ import org.grails.web.servlet.mvc.SynchronizerTokensHolder
  * Allows using HTTP headers to supply synchronizer tokens, they are injected in the parameters map before invoking
  * the controller, which may do withForm{} to validate them as parameters.
  */
-class FormTokenFilters {
+class FormTokenInterceptor {
 
     public static final String TOKEN_KEY_HEADER = 'X-RUNDECK-TOKEN-KEY'
     public static final String TOKEN_URI_HEADER = 'X-RUNDECK-TOKEN-URI'
-    def filters = {
-        all(controller: '*', action: '*') {
-            before = {
-                //transfer request token from header to params, for the form verification used in controllers
-                if(request.getHeader(TOKEN_KEY_HEADER) && request.getHeader(TOKEN_URI_HEADER)){
-                    params[SynchronizerTokensHolder.TOKEN_KEY]=request.getHeader(TOKEN_KEY_HEADER)
-                    params[SynchronizerTokensHolder.TOKEN_URI]=request.getHeader(TOKEN_URI_HEADER)
-                }
-            }
-        }
+    def dependsOn = []
+    FormTokenInterceptor(){
+        matchAll()
     }
+    boolean before(){
+        //transfer request token from header to params, for the form verification used in controllers
+        if(request.getHeader(TOKEN_KEY_HEADER) && request.getHeader(TOKEN_URI_HEADER)){
+            params[SynchronizerTokensHolder.TOKEN_KEY]=request.getHeader(TOKEN_KEY_HEADER)
+            params[SynchronizerTokensHolder.TOKEN_URI]=request.getHeader(TOKEN_URI_HEADER)
+        }
+        true
+    }
+//    def filters = {
+//        all(controller: '*', action: '*') {
+//            before = {
+//                //transfer request token from header to params, for the form verification used in controllers
+//                if(request.getHeader(TOKEN_KEY_HEADER) && request.getHeader(TOKEN_URI_HEADER)){
+//                    params[SynchronizerTokensHolder.TOKEN_KEY]=request.getHeader(TOKEN_KEY_HEADER)
+//                    params[SynchronizerTokensHolder.TOKEN_URI]=request.getHeader(TOKEN_URI_HEADER)
+//                }
+//            }
+//        }
+//    }
 }

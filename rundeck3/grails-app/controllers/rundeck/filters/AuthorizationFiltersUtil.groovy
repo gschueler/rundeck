@@ -41,10 +41,10 @@ import javax.servlet.http.HttpServletRequest
 * $Id$
 */
 
-public class AuthorizationFilters implements ApplicationContextAware{
+public class AuthorizationFiltersUtil implements ApplicationContextAware{
     def FrameworkService frameworkService
     def ApplicationContext applicationContext
-    def dependsOn = [ApiRequestFilters]
+    def dependsOn = [ApiRequestFiltersUtil]
 
     def filters = {
         /**
@@ -129,13 +129,13 @@ public class AuthorizationFilters implements ApplicationContextAware{
                         if (response.format in ['json']) {
                             render(contentType: "application/json", encoding: "UTF-8") {
                                 error = true
-                                apiversion = ApiRequestFilters.API_CURRENT_VERSION
+                                apiversion = ApiRequestFiltersUtil.API_CURRENT_VERSION
                                 errorCode = "unauthorized"
                                 message = ("${authid} is not authorized for: ${request.forwardURI}")
                             }
                         } else {
                             render(contentType: "text/xml", encoding: "UTF-8") {
-                                result(error: "true", apiversion: ApiRequestFilters.API_CURRENT_VERSION) {
+                                result(error: "true", apiversion: ApiRequestFiltersUtil.API_CURRENT_VERSION) {
                                     delegate.'error'(code: "unauthorized") {
                                         message("${authid} is not authorized for: ${request.forwardURI}")
                                     }
@@ -163,7 +163,7 @@ public class AuthorizationFilters implements ApplicationContextAware{
         }
     }
 
-    private Subject createAuthSubject(HttpServletRequest request) {
+    static Subject createAuthSubject(HttpServletRequest request, ApplicationContext applicationContext) {
         def principal = request.userPrincipal
         def subject = new Subject();
         subject.principals << new Username(principal.name)
@@ -195,7 +195,7 @@ public class AuthorizationFilters implements ApplicationContextAware{
      * @param context
      * @return
      */
-    private String lookupToken(String authtoken, ServletContext context) {
+    static String lookupToken(String authtoken, ServletContext context, log) {
         if(!authtoken){
             return null
         }
@@ -227,7 +227,7 @@ public class AuthorizationFilters implements ApplicationContextAware{
      * @param context
      * @return
      */
-    private List<String> lookupTokenRoles(String authtoken, ServletContext context) {
+    static List<String> lookupTokenRoles(String authtoken, ServletContext context,log) {
         if(!authtoken){
             return null
         }
