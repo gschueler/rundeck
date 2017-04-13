@@ -228,12 +228,13 @@ beans={
     }
 
     def storageDir= new File(varDir, 'storage')
+    def storageConfig=application.config?.rundeck?.storage?:[:]
     rundeckStorageTree(StorageTreeFactory){
         rundeckFramework=ref('rundeckFramework')
         pluginRegistry=ref("rundeckPluginRegistry")
         storagePluginProviderService=ref('storagePluginProviderService')
         storageConverterPluginProviderService=ref('storageConverterPluginProviderService')
-        configuration = application.config.rundeck?.storage?.flatten()
+        configuration = storageConfig
         storageConfigPrefix='provider'
         converterConfigPrefix='converter'
         baseStorageType='file'
@@ -248,7 +249,7 @@ beans={
         pluginRegistry=ref("rundeckPluginRegistry")
         storagePluginProviderService=ref('storagePluginProviderService')
         storageConverterPluginProviderService=ref('storageConverterPluginProviderService')
-        configuration = application.config.rundeck?.config?.storage?.flatten()
+        configuration = application.config?.rundeck?.config?.storage?:[:]
         storageConfigPrefix='provider'
         converterConfigPrefix='converter'
         baseStorageType='db'
