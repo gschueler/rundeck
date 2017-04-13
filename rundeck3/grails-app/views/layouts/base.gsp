@@ -133,8 +133,8 @@
 <g:render template="/common/footer"/>
 </div>
 <!--
-<g:profilerOutput />
+%{--<g:profilerOutput />--}%
 -->
-<miniprofiler:javascript/>
+%{--<miniprofiler:javascript/>--}%
 </body>
 </html>
