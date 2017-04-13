@@ -56,7 +56,7 @@ import org.springframework.web.servlet.support.RequestContextUtils as RCU
 import reactor.spring.context.annotation.Consumer
 import reactor.spring.context.annotation.Selector
 import rundeck.*
-import rundeck.filters.ApiRequestFilters
+import rundeck.filters.ApiRequestFiltersUtil
 import rundeck.services.events.ExecutionPrepareEvent
 import rundeck.services.events.ExecutionCompleteEvent
 import rundeck.services.logging.ExecutionLogWriter
@@ -147,7 +147,7 @@ class ExecutionService implements ApplicationContextAware, StepExecutor, NodeSte
      */
 
     public def respondExecutionsXml(HttpServletRequest request,HttpServletResponse response, List<Execution> executions, paging = [:]) {
-        def apiv14=request.api_version>=ApiRequestFilters.V14
+        def apiv14=request.api_version>=ApiRequestFiltersUtil.V14
         return apiService.respondExecutionsXml(request,response,executions.collect { Execution e ->
                 def data=[
                         execution: e,

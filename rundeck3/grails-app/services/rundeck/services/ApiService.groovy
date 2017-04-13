@@ -30,7 +30,7 @@ import org.rundeck.util.Sizes
 import rundeck.AuthToken
 import rundeck.Execution
 import rundeck.User
-import rundeck.filters.ApiRequestFilters
+import rundeck.filters.ApiRequestFiltersUtil
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -286,7 +286,7 @@ class ApiService {
     def respondOutput(HttpServletResponse response, String contentType, String output) {
         response.setContentType(contentType)
         response.setCharacterEncoding('UTF-8')
-        response.setHeader("X-Rundeck-API-Version",ApiRequestFilters.API_CURRENT_VERSION.toString())
+        response.setHeader("X-Rundeck-API-Version", ApiRequestFiltersUtil.API_CURRENT_VERSION.toString())
         def out = response.outputStream
         out << output
         out.flush()
@@ -333,7 +333,7 @@ class ApiService {
      * @return
      */
     public boolean doWrapXmlResponse(HttpServletRequest request) {
-        if(request.api_version < ApiRequestFilters.V11){
+        if(request.api_version < ApiRequestFiltersUtil.V11){
             //require false to disable wrapper
             return !"false".equals(request.getHeader(XML_API_RESPONSE_WRAPPER_HEADER))
         } else{
@@ -401,7 +401,7 @@ class ApiService {
      */
     def renderSuccessXml(Closure recall){
         return renderSuccessXmlUnwrapped {
-            result(success: "true", apiversion: ApiRequestFilters.API_CURRENT_VERSION) {
+            result(success: "true", apiversion: ApiRequestFiltersUtil.API_CURRENT_VERSION) {
                 recall.delegate = delegate
                 recall.resolveStrategy=Closure.DELEGATE_FIRST
                 recall()
@@ -742,7 +742,7 @@ class ApiService {
     def renderErrorJson(messages, String code=null){
         def result=[
                 error: true,
-                apiversion: ApiRequestFilters.API_CURRENT_VERSION,
+                apiversion: ApiRequestFiltersUtil.API_CURRENT_VERSION,
         ]
         if (code) {
             result.errorCode=code
@@ -768,7 +768,7 @@ class ApiService {
             xml=builder
         }
         xml.with {
-            result(error: "true", apiversion: ApiRequestFilters.API_CURRENT_VERSION) {
+            result(error: "true", apiversion: ApiRequestFiltersUtil.API_CURRENT_VERSION) {
                 def errorprops = [:]
                 if (code) {
                     errorprops = [code: code]
@@ -1104,9 +1104,9 @@ class ApiService {
 
     String apiHrefForJob(def scheduledExecution) {
         return grailsLinkGenerator.link(controller: 'scheduledExecution',
-                id: scheduledExecution.extid,
-                params: [api_version:ApiRequestFilters.API_CURRENT_VERSION],
-                absolute: true)
+                                        id: scheduledExecution.extid,
+                                        params: [api_version:ApiRequestFiltersUtil.API_CURRENT_VERSION],
+                                        absolute: true)
     }
     String guiHrefForJob(def scheduledExecution) {
         return grailsLinkGenerator.link(controller: 'scheduledExecution',
@@ -1117,8 +1117,8 @@ class ApiService {
     }
     String apiHrefForExecution(Execution execution) {
         return grailsLinkGenerator.link(controller: 'execution', id: execution.id,
-                params: [api_version: ApiRequestFilters.API_CURRENT_VERSION],
-                absolute: true)
+                                        params: [api_version: ApiRequestFiltersUtil.API_CURRENT_VERSION],
+                                        absolute: true)
     }
     String guiHrefForExecution(Execution execution) {
         return grailsLinkGenerator.link(

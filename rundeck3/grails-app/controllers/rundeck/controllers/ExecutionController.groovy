@@ -37,7 +37,7 @@ import grails.web.mapping.LinkGenerator
 import rundeck.CommandExec
 import rundeck.Execution
 import rundeck.ScheduledExecution
-import rundeck.filters.ApiRequestFilters
+import rundeck.filters.ApiRequestFiltersUtil
 import rundeck.services.ApiService
 import rundeck.services.ExecutionService
 import rundeck.services.FileUploadService
@@ -692,12 +692,12 @@ class ExecutionController extends ControllerBase{
      * API: /api/execution/{id}/output, version 5
      */
     def apiExecutionOutput = {
-        if (!apiService.requireVersion(request, response, ApiRequestFilters.V5)) {
+        if (!apiService.requireVersion(request, response, ApiRequestFiltersUtil.V5)) {
             return
         }
         params.stateOutput=false
 
-        if (request.api_version < ApiRequestFilters.V9) {
+        if (request.api_version < ApiRequestFiltersUtil.V9) {
             params.nodename = null
             params.stepctx = null
         }
@@ -756,7 +756,7 @@ class ExecutionController extends ControllerBase{
                 } else {
                     datamap.log = datamap.log.replaceAll(invalidXmlPattern, '')
                     //xml
-                    if (apiVersion <= ApiRequestFilters.V5) {
+                    if (apiVersion <= ApiRequestFiltersUtil.V5) {
                         def text = datamap.remove('log')
                         delegate.'entry'(datamap, text)
                     } else {
@@ -775,7 +775,7 @@ class ExecutionController extends ControllerBase{
      * API: /api/execution/{id}/output/state, version ?
      */
     def apiExecutionStateOutput = {
-        if (!apiService.requireVersion(request,response,ApiRequestFilters.V10)) {
+        if (!apiService.requireVersion(request, response, ApiRequestFiltersUtil.V10)) {
             return
         }
         params.stateOutput = true
@@ -1256,7 +1256,7 @@ class ExecutionController extends ControllerBase{
             return
         }
 
-        if (request.api_version < ApiRequestFilters.V14 && !(response.format in ['all','xml'])) {
+        if (request.api_version < ApiRequestFiltersUtil.V14 && !(response.format in ['all', 'xml'])) {
             return apiService.renderErrorFormat(response,[
                     status:HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE,
                     code: 'api.error.item.unsupported-format',
@@ -1276,7 +1276,7 @@ class ExecutionController extends ControllerBase{
      * API: /api/execution/{id}/state , version 10
      */
     def apiExecutionState(){
-        if (!apiService.requireVersion(request, response, ApiRequestFilters.V10)) {
+        if (!apiService.requireVersion(request, response, ApiRequestFiltersUtil.V10)) {
             return
         }
         def Execution e = Execution.get(params.id)
@@ -1380,7 +1380,7 @@ class ExecutionController extends ControllerBase{
             }
             xml{
                 return render(contentType: "text/xml", encoding: "UTF-8") {
-                    result(success: "true", apiversion: ApiRequestFilters.API_CURRENT_VERSION) {
+                    result(success: "true", apiversion: ApiRequestFiltersUtil.API_CURRENT_VERSION) {
                         executionState(id:params.id){
                             new BuilderUtil().mapToDom(convertXml(state), delegate)
                         }
@@ -1412,7 +1412,7 @@ class ExecutionController extends ControllerBase{
         def ScheduledExecution se = e.scheduledExecution
         def user=session.user
         def killas=null
-        if (params.asUser && apiService.requireVersion(request,response,ApiRequestFilters.V5)) {
+        if (params.asUser && apiService.requireVersion(request, response, ApiRequestFiltersUtil.V5)) {
             //authorized within service call
             killas= params.asUser
         }
@@ -1423,7 +1423,7 @@ class ExecutionController extends ControllerBase{
             reportstate.reason= abortresult.reason
         }
 
-        if (request.api_version < ApiRequestFilters.V14 && !(response.format in ['all','xml'])) {
+        if (request.api_version < ApiRequestFiltersUtil.V14 && !(response.format in ['all', 'xml'])) {
             return apiService.renderErrorXml(response,[
                     status:HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE,
                     code: 'api.error.item.unsupported-format',
@@ -1463,7 +1463,7 @@ class ExecutionController extends ControllerBase{
      * @return
      */
     def apiExecutionDelete (){
-        if (!apiService.requireVersion(request, response, ApiRequestFilters.V12)) {
+        if (!apiService.requireVersion(request, response, ApiRequestFiltersUtil.V12)) {
             return
         }
         def Execution e = Execution.get(params.id)
@@ -1502,7 +1502,7 @@ class ExecutionController extends ControllerBase{
      * @return
      */
     def apiExecutionDeleteBulk() {
-        if (!apiService.requireVersion(request, response, ApiRequestFilters.V12)) {
+        if (!apiService.requireVersion(request, response, ApiRequestFiltersUtil.V12)) {
             return
         }
         return executionDeleteBulk()
@@ -1566,7 +1566,7 @@ class ExecutionController extends ControllerBase{
      * API: /api/14/project/NAME/executions
      */
     def apiExecutionsQueryv14(ExecutionQuery query){
-        if(!apiService.requireVersion(request,response,ApiRequestFilters.V14)){
+        if(!apiService.requireVersion(request, response, ApiRequestFiltersUtil.V14)){
             return
         }
         return apiExecutionsQuery(query)
@@ -1576,7 +1576,7 @@ class ExecutionController extends ControllerBase{
      * API: /api/5/executions query interface, deprecated since v14
      */
     def apiExecutionsQuery(ExecutionQuery query){
-        if (!apiService.requireVersion(request, response, ApiRequestFilters.V5)) {
+        if (!apiService.requireVersion(request, response, ApiRequestFiltersUtil.V5)) {
             return
         }
         if(query?.hasErrors()){
@@ -1597,7 +1597,7 @@ class ExecutionController extends ControllerBase{
         }
         AuthContext authContext = frameworkService.getAuthContextForSubjectAndProject(session.subject,params.project)
 
-        if (request.api_version < ApiRequestFilters.V14 && !(response.format in ['all','xml'])) {
+        if (request.api_version < ApiRequestFiltersUtil.V14 && !(response.format in ['all', 'xml'])) {
             return apiService.renderErrorFormat(response,[
                     status:HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE,
                     code: 'api.error.item.unsupported-format',
@@ -1697,7 +1697,7 @@ class ExecutionController extends ControllerBase{
      * @return
      */
     private def apiExecutionMode(boolean active) {
-        if (!apiService.requireVersion(request, response, ApiRequestFilters.V14)) {
+        if (!apiService.requireVersion(request, response, ApiRequestFiltersUtil.V14)) {
             return
         }
         AuthContext authContext = frameworkService.getAuthContextForSubject(session.subject)
@@ -1737,7 +1737,7 @@ class ExecutionController extends ControllerBase{
      * List input files for an execution
      */
     def apiExecutionInputFiles() {
-        if (!apiService.requireVersion(request, response, ApiRequestFilters.V19)) {
+        if (!apiService.requireVersion(request, response, ApiRequestFiltersUtil.V19)) {
             return
         }
         if (!apiService.requireParameters(params, response, ['id'])) {

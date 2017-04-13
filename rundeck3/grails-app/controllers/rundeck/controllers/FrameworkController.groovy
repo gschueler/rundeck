@@ -72,7 +72,7 @@ import rundeck.NodeFilter
 import rundeck.services.ExecutionService
 import rundeck.services.FrameworkService
 import rundeck.services.UserService
-import rundeck.filters.ApiRequestFilters
+import rundeck.filters.ApiRequestFiltersUtil
 
 class FrameworkController extends ControllerBase implements ApplicationContextAware {
     FrameworkService frameworkService
@@ -1919,7 +1919,7 @@ class FrameworkController extends ControllerBase implements ApplicationContextAw
      * @deprecated will be removed
      * */
     def apiProjectResourcesRefresh () {
-        if (!apiService.requireVersion(request,response,ApiRequestFilters.V2)) {
+        if (!apiService.requireVersion(request, response, ApiRequestFiltersUtil.V2)) {
             return
         }
         Framework framework = frameworkService.getRundeckFramework()
@@ -1967,7 +1967,7 @@ class FrameworkController extends ControllerBase implements ApplicationContextAw
      *     GET: see {@link #apiResourcesv2}
      * */
     def apiProjectResourcesPost() {
-        if (!apiService.requireVersion(request, response,ApiRequestFilters.V2)) {
+        if (!apiService.requireVersion(request, response, ApiRequestFiltersUtil.V2)) {
             return
         }
         Framework framework = frameworkService.getRundeckFramework()
@@ -2001,7 +2001,7 @@ class FrameworkController extends ControllerBase implements ApplicationContextAw
         final contentType = request.contentType
         //try to parse loaded data
         if(!(contentType?.endsWith("/xml")||contentType?.endsWith('/yaml')|| contentType?.endsWith('/x-yaml'))){
-            if (!apiService.requireVersion(request, response,ApiRequestFilters.V3)) {
+            if (!apiService.requireVersion(request, response, ApiRequestFiltersUtil.V3)) {
                 //require api V3 for any other content type
                 return
             }
@@ -2095,7 +2095,7 @@ class FrameworkController extends ControllerBase implements ApplicationContextAw
      * API: /api/14/project/PROJECT/resource/NAME, version 14
      */
     def apiResourcev14 () {
-        if(!apiService.requireVersion(request,response,ApiRequestFilters.V14)){
+        if(!apiService.requireVersion(request, response, ApiRequestFiltersUtil.V14)){
             return
         }
         return apiResource()
@@ -2148,7 +2148,7 @@ class FrameworkController extends ControllerBase implements ApplicationContextAw
      * API: /api/2/project/NAME/resources, version 2
      */
     def apiResourcesv2(ExtNodeFilters query) {
-        if (!apiService.requireVersion(request, response,ApiRequestFilters.V2)) {
+        if (!apiService.requireVersion(request, response, ApiRequestFiltersUtil.V2)) {
             return
         }
         return apiResources(query)
@@ -2188,7 +2188,7 @@ class FrameworkController extends ControllerBase implements ApplicationContextAw
                 response.format && !(response.format in ['all','html','xml','yaml'])) {
             //expected another content type
             def reqformat = params.format ?: response.format
-            if (!apiService.requireVersion(request, response,ApiRequestFilters.V3)) {
+            if (!apiService.requireVersion(request, response, ApiRequestFiltersUtil.V3)) {
                 return
             }
         }
@@ -2221,7 +2221,7 @@ class FrameworkController extends ControllerBase implements ApplicationContextAw
                 response.format &&
                 !(response.format in ['all', 'html', 'xml', 'yaml'])) {
             //expected another content type
-            if (!apiService.requireVersion(request, response, ApiRequestFilters.V3)) {
+            if (!apiService.requireVersion(request, response, ApiRequestFiltersUtil.V3)) {
                 return
             }
             def reqformat = params.format ?: response.format
@@ -2302,7 +2302,7 @@ class FrameworkController extends ControllerBase implements ApplicationContextAw
      * /api/14/system/acl/* endpoint
      */
     def apiSystemAcls(){
-        if (!apiService.requireVersion(request, response, ApiRequestFilters.V14)) {
+        if (!apiService.requireVersion(request, response, ApiRequestFiltersUtil.V14)) {
             return
         }
         AuthContext authContext = frameworkService.getAuthContextForSubject(session.subject)
@@ -2351,7 +2351,7 @@ class FrameworkController extends ControllerBase implements ApplicationContextAw
     }
 
     private def renderAclHref(String path) {
-        createLink(absolute: true, uri: "/api/${ApiRequestFilters.API_CURRENT_VERSION}/system/acl/$path")
+        createLink(absolute: true, uri: "/api/${ApiRequestFiltersUtil.API_CURRENT_VERSION}/system/acl/$path")
     }
     private def apiSystemAclsPutResource(String storagePath, boolean create) {
         def respFormat = apiService.extractResponseFormat(request, response, ['xml','json','yaml','text'],request.format)

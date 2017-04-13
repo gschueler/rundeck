@@ -22,7 +22,7 @@ import grails.test.mixin.*
 import groovy.util.slurpersupport.GPathResult
 import groovy.xml.MarkupBuilder
 import org.codehaus.groovy.grails.plugins.testing.GrailsMockHttpServletResponse
-import rundeck.filters.ApiRequestFilters
+import rundeck.filters.ApiRequestFiltersUtil
 
 import javax.servlet.http.HttpServletResponse
 
@@ -52,7 +52,7 @@ class ApiServiceTests {
         }
         mock.demand.setHeader{String name, String value->
             assertEquals("X-Rundeck-API-Version", name)
-            assertEquals(ApiRequestFilters.API_CURRENT_VERSION.toString(), value)
+            assertEquals(ApiRequestFiltersUtil.API_CURRENT_VERSION.toString(), value)
         }
         def mockOut = mockFor(OutputStream)
         def output = []
@@ -97,7 +97,7 @@ class ApiServiceTests {
         }
         mock.demand.setHeader { String name, String value ->
             assertTrue([(name):value] in [
-                    ["X-Rundeck-API-Version": ApiRequestFilters.API_CURRENT_VERSION.toString()],
+                    ["X-Rundeck-API-Version": ApiRequestFiltersUtil.API_CURRENT_VERSION.toString()],
                     ["X-Rundeck-API-XML-Response-Wrapper": 'true'],
             ])
         }
@@ -136,7 +136,7 @@ class ApiServiceTests {
         }
         mock.demand.setHeader { String name, String value ->
             assertTrue([(name): value] in [
-                    ["X-Rundeck-API-Version": ApiRequestFilters.API_CURRENT_VERSION.toString()],
+                    ["X-Rundeck-API-Version": ApiRequestFiltersUtil.API_CURRENT_VERSION.toString()],
                     ["X-Rundeck-API-XML-Response-Wrapper": 'true'],
             ])
         }
@@ -178,7 +178,7 @@ class ApiServiceTests {
         def gpath = slurper.parseText(result)
         assertEquals('result', gpath.name())
         assertEquals('true', gpath['@success'].text())
-        assertEquals(ApiRequestFilters.API_CURRENT_VERSION.toString(), gpath['@apiversion'].text())
+        assertEquals(ApiRequestFiltersUtil.API_CURRENT_VERSION.toString(), gpath['@apiversion'].text())
         gpath
     }
     private GPathResult assertXmlErrorText(String result) {
@@ -186,7 +186,7 @@ class ApiServiceTests {
         def gpath = slurper.parseText(result)
         assertEquals('result', gpath.name())
         assertEquals('true', gpath['@error'].text())
-        assertEquals(ApiRequestFilters.API_CURRENT_VERSION.toString(), gpath['@apiversion'].text())
+        assertEquals(ApiRequestFiltersUtil.API_CURRENT_VERSION.toString(), gpath['@apiversion'].text())
         gpath
     }
 }

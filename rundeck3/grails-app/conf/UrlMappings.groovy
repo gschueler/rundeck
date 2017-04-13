@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import rundeck.filters.ApiRequestFilters
+import rundeck.filters.ApiRequestFiltersUtil
 
 class UrlMappings {
     static mappings = {
@@ -215,7 +215,7 @@ class UrlMappings {
 
         //promoted incubator endpoints
         "/api/$api_version/incubator/jobs/takeoverSchedule"(controller: 'api',action:'endpointMoved'){
-            moved_to="/api/${ApiRequestFilters.API_CURRENT_VERSION}/scheduler/takeover"
+            moved_to="/api/${ApiRequestFiltersUtil.API_CURRENT_VERSION}/scheduler/takeover"
         }
 
         //catchall
