@@ -34,6 +34,7 @@ if (Environment.isDevelopmentMode() && targetDir != null) {
     logger("StackTrace", ERROR, ['FULL_STACKTRACE'], false)
 }
 root(ERROR, ['STDOUT'])
+logger 'grails.artefact.Interceptor', DEBUG, ['STDOUT'], false
 
 //old logging config:
 
