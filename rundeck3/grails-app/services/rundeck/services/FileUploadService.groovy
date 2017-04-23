@@ -3,6 +3,7 @@ package rundeck.services
 import com.dtolabs.rundeck.core.execution.workflow.StepExecutionContext
 import com.dtolabs.rundeck.core.plugins.configuration.Validator
 import com.dtolabs.rundeck.plugins.file.FileUploadPlugin
+import grails.async.Promises
 import grails.transaction.Transactional
 import org.rundeck.util.SHAInputStream
 import org.rundeck.util.SHAOutputStream
@@ -180,7 +181,7 @@ class FileUploadService {
 
     @Transactional
     def onBootstrap() {
-        callAsync {
+        Promises.task {
             checkAndExpireAllRecords()
         }
     }

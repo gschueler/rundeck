@@ -40,7 +40,7 @@ import com.dtolabs.rundeck.execution.JobExecutionItem
 import com.dtolabs.rundeck.execution.JobReferenceFailureReason
 import com.dtolabs.rundeck.plugins.scm.JobChangeEvent
 import com.dtolabs.rundeck.server.authorization.AuthConstants
-
+import grails.async.Promises
 import grails.web.mapping.LinkGenerator
 import groovy.transform.ToString
 import org.apache.log4j.Logger
@@ -672,7 +672,8 @@ class ExecutionService implements ApplicationContextAware, StepExecutor, NodeSte
                 property('id')
             }
         }
-        callAsync {
+//        callAsync {
+        Promises.task {
             def found = executionIds.collect { Execution.get(it) }
             cleanupRunningJobs(found)
         }
