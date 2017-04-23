@@ -1407,7 +1407,7 @@ class MenuController extends ControllerBase implements ApplicationContextAware{
         if(configurationService.getBoolean("startup.detectFirstRun",true) &&
                 frameworkService.rundeckFramework.hasProperty('framework.var.dir')) {
             def vardir = frameworkService.rundeckFramework.getProperty('framework.var.dir')
-            def vers = grailsApplication.metadata['build.ident'].replaceAll('\\s+\\(.+\\)$','')
+            def vers = grailsApplication.metadata['info.app.version']?.replaceAll('\\s+\\(.+\\)$','')
             def file = new File(vardir, ".first-run-${vers}")
             if(!file.exists()){
                 isFirstRun=true
