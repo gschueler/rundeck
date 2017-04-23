@@ -35,6 +35,7 @@ if (Environment.isDevelopmentMode() && targetDir != null) {
 }
 root(ERROR, ['STDOUT'])
 logger 'grails.artefact.Interceptor', DEBUG, ['STDOUT'], false
+logger 'grails.app.init', INFO, ['STDOUT'], false
 
 //old logging config:
 
