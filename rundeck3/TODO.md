@@ -1,6 +1,7 @@
 
 - [ ] interceptor order corrected
-- [ ] metricweb plugin:
+- [ ] local plugins converted
+- [x] metricweb plugin: disabled requirement √
 
 
     ~~~
