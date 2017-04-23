@@ -746,7 +746,7 @@ class FrameworkController extends ControllerBase implements ApplicationContextAw
      */
 
     def createProjectPost() {
-        metricService.markMeter(this.class.name,actionName)
+        metricService?.markMeter(this.class.name,actionName)
         boolean valid=false
         withForm{
             valid=true

@@ -723,7 +723,7 @@ class ExecutionService implements ApplicationContextAware, StepExecutor, NodeSte
                                                             dateCompleted: new Date(), cancelled: true], null, null
         )
         log.error("Stale Execution cleaned up: [${e.id}]")
-        metricService.markMeter(this.class.name, 'executionCleanupMeter')
+        metricService?.markMeter(this.class.name, 'executionCleanupMeter')
     }
 
     /**
@@ -888,7 +888,7 @@ class ExecutionService implements ApplicationContextAware, StepExecutor, NodeSte
                               ScheduledExecution scheduledExecution=null, Map extraParams = null,
                               Map extraParamsExposed = null, int retryAttempt=0){
         //TODO: method can be transactional readonly
-        metricService.markMeter(this.class.name,'executionStartMeter')
+        metricService?.markMeter(this.class.name,'executionStartMeter')
         execution.refresh()
         //set up log output threshold
         def thresholdMap = ScheduledExecution.parseLogOutputThreshold(scheduledExecution?.logOutputThreshold)
@@ -903,9 +903,9 @@ class ExecutionService implements ApplicationContextAware, StepExecutor, NodeSte
         execution.outputfilepath = loghandler.filepath?.getAbsolutePath()
         execution.save(flush:true)
         if(execution.scheduledExecution){
-            metricService.markMeter(this.class.name,'executionJobStartMeter')
+            metricService?.markMeter(this.class.name,'executionJobStartMeter')
         }else{
-            metricService.markMeter(this.class.name,'executionAdhocStartMeter')
+            metricService?.markMeter(this.class.name,'executionAdhocStartMeter')
         }
         try{
             def jobcontext=exportContextForExecution(execution,grailsLinkGenerator)
@@ -1278,7 +1278,7 @@ class ExecutionService implements ApplicationContextAware, StepExecutor, NodeSte
      * @return AbortResult
      */
     def abortExecutionDirect(ScheduledExecution se, Execution e, String user, String killAsUser = null) {
-        metricService.markMeter(this.class.name, 'executionAbortMeter')
+        metricService?.markMeter(this.class.name, 'executionAbortMeter')
         def eid = e.id
         def dateCompleted = e.dateCompleted
         e.discard()
@@ -2973,9 +2973,10 @@ class ExecutionService implements ApplicationContextAware, StepExecutor, NodeSte
 
         def WorkflowExecutionService service = executionContext.getFramework().getWorkflowExecutionService()
 
-        def wresult = metricService.withTimer(this.class.name,'runJobReference'){
+        def task={
             service.getExecutorForItem(newExecItem).executeWorkflow(newContext, newExecItem)
         }
+        def wresult = metricService?metricService.withTimer(this.class.name,'runJobReference',task):task()
 
         if (!wresult || !wresult.success) {
             result = createFailure(JobReferenceFailureReason.JobFailed, "Job [${jitem.jobIdentifier}] failed")

@@ -53,9 +53,9 @@ class ExecutionUtilService {
     def  finishExecutionMetrics(Map execMap) {
         def ServiceThreadBase thread = execMap.thread
         if (!thread.isSuccessful()) {
-            metricService.markMeter(ExecutionService.name, 'executionFailureMeter')
+            metricService?.markMeter(ExecutionService.name, 'executionFailureMeter')
         } else {
-            metricService.markMeter(ExecutionService.name, 'executionSuccessMeter')
+            metricService?.markMeter(ExecutionService.name, 'executionSuccessMeter')
         }
     }
     def  finishExecutionLogging(Map execMap) {

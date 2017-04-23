@@ -285,13 +285,14 @@ class FrameworkService implements ApplicationContextAware {
      * @param project
      */
     def INodeSet filterNodeSet( NodesSelector selector, String project) {
-        metricService.withTimer(this.class.name,'filterNodeSet') {
+        def task={
             def unfiltered = rundeckFramework.getFrameworkProjectMgr().getFrameworkProject(project).getNodeSet();
             if(0==unfiltered.getNodeNames().size()) {
                 log.warn("Empty node list");
             }
             NodeFilter.filterNodes(selector, unfiltered);
         }
+        return metricService?metricService.withTimer(this.class.name,'filterNodeSet',task):task()
     }
 
     public INodeSet filterAuthorizedNodes(final String project, final Set<String> actions, final INodeSet unfiltered,
@@ -357,12 +358,13 @@ class FrameworkService implements ApplicationContextAware {
             throw new IllegalArgumentException("null authContext")
         }
         def Set decisions
-        metricService.withTimer(this.class.name,'authorizeProjectResources') {
-            decisions= authContext.evaluate(
+        def task={
+            authContext.evaluate(
                     resources,
                     actions,
                     Collections.singleton(new Attribute(URI.create(EnvironmentalContext.URI_BASE + "project"), project)))
         }
+        decisions=metricService?metricService.withTimer(this.class.name,'authorizeProjectResources',task):task()
         return decisions
     }
     /**
@@ -403,12 +405,13 @@ class FrameworkService implements ApplicationContextAware {
         if (null == authContext) {
             throw new IllegalArgumentException("null authContext")
         }
-        def decisions= metricService.withTimer(this.class.name,'authorizeProjectResourceAll') {
+        def task={
             authContext.evaluate(
                     [resource] as Set,
                     actions as Set,
                     Collections.singleton(new Attribute(URI.create(EnvironmentalContext.URI_BASE + "project"), project)))
         }
+        def decisions= metricService?metricService.withTimer(this.class.name,'authorizeProjectResourceAll',task):task()
         return !(decisions.find {!it.authorized})
     }
 
@@ -438,20 +441,21 @@ class FrameworkService implements ApplicationContextAware {
         def semap=[:]
         def adhocauth=null
         def results=[]
-        metricService.withTimer(this.class.name,'filterAuthorizedProjectExecutionsAll') {
+        def task={
             execs.each{Execution exec->
                 def ScheduledExecution se = exec.scheduledExecution
                 if(se && null==semap[se.id]){
                     semap[se.id]=authorizeProjectJobAll(authContext, se, actions, se.project)
                 }else if(!se && null==adhocauth){
                     adhocauth=authorizeProjectResourceAll(authContext, AuthConstants.RESOURCE_ADHOC, actions,
-                            exec.project)
+                                                          exec.project)
                 }
                 if(se ? semap[se.id] : adhocauth){
                     results << exec
                 }
             }
         }
+        metricService?metricService.withTimer(this.class.name,'filterAuthorizedProjectExecutionsAll',task):task()
         return results
     }
     /**
@@ -469,12 +473,13 @@ class FrameworkService implements ApplicationContextAware {
         if (null == authContext) {
             throw new IllegalArgumentException("null authContext")
         }
-        def decisions= metricService.withTimer(this.class.name,'authorizeProjectJobAll') {
+        def task={
             authContext.evaluate(
                     [authResourceForJob(job)] as Set,
                     actions as Set,
                     Collections.singleton(new Attribute(URI.create(EnvironmentalContext.URI_BASE + "project"), project)))
         }
+        def decisions= metricService?metricService.withTimer(this.class.name,'authorizeProjectJobAll',task):task()
         return !(decisions.find {!it.authorized})
     }
 
@@ -489,13 +494,13 @@ class FrameworkService implements ApplicationContextAware {
         if (null == authContext) {
             throw new IllegalArgumentException("null authContext")
         }
-
-        def decision = metricService.withTimer(this.class.name,'authorizeApplicationResource') {
+        def task={
             authContext.evaluate(
-                resource,
-                action,
-                Collections.singleton(new Attribute(URI.create(EnvironmentalContext.URI_BASE + "application"), 'rundeck')))
+                    resource,
+                    action,
+                    Collections.singleton(new Attribute(URI.create(EnvironmentalContext.URI_BASE + "application"), 'rundeck')))
         }
+        def decision = metricService?metricService.withTimer(this.class.name,'authorizeApplicationResource',task):task()
         return decision.authorized
     }
     /**
@@ -509,12 +514,13 @@ class FrameworkService implements ApplicationContextAware {
         if (null == authContext) {
             throw new IllegalArgumentException("null authContext")
         }
-        def decisions = metricService.withTimer(this.class.name,'authorizeApplicationResourceSet') {
+        def task={
             authContext.evaluate(
                     resources,
                     [action] as Set,
                     Collections.singleton(new Attribute(URI.create(EnvironmentalContext.URI_BASE + "application"), 'rundeck')))
         }
+        def decisions = metricService?metricService.withTimer(this.class.name,'authorizeApplicationResourceSet',task):task()
         return decisions.findAll {it.authorized}.collect {it.resource}
     }
 
@@ -529,12 +535,13 @@ class FrameworkService implements ApplicationContextAware {
         if (null == authContext) {
             throw new IllegalArgumentException("null authContext")
         }
-        def Set decisions = metricService.withTimer(this.class.name,'authorizeApplicationResourceAll') {
+        def task={
             authContext.evaluate(
-                [resource] as Set,
-                actions as Set,
-                Collections.singleton(new Attribute(URI.create(EnvironmentalContext.URI_BASE + "application"), 'rundeck')))
+                    [resource] as Set,
+                    actions as Set,
+                    Collections.singleton(new Attribute(URI.create(EnvironmentalContext.URI_BASE + "application"), 'rundeck')))
         }
+        def Set decisions = metricService?metricService.withTimer(this.class.name,'authorizeApplicationResourceAll',task):task()
 
         return !(decisions.find {!it.authorized})
     }
@@ -562,12 +569,13 @@ class FrameworkService implements ApplicationContextAware {
         if (null == authContext) {
             throw new IllegalArgumentException("null authContext")
         }
-        def decision = metricService.withTimer(this.class.name,'authorizeApplicationResourceType') {
+        def task={
             authContext.evaluate(
                     AuthorizationUtil.resourceType(resourceType),
                     action,
                     Collections.singleton(new Attribute(URI.create(EnvironmentalContext.URI_BASE + "application"), 'rundeck')))
         }
+        def decision = metricService?metricService.withTimer(this.class.name,'authorizeApplicationResourceType',task):task()
         return decision.authorized
     }
     /**
@@ -581,12 +589,13 @@ class FrameworkService implements ApplicationContextAware {
         if (null == authContext) {
             throw new IllegalArgumentException("null authContext")
         }
-        def Set decisions= metricService.withTimer(this.class.name,'authorizeApplicationResourceType') {
+        def task={
             authContext.evaluate(
                     [AuthorizationUtil.resourceType(resourceType)] as Set,
                     actions as Set,
                     Collections.singleton(new Attribute(URI.create(EnvironmentalContext.URI_BASE + "application"), 'rundeck')))
         }
+        def Set decisions= metricService?metricService.withTimer(this.class.name,'authorizeApplicationResourceType',task):task()
         return !(decisions.find {!it.authorized})
     }
 
