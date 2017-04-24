@@ -36,7 +36,7 @@
     <g:javascript library="respond.min"/>
     <![endif]-->
     <asset:javascript src="jquery.js"/>
-    <asset:javascript src="bootstrap.js"/>
+    <asset:javascript src="bootstrap-all.js"/>
     <asset:javascript src="prototype.min.js"/>
     <style>
         @keyframes riseup {
