@@ -12,7 +12,7 @@
         ... 14 common frames omitted
     ~~~
 
-- [ ] rundeck.less, bootstrap.less
+- [x] rundeck.less, bootstrap.less
 
     ~~~
     com.github.sommeri.less4j.Less4jException: Could not compile less. 350 error(s) occurred:
@@ -26,3 +26,7 @@
      25:       color: @navbar-inverse-bg;
      26:     }
      ~~~
+- [ ] `<g:javascript library="xyz"/>` does not work, copy all web-app/js into assets/javascript and use
+    `<asset:javascript src="xyz.js"/>`
+- [ ] application.yml/config.groovy/externalized config
+- [ ] logback.groovy (convert log4j)
