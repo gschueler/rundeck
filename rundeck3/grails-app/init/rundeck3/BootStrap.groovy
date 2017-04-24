@@ -80,7 +80,7 @@ class BootStrap {
          servletContext.setAttribute("version.number",VersionConstants.VERSION)
          servletContext.setAttribute("version.ident",VersionConstants.VERSION_IDENT)
          def appname=messageSource.getMessage('main.app.name',null,'',null) ?: messageSource.getMessage('main.app.default.name',null,'',null) ?: 'Rundeck'
-
+         grailsApplication.metadata['build.ident']=grailsApplication.metadata['info.app.version']
          servletContext.setAttribute("app.ident",grailsApplication.metadata['build.ident'])
          log.info("Starting ${appname} ${servletContext.getAttribute('app.ident')} ($shortBuildDate) ...")
 

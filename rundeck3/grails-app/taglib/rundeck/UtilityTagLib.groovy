@@ -595,7 +595,7 @@ class UtilityTagLib{
                             if(it[1]=='title'){
                                 appTitle()
                             }else if(it[1]=='version'){
-                                grailsApplication.metadata['app.version']
+                                grailsApplication.metadata['info.app.version']
                             }else if(it[1]=='ident'){
                                 grailsApplication.metadata['build.ident']
                             }
