@@ -21,6 +21,7 @@ import com.dtolabs.rundeck.core.execution.ExecutionService;
 import com.dtolabs.rundeck.core.execution.dispatch.NodeDispatcher;
 import com.dtolabs.rundeck.core.execution.orchestrator.OrchestratorService;
 import com.dtolabs.rundeck.core.execution.service.*;
+import com.dtolabs.rundeck.core.execution.workflow.StepExecutionContext;
 import com.dtolabs.rundeck.core.execution.workflow.WorkflowExecutionService;
 import com.dtolabs.rundeck.core.execution.workflow.WorkflowStrategyService;
 import com.dtolabs.rundeck.core.execution.workflow.steps.StepExecutionService;
@@ -69,7 +70,7 @@ public interface IFrameworkServices {
 
     NodeStepExecutor getNodeStepExecutorForItem(NodeStepExecutionItem item) throws ExecutionServiceException;
 
-    NodeDispatcher getNodeDispatcherForContext(ExecutionContext context) throws ExecutionServiceException;
+    NodeDispatcher getNodeDispatcherForContext(StepExecutionContext context) throws ExecutionServiceException;
 
     ResourceModelSourceService getResourceModelSourceService();
 

@@ -18,9 +18,9 @@ package com.dtolabs.rundeck.core.common;
 
 import com.dtolabs.rundeck.core.authorization.*;
 import com.dtolabs.rundeck.core.authorization.providers.EnvironmentalContext;
-import com.dtolabs.rundeck.core.execution.ExecutionContext;
 import com.dtolabs.rundeck.core.execution.ExecutionService;
 import com.dtolabs.rundeck.core.execution.orchestrator.OrchestratorService;
+import com.dtolabs.rundeck.core.execution.workflow.StepExecutionContext;
 import com.dtolabs.rundeck.core.execution.workflow.WorkflowStrategyService;
 import com.dtolabs.rundeck.core.execution.workflow.steps.node.NodeStepExecutionItem;
 import com.dtolabs.rundeck.core.execution.workflow.steps.node.NodeStepExecutionService;
@@ -174,7 +174,7 @@ public class FrameworkBase implements IFramework{
     }
 
     @Override
-    public NodeDispatcher getNodeDispatcherForContext(final ExecutionContext context) throws ExecutionServiceException {
+    public NodeDispatcher getNodeDispatcherForContext(final StepExecutionContext context) throws ExecutionServiceException {
         return frameworkServices.getNodeDispatcherForContext(context);
     }
 

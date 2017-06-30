@@ -30,6 +30,7 @@ import com.dtolabs.rundeck.core.common.NodeFilter;
 import com.dtolabs.rundeck.core.execution.ExecutionContext;
 import com.dtolabs.rundeck.core.execution.ExecutionContextImpl;
 import com.dtolabs.rundeck.core.execution.ExecutionListener;
+import com.dtolabs.rundeck.core.execution.workflow.StepExecutionContext;
 import com.dtolabs.rundeck.core.resources.FileResourceModelSource;
 import com.dtolabs.rundeck.core.tools.AbstractBaseTest;
 import com.dtolabs.rundeck.core.utils.FileUtils;
@@ -82,19 +83,19 @@ public class TestNodeDispatcherService extends AbstractBaseTest {
             nodeSet.createInclude().setName(".*");
             nodeSet.setThreadCount(2);
             //get node dispatcher for a context.  nodeset>1 and threadcount>1 returns parallel provider
-            final ExecutionContext context = ExecutionContextImpl.builder()
-                .frameworkProject(PROJ_NAME)
-                .framework(frameworkInstance)
-                .user("blah")
-                .nodeSelector(nodeSet)
-                .nodes(
+            final StepExecutionContext context = ExecutionContextImpl.builder()
+                                                                     .frameworkProject(PROJ_NAME)
+                                                                     .framework(frameworkInstance)
+                                                                     .user("blah")
+                                                                     .nodeSelector(nodeSet)
+                                                                     .nodes(
                         NodeFilter.filterNodes(
                                 nodeSet,
                                 frameworkInstance.getFrameworkProjectMgr().getFrameworkProject(PROJ_NAME).getNodeSet()
                         ))
-                .threadCount(nodeSet.getThreadCount())
-                .keepgoing(nodeSet.isKeepgoing())
-                .build();
+                                                                     .threadCount(nodeSet.getThreadCount())
+                                                                     .keepgoing(nodeSet.isKeepgoing())
+                                                                     .build();
 
 
             final NodeDispatcher nodeDispatcher = service.getNodeDispatcher(context);
@@ -108,7 +109,7 @@ public class TestNodeDispatcherService extends AbstractBaseTest {
             final NodeSet nodeSet = new NodeSet();
             nodeSet.createInclude().setName(".*");
             nodeSet.setThreadCount(1);
-            final ExecutionContext context = ExecutionContextImpl.builder()
+            final StepExecutionContext context = ExecutionContextImpl.builder()
                 .frameworkProject(PROJ_NAME)
                 .framework(frameworkInstance)
                 .user("blah")
@@ -129,7 +130,7 @@ public class TestNodeDispatcherService extends AbstractBaseTest {
             final NodeSet nodeSet = new NodeSet();
             nodeSet.setSingleNodeName("test1");
             nodeSet.setThreadCount(1);
-            final ExecutionContext context = ExecutionContextImpl.builder()
+            final StepExecutionContext context = ExecutionContextImpl.builder()
                 .frameworkProject(PROJ_NAME)
                 .framework(frameworkInstance)
                 .user("blah")
@@ -150,7 +151,7 @@ public class TestNodeDispatcherService extends AbstractBaseTest {
             final NodeSet nodeSet = new NodeSet();
             nodeSet.setSingleNodeName("test1");
             nodeSet.setThreadCount(2);
-            final ExecutionContext context = ExecutionContextImpl.builder()
+            final StepExecutionContext context = ExecutionContextImpl.builder()
                 .frameworkProject(PROJ_NAME)
                 .framework(frameworkInstance)
                 .user("blah")
@@ -183,7 +184,7 @@ public class TestNodeDispatcherService extends AbstractBaseTest {
             nodeSet.createInclude().setTags("priority1"); //matches single nodes in test1 file
             nodeSet.setThreadCount(2);
             //get node dispatcher for a context.  nodeset<2 and threadcount>1 returns sequential provider
-            final ExecutionContext context = ExecutionContextImpl.builder()
+            final StepExecutionContext context = ExecutionContextImpl.builder()
                 .frameworkProject(PROJ_NAME)
                 .framework(frameworkInstance)
                 .user("blah")
@@ -206,7 +207,7 @@ public class TestNodeDispatcherService extends AbstractBaseTest {
             nodeSet.createInclude().setTags("priority1"); //matches two nodes in external file
             nodeSet.setThreadCount(2);
             //get node dispatcher for a context.  nodeset>1 and threadcount>1 returns parallel provider
-            final ExecutionContext context = ExecutionContextImpl.builder()
+            final StepExecutionContext context = ExecutionContextImpl.builder()
                 .frameworkProject(PROJ_NAME)
                 .framework(frameworkInstance)
                 .user("blah")

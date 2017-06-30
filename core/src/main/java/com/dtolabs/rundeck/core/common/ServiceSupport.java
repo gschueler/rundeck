@@ -23,6 +23,7 @@ import com.dtolabs.rundeck.core.execution.dispatch.NodeDispatcher;
 import com.dtolabs.rundeck.core.execution.dispatch.NodeDispatcherService;
 import com.dtolabs.rundeck.core.execution.orchestrator.OrchestratorService;
 import com.dtolabs.rundeck.core.execution.service.*;
+import com.dtolabs.rundeck.core.execution.workflow.StepExecutionContext;
 import com.dtolabs.rundeck.core.execution.workflow.WorkflowExecutionService;
 import com.dtolabs.rundeck.core.execution.workflow.WorkflowStrategyService;
 import com.dtolabs.rundeck.core.execution.workflow.steps.StepExecutionService;
@@ -34,7 +35,6 @@ import com.dtolabs.rundeck.core.plugins.ServiceProviderLoader;
 import com.dtolabs.rundeck.core.resources.ResourceModelSourceService;
 import com.dtolabs.rundeck.core.resources.format.ResourceFormatGeneratorService;
 import com.dtolabs.rundeck.core.resources.format.ResourceFormatParserService;
-import com.dtolabs.rundeck.core.utils.IPropertyLookup;
 
 import java.util.HashMap;
 
@@ -147,7 +147,7 @@ public class ServiceSupport implements IFrameworkServices {
         return NodeStepExecutionService.getInstanceForFramework(getFramework()).getExecutorForExecutionItem(item);
     }
     @Override
-    public NodeDispatcher getNodeDispatcherForContext(ExecutionContext context) throws ExecutionServiceException {
+    public NodeDispatcher getNodeDispatcherForContext(StepExecutionContext context) throws ExecutionServiceException {
         return NodeDispatcherService.getInstanceForFramework(getFramework()).getNodeDispatcher(context);
     }
     @Override

@@ -62,7 +62,7 @@ public class WorkflowExecutionService extends ChainedProviderService<WorkflowExe
 
         registry = new HashMap<>();
         //TODO:
-        registry.put(WorkflowExecutor.NODE_FIRST, NodeFirstWorkflowExecutor.class);
+        registry.put(WorkflowExecutor.NODE_FIRST,  NodeFirstWorkflowExecutor.class);
 //        registry.put(WorkflowExecutor.STEP_FIRST, StepFirstWorkflowExecutor.class);
 //        registry.put(WorkflowExecutor.PARALLEL, ParallelWorkflowExecutor.class);
 

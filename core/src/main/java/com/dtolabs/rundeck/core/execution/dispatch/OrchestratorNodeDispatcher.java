@@ -119,8 +119,7 @@ public class OrchestratorNodeDispatcher implements NodeDispatcher {
             + context.getThreadCount()
             + ")");
         //to not have 2 orchestrator within one run when it processed the inner node
-        Map<String,String> orchestratorData = new HashMap<String, String>();
-        context.getDataContext().put(ORCHESTRATOR_DATA, orchestratorData);
+        context.getDataContext().put(ORCHESTRATOR_DATA, new HashMap<>());
         boolean success = false;
         final HashMap<String, NodeStepResult> resultMap = new HashMap<String, NodeStepResult>();
         final HashMap<String, NodeStepResult> failureMap = new HashMap<String, NodeStepResult>();

@@ -26,11 +26,11 @@ package com.dtolabs.rundeck.core.execution.impl.common;
 import com.dtolabs.rundeck.core.authorization.AuthContext;
 import com.dtolabs.rundeck.core.authorization.Authorization;
 import com.dtolabs.rundeck.core.common.*;
-import com.dtolabs.rundeck.core.execution.ExecutionContext;
 import com.dtolabs.rundeck.core.execution.ExecutionService;
 import com.dtolabs.rundeck.core.execution.dispatch.NodeDispatcher;
 import com.dtolabs.rundeck.core.execution.orchestrator.OrchestratorService;
 import com.dtolabs.rundeck.core.execution.service.*;
+import com.dtolabs.rundeck.core.execution.workflow.StepExecutionContext;
 import com.dtolabs.rundeck.core.execution.workflow.WorkflowExecutionService;
 import com.dtolabs.rundeck.core.execution.workflow.WorkflowStrategyService;
 import com.dtolabs.rundeck.core.execution.workflow.steps.StepExecutionService;
@@ -419,7 +419,7 @@ public class TestDefaultFileCopierUtil extends TestCase {
         }
 
         @Override
-        public NodeDispatcher getNodeDispatcherForContext(final ExecutionContext context)
+        public NodeDispatcher getNodeDispatcherForContext(final StepExecutionContext context)
                 throws ExecutionServiceException
         {
             return null;

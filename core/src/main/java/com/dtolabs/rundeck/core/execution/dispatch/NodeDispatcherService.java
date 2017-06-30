@@ -25,9 +25,12 @@ package com.dtolabs.rundeck.core.execution.dispatch;
 
 import com.dtolabs.rundeck.core.common.*;
 import com.dtolabs.rundeck.core.execution.ExecutionContext;
+import com.dtolabs.rundeck.core.execution.workflow.StepExecutionContext;
 import com.dtolabs.rundeck.core.plugins.BaseProviderRegistryService;
 import com.dtolabs.rundeck.core.execution.service.ExecutionServiceException;
 import com.dtolabs.rundeck.plugins.ServiceNameConstants;
+
+import java.util.Map;
 
 
 /**
@@ -46,10 +49,15 @@ public class NodeDispatcherService extends BaseProviderRegistryService<NodeDispa
         registry.put("orchestrator", OrchestratorNodeDispatcher.class);
     }
 
-    public  NodeDispatcher getNodeDispatcher(ExecutionContext context) throws ExecutionServiceException {
+    public NodeDispatcher getNodeDispatcher(StepExecutionContext context) throws ExecutionServiceException {
         //this gets called for each node as well if we already have data then the parent orchestrator has fired
-        if(context.getOrchestrator() != null && 
-                !context.getDataContext().containsKey(OrchestratorNodeDispatcher.ORCHESTRATOR_DATA)){
+        Map<String, String> orchData = context.getDataContext() != null ? context.getDataContext().get(
+                OrchestratorNodeDispatcher.ORCHESTRATOR_DATA) : null;
+        boolean hasOrchWithData = context.getOrchestrator() != null && null == orchData;
+        System.err.println("getNodedispatcher: orch? " + hasOrchWithData + " : nodes: " + context.getNodes());
+        System.err.println("context: " + context.getStepContext() + ": " + context.getStepNumber());
+
+        if (hasOrchWithData) {
             return providerOfType("orchestrator");
         }
         if (context.getThreadCount() > 1 && context.getNodes().getNodeNames().size() > 1) {
