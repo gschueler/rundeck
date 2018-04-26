@@ -99,6 +99,14 @@ public class QuotedStringTokenizerTest {
                         ""));
     }
 
+    @Test
+    public void tokenizeToArray2() {
+        assertArrayEquals(
+            new String[]{"--test=\"some args\""},
+            QuotedStringTokenizer.tokenizeToArray("--test=\"some args\"")
+        );
+    }
+
 
     @Test
     public void tokenize() {
