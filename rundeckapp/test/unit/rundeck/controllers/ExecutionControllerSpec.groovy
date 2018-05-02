@@ -61,6 +61,23 @@ class ExecutionControllerSpec extends Specification {
         mockCodec(AnsiColorCodec)
         mockCodec(HTMLElementCodec)
     }
+
+    def "ajaxExecState without ajax header"() {
+        given:
+        controller.params.id = 123
+        if(header!=null) {
+            request.addHeader('x-rundeck-ajax', header)
+        }
+        when:
+        controller.ajaxExecState()
+        then:
+        302 == response.status
+
+        where:
+        header  | _
+        'false' | _
+        null    | _
+    }
     def "api execution query no project"() {
         setup:
         def query = new ExecutionQuery()

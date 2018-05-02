@@ -132,6 +132,7 @@ class ExecutionControllerTests  {
 
     void testAjaxExecState_missing(){
         controller.params.id=123
+        request.addHeader('x-rundeck-ajax','true')
         controller.ajaxExecState()
         assertEquals(404,response.status)
         assertEquals("Execution not found for id: 123",response.json.error)
@@ -149,6 +150,7 @@ class ExecutionControllerTests  {
             getAuthContextForSubjectAndProject{ subj,proj-> null }
             authorizeProjectExecutionAny{ ctx, exec, actions-> false }
         }
+        request.addHeader('x-rundeck-ajax','true')
         controller.ajaxExecState()
         assertEquals(403,response.status)
         assertEquals("Unauthorized: View Execution ${e1.id}",response.json.error)
@@ -646,6 +648,7 @@ class ExecutionControllerTests  {
         controller.workflowService = mockWith(WorkflowService){
             requestStateSummary{e,nodes,selectedOnly, perform,steps-> loader}
         }
+        request.addHeader('x-rundeck-ajax','true')
         controller.ajaxExecState()
         assertEquals(200,response.status)
     }

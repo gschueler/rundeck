@@ -347,6 +347,9 @@ class ExecutionController extends ControllerBase{
     }
     def ajaxExecState(){
         def Execution e = Execution.get(params.id)
+        if(requireAjax(action: 'show', params: params)) {
+            return
+        }
         if (!e) {
             log.error("Execution not found for id: " + params.id)
             response.status=HttpServletResponse.SC_NOT_FOUND
