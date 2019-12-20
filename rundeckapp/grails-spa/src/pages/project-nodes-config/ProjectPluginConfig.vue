@@ -135,6 +135,25 @@
             size="lg"
             id="add-new-modal"
           >
+            <div class="list-group" v-if="preferredProviders.length>0">
+              <a
+                      v-for="plugin in preferredProviders"
+                      v-bind:key="plugin"
+                      href="#"
+                      @click="addPlugin(plugin)"
+                      class="list-group-item"
+                      v-if="findProvider(plugin)"
+              >
+                <plugin-info
+                        :detail="findProvider(plugin)"
+                        :show-description="true"
+                        :show-extended="false"
+                        description-css="help-block"
+                >
+                  <i class="glyphicon glyphicon-plus text-muted"></i>
+                </plugin-info>
+              </a>
+            </div>
             <div class="list-group">
               <a
                 v-for="plugin in pluginProviders"
@@ -142,6 +161,7 @@
                 href="#"
                 @click="addPlugin(plugin.name)"
                 class="list-group-item"
+                v-if="preferredProviders.indexOf(plugin.name)<0"
               >
                 <plugin-info
                   :detail="plugin"
@@ -213,6 +233,7 @@ export default Vue.extend({
       rundeckContext: {} as RundeckContext,
       modalAddOpen: false,
       pluginProviders: [],
+      preferredProviders:['local','single','file','directory'],
       pluginLabels: {},
       editFocus: -1,
       errors: [] as string[]
@@ -326,6 +347,9 @@ export default Vue.extend({
       if (this.modeToggle) {
         this.mode = "show";
       }
+    },
+    findProvider(provider:string){
+      return this.pluginProviders.find((p:any)=>p.name===provider)
     },
     async savePlugins() {
       try {
@@ -462,8 +486,10 @@ export default Vue.extend({
     ) {
       this.rdBase = window._rundeck.rdBase;
       this.project = window._rundeck.projectName;
-
-      this.loadProjectPluginConfig(
+      if(window._rundeck.data) {
+        this.preferredProviders = window._rundeck.data.nodeSourceBuiltinProviders
+      }
+        this.loadProjectPluginConfig(
         window._rundeck.projectName,
         this.configPrefix,
         this.serviceName

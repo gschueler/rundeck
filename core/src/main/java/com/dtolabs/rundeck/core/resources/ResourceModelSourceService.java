@@ -59,6 +59,7 @@ public class ResourceModelSourceService
         super(framework);
 
         registry.put(LocalResourceModelSourceFactory.SERVICE_PROVIDER_TYPE, LocalResourceModelSourceFactory.class);
+        registry.put(SingleResourceModelSourceFactory.SERVICE_PROVIDER_TYPE, SingleResourceModelSourceFactory.class);
         registry.put(FileResourceModelSourceFactory.SERVICE_PROVIDER_TYPE, FileResourceModelSourceFactory.class);
         registry.put(DirectoryResourceModelSourceFactory.SERVICE_PROVIDER_TYPE,
             DirectoryResourceModelSourceFactory.class);

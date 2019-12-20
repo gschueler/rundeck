@@ -1781,6 +1781,7 @@ class FrameworkController extends ControllerBase implements ApplicationContextAw
                 'resourceModelSource'
         )
         final writeableModelSources = frameworkService.listWriteableResourceModelSources(project)
+        def builtinSourcesTypes = frameworkService.rundeckFramework.getResourceModelSourceService().getBundledProviderNames()
 
         def parseExceptions = fwkProject.projectNodes.getResourceModelSourceExceptionsMap()
 
@@ -1791,6 +1792,7 @@ class FrameworkController extends ControllerBase implements ApplicationContextAw
                 extraConfig       : extraConfig,
                 parseExceptions   : parseExceptions,
                 writeableSources  : writeableModelSources,
+                builtinSourceTypes: builtinSourcesTypes
         ]
     }
 
