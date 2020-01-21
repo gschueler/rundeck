@@ -62,6 +62,7 @@ import grails.converters.JSON
 import groovy.transform.PackageScope
 import groovy.xml.MarkupBuilder
 import org.grails.plugins.metricsweb.MetricService
+import org.rundeck.app.components.RundeckJobDefinitionManager
 import org.rundeck.app.components.jobs.JobQuery
 import org.rundeck.app.components.jobs.JobQueryInput
 import org.rundeck.core.auth.AuthConstants
@@ -112,6 +113,7 @@ class MenuController extends ControllerBase implements ApplicationContextAware{
     PluginService pluginService
     PluginApiService pluginApiService
     MetricService metricService
+    RundeckJobDefinitionManager rundeckJobDefinitionManager
 
     def configurationService
     ScmService scmService
@@ -347,8 +349,7 @@ class MenuController extends ControllerBase implements ApplicationContextAware{
             xml{
                 response.setHeader(Constants.X_RUNDECK_RESULT_HEADER,"Jobs found: ${results.nextScheduled?.size()}")
                 def writer = new StringWriter()
-                def xml = new MarkupBuilder(writer)
-                JobsXMLCodec.encodeWithBuilder(results.nextScheduled,xml)
+                rundeckJobDefinitionManager.exportAs('xml',results.nextScheduled, writer)
                 writer.flush()
                 render(text:writer.toString(),contentType:"text/xml",encoding:"UTF-8")
             }
@@ -3142,8 +3143,7 @@ class MenuController extends ControllerBase implements ApplicationContextAware{
         withFormat{
             xml{
                 def writer = new StringWriter()
-                def xml = new MarkupBuilder(writer)
-                JobsXMLCodec.encodeWithBuilder(results.nextScheduled,xml)
+                rundeckJobDefinitionManager.exportAs('xml',results.nextScheduled, writer)
                 writer.flush()
                 render(text:writer.toString(),contentType:"text/xml",encoding:"UTF-8")
             }
