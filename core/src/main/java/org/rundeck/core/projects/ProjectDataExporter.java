@@ -19,5 +19,7 @@ import java.util.Map;
 
 public interface ProjectDataExporter {
     String getSelector();
+    String getTitle();
+    String getTitleCode();
     void export(String project, Object zipBuilder, Map exportOptions); //a ZipBuilder class which lives in the rundeck grails project
 }

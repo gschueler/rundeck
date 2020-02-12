@@ -51,8 +51,49 @@
 </g:if>
 <g:elseif test="${prop.type.toString()=='Boolean'}">
     <g:set var="fieldid" value="${g.rkey()}"/>
-    <div class="${offsetColType}">
         <g:hiddenField name="${origfieldname}" value="${values && values[prop.name] ? values[prop.name] : ''}"/>
+        <g:set var="trueChecked" value="${values&&values[prop.name]?values[prop.name]=='true':prop.defaultValue=='true'}"/>
+        <g:set var="hasLabel" value="${prop.renderingOptions?.get('booleanHasLabelColumn')!='false'}"/>
+        <g:if test="${prop.defaultValue=='true'}">
+            <g:if test="${hasLabel}">
+            <div class="${labelColType} form-control-static  ${prop.required ? 'required' : ''}"
+                  ><stepplugin:message
+                    service="${service}"
+                    name="${provider}"
+                    code="${messagePrefix}property.${prop.name}.title"
+                    messagesType="${messagesType}"
+                    default="${prop.title ?: prop.name}"/></div>
+            </g:if>
+            <div class="${hasLabel?valueColType:fullWidthCol}">
+            <div class="radio">
+                <g:radio name="${fieldname}" value="true" checked="${trueChecked}" id="${fieldid}"/>
+                <label title="" for="${fieldid}">
+
+                    <stepplugin:message
+                            service="${service}"
+                            name="${provider}"
+                            code="${messagePrefix}property.${prop.name}.title.true"
+                            messagesType="${messagesType}"
+                            default="${prop.renderingOptions?.get('booleanTrueDisplayValue')?:'true'}"/>
+
+                </label>
+            </div>
+            <div class="radio">
+                <g:radio name="${fieldname}" value="false" checked="${!trueChecked}" id="${fieldid}_false"/>
+                <label title="" for="${fieldid}_false">
+                    <stepplugin:message
+                            service="${service}"
+                            name="${provider}"
+                            code="${messagePrefix}property.${prop.name}.title.false"
+                            messagesType="${messagesType}"
+                            default="${prop.renderingOptions?.get('booleanFalseDisplayValue')?:'false'}"/>
+
+                </label>
+            </div>
+            </div>
+        </g:if>
+        <g:else>
+            <div class="${hasLabel?offsetColType:fullWidthCol}">
         <div class="checkbox">
           <g:checkBox name="${fieldname}" value="true"
                       checked="${values&&values[prop.name]?values[prop.name]=='true':prop.defaultValue=='true'}"
@@ -69,7 +110,8 @@
                         default="${prop.title ?: prop.name}"/>
           </label>
         </div>
-    </div>
+        </div>
+        </g:else>
 </g:elseif>
 <g:elseif test="${prop.type.toString()=='Select' || prop.type.toString()=='FreeSelect'}">
     <g:set var="fieldid" value="${g.rkey()}"/>
@@ -254,7 +296,8 @@
         </div>
     </g:if>
 </g:else>
-<div class="${outofscope?valueColType:offsetColType}">
+    <g:set var="hasLabel" value="${prop.type.toString() !='Boolean' || prop.renderingOptions?.get('booleanHasLabelColumn')!='false'}"/>
+<div class="${outofscope?valueColType:hasLabel?offsetColType:fullWidthCol}">
     <div class="help-block"> <g:render template="/scheduledExecution/description"
                                        model="[description: stepplugin.messageText(
                                                service: service,

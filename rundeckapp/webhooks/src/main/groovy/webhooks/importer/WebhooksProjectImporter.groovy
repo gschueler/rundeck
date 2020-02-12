@@ -16,6 +16,8 @@
 package webhooks.importer
 
 import com.dtolabs.rundeck.core.authorization.UserAndRolesAuthContext
+import com.dtolabs.rundeck.core.plugins.configuration.Property
+import com.dtolabs.rundeck.plugins.util.PropertyBuilder
 import org.rundeck.core.projects.ProjectDataImporter
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -31,6 +33,30 @@ class WebhooksProjectImporter implements ProjectDataImporter {
     String getSelector() {
         return "webhooks"
     }
+    final String title = "Webhooks"
+    final String titleCode = "rundeck.Webhook.projectExporter.title"
+    final List<String> importPatterns = ['webhooks.yaml']
+    final List<Property> properties = [
+            PropertyBuilder.builder().booleanType('import')
+            .defaultValue('true')
+            .title("Import Webhooks")
+            .description("Import webhooks into the project")
+            .renderingOptions([
+                    'booleanTrueDisplayValue':'Import webhooks',
+                    'booleanFalseDisplayValue':'Do not import webhooks',
+                    'booleanHasLabelColumn':'false'
+            ]).build(),
+
+            PropertyBuilder.builder().booleanType('regenerate')
+                           .defaultValue('true')
+                           .title("Regenerate Webhook Keys")
+                           .description("When importing webhooks, regenerate the unique key")
+                           .renderingOptions([
+                                   'booleanTrueDisplayValue':'Regenerate webhook keys',
+                                   'booleanFalseDisplayValue':'Do not regenerate webhook keys',
+                                   'booleanHasLabelColumn':'false'
+                           ]).build(),
+    ]
 
     @Override
     List<String> doImport(final UserAndRolesAuthContext authContext, final String project, final File importFile, final Map importOptions) {

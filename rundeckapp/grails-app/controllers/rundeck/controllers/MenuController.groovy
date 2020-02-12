@@ -44,6 +44,8 @@ import groovy.xml.MarkupBuilder
 import org.grails.plugins.metricsweb.MetricService
 import org.rundeck.app.components.jobs.JobQuery
 import org.rundeck.core.auth.AuthConstants
+import org.rundeck.core.projects.ProjectDataExporter
+import org.rundeck.core.projects.ProjectDataImporter
 import org.rundeck.util.Sizes
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
@@ -966,6 +968,13 @@ class MenuController extends ControllerBase implements ApplicationContextAware{
         )) {
             return
         }
+
+        def exportConfigs=[:]
+        def projectExporters = applicationContext.getBeansOfType(ProjectDataExporter)
+        projectExporters.each { String name, ProjectDataExporter exporter ->
+            exportConfigs[name]=[title:exporter.title, titleCode:exporter.titleCode]
+        }
+        [exportConfigs:exportConfigs]
     }
     def projectImport() {
         AuthContext authContext = frameworkService.getAuthContextForSubject(session.subject)
@@ -982,6 +991,13 @@ class MenuController extends ControllerBase implements ApplicationContextAware{
         )) {
             return
         }
+
+        def importConfigs=[:]
+        def projectExporters = applicationContext.getBeansOfType(ProjectDataImporter)
+        projectExporters.each { String name, ProjectDataImporter exporter ->
+            importConfigs[name]=[title:exporter.title, titleCode:exporter.titleCode, properties: exporter.properties]
+        }
+        [importConfigs:importConfigs]
     }
     def projectDelete() {
         AuthContext authContext = frameworkService.getAuthContextForSubject(session.subject)

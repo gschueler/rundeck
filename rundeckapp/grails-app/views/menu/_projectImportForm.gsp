@@ -191,6 +191,33 @@
             </div>
           </div>
           </feature:enabled>
+
+                <g:each in="${importConfigs.keySet()}" var="importer">
+                <g:set var="irkey" value="${g.rkey()}"/>
+
+          <div class="list-group-item">
+            <h4 class="list-group-item-heading"><g:if test="${importConfigs[importer].titleCode}">
+                                <g:message code="${importConfigs[importer].titleCode}" default="${importConfigs[importer].title?:importer}"/>
+                        </g:if>
+                        <g:else>
+                            ${importConfigs[importer].title?:importer}
+                        </g:else></h4>
+
+                    <div class="container-fluid">
+                        <g:set var="prefix" value="importOpts.${importer}."/>
+                                <g:render template="/framework/pluginConfigPropertiesInputs" model="${[
+                                        properties:importConfigs[importer].properties?:[],
+                                        prefix:prefix,
+                                        values:[:],
+                                        fieldnamePrefix:prefix,
+                                        origfieldnamePrefix:'orig.' + prefix,
+                                        allowedScope:com.dtolabs.rundeck.core.plugins.configuration.PropertyScope.Project,
+                                        messagesType       : 'project.import'
+                                ]}"/>
+
+                      </div>
+                      </div>
+                </g:each>
         </div>
       </div>
       <div class="card-footer">

@@ -35,6 +35,7 @@ class ProjectArchiveParams implements ProjectArchiveImportRequest, Validateable{
     Boolean importACL=false
     Boolean importScm=false
     Boolean importWebhooks=false
+    Map importOpts=[:]
     Boolean whkRegenAuthTokens=false
     Boolean validateJobref=false
     Boolean exportAll
@@ -56,6 +57,7 @@ class ProjectArchiveParams implements ProjectArchiveImportRequest, Validateable{
         importACL(nullable: true)
         importScm(nullable: true)
         importWebhooks(nullable: true)
+        importOpts(nullable: true)
         whkRegenAuthTokens(nullable: true)
         exportAll(nullable: true)
         exportJobs(nullable: true)

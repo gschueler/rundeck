@@ -944,7 +944,6 @@ class ProjectService implements InitializingBean, ExecutionFileProducer, EventPu
         boolean importConfig = options.importConfig
         boolean importACL = options.importACL
         boolean importScm = options.importScm
-        boolean importWebhooks = options.importWebhooks
         boolean validateJobref = options.validateJobref
         File configtemp = null
         File scmimporttemp = null
@@ -952,6 +951,7 @@ class ProjectService implements InitializingBean, ExecutionFileProducer, EventPu
         File webhookimporttemp = null
         Map<String, File> mdfilestemp = [:]
         Map<String, File> aclfilestemp = [:]
+        Map<String, File> optsfilestemp = [:]
         zip.read {
             '*/' { //rundeck-<projectname>/
                 'jobs/' {

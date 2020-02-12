@@ -355,6 +355,7 @@ class ProjectController extends ControllerBase{
             flash.errors=archiveParams.errors
             return redirect(controller: 'menu', action: 'projectImport', params: [project: params.project])
         }
+            log.error('archiveParams.importOpts: '+archiveParams.importOpts)
         def project = params.project?:params.name
         if (!project) {
             return renderErrorView("Project parameter is required")

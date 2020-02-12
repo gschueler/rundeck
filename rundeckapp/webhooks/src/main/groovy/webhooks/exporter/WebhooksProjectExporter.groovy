@@ -32,6 +32,8 @@ class WebhooksProjectExporter implements ProjectDataExporter {
     String getSelector() {
         return "webhooks"
     }
+    final String title = "Webhooks"
+    final String titleCode = "rundeck.Webhook.projectExporter.title"
 
     @Override
     void export(String project, def zipBuilder, Map exportOptions) {
