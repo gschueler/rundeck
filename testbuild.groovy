@@ -15,11 +15,12 @@
  * limitations under the License.
  */
 
-
+evaluate(new File('buildSrc/src/main/groovy/Junit.groovy'))
 //Test the result of the build to verify expected artifacts are created
 
 cli = new CliBuilder(usage: 'slide')
 cli._(longOpt: 'buildType', args: 1, 'Build type [development | release]')
+cli._(longOpt: 'junit', args: 1, 'Write junit xml to a file')
 def options = cli.parse(args)
 
 def target="build/libs"
@@ -40,8 +41,17 @@ if(options.buildType == 'development'){
 } else {
     throw new Exception("Unknown build type [${options.buildType}]".toString())
 }
+File junitOutput=null
+if(options.junit){
+    junitOutput=new File(options.junit)
+}
 
 def debug=Boolean.getBoolean('debug')?:("-debug" in args)
+
+def junit = new Junit()
+def testsuite={name,group='files'->
+    junit.testsuite(name,group)
+}
 
 //versions of dependency we want to verify
 def versions=[
@@ -209,8 +219,12 @@ def sumtest=[:]
 
 //require files exist
 manifest.each{ fname,mfest->
+    def ts=testsuite(fname)
     f=new File(fname)
-    if(require("[${fname}] MUST exist: ${f.exists()}",f.exists())){
+    def msg = "[${fname}] MUST exist: ${f.exists()}"
+    def exists = require(msg, f.exists())
+    ts.test( fname+' Exists',msg,exists)
+    if(exists){
         if(mfest){
             ziptest[f]=mfest
         }
@@ -232,9 +246,11 @@ def testZip={ totest ->
                 def found=z.getEntry(dname)
                 if(n==~/^\d+/){
                     fverify&=require("[${f.basename}] \"${dname}\" MUST exist. Result: (${found?:false})",found)
+                    testsuite(f.name).test(' Count',"[${f.basename}] \"${dname}\" MUST exist. Result: (${found?:false})",found)
                     counts[dname]=[equal:Integer.parseInt(n)]
                 }else if(n=='+'){
                     fverify&=require("[${f.basename}] \"${dname}\" MUST exist. Result: (${found?:false})",found)
+                    testsuite(f.name).test(' 1+',"[${f.basename}] \"${dname}\" MUST exist. Result: (${found?:false})",found)
                     counts[dname]=[atleast:1]
                 }else if(n=='?'){
                     counts[dname]=[maybe:1]
@@ -242,10 +258,13 @@ def testZip={ totest ->
                     n=n.substring(1)
                     def sum=getSha256(z.getInputStream(found))
                     require("[${f.basename}] \"${dname}\" SHA-256 MUST match \"${n}\". Seen: ($sum) Expected: (${sumtest[n]})", sum==sumtest[n])
+                    testsuite(f.name).test(' SHA',"[${f.basename}] \"${dname}\" SHA-256 MUST match \"${n}\". Seen: ($sum) Expected: (${sumtest[n]})", sum==sumtest[n])
+
                 }
             }else{
                 def found=z.getEntry(path)
                 fverify&=require("[${f.basename}] \"${path}\" MUST exist. Result: (${found?:false})",found)
+                testsuite(f.name).test(' Exists',"[${f.basename}] \"${path}\" MUST exist. Result: (${found?:false})",found)
             }
         }
         //verify any counts
@@ -262,17 +281,22 @@ def testZip={ totest ->
         counts.each{n,c->
             if(c['equal']){
                 fverify&=require("[${f.basename}] \"${n}\" MUST have ==${c.equal} files. Result: ${fcounts[n]?:0}",c.equal==fcounts[n])
+                testsuite(f.name).test(' File Count Match',"[${f.basename}] \"${n}\" MUST have ==${c.equal} files. Result: ${fcounts[n]?:0}",c.equal==fcounts[n])
             }else if(c['atleast']){
                 fverify&=require("[${f.basename}] \"${n}\" MUST have >=${c.atleast} files. Result: ${fcounts[n]?:0}",c.atleast<=fcounts[n])
+                testsuite(f.name).test(' File Count At Least',"[${f.basename}] \"${n}\" MUST have >=${c.atleast} files. Result: ${fcounts[n]?:0}",c.atleast<=fcounts[n])
             }else if(c['maybe']){
                 fverify&=expect("[${f.basename}] \"${n}\" SHOULD have >=${c.maybe} files. Result: ${fcounts[n]?:0}",fcounts[n]>0)
+                testsuite(f.name).test(' File Count Maybe',"[${f.basename}] \"${n}\" SHOULD have >=${c.maybe} files. Result: ${fcounts[n]?:0}",fcounts[n]>0)
             }
         }
         require("${f}: was${fverify?'':' NOT'} verified",fverify)
     }
 }
 testZip(ziptest)
-
+if(junitOutput){
+    junitOutput.withWriter junit.&writeTo
+}
 if(!require("Build manifest was${isValid?'':' NOT'} verified.",isValid)){
     System.exit(1)
 }
